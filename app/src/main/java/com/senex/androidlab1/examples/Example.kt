@@ -22,7 +22,6 @@ internal class ExampleChildFooImpl(
 ), ExampleInterfaceFoo {
     override fun foo(string: String) =
         (string + data + optional).chars().sum()
-
 }
 
 internal class ExampleChildBarImpl(
