@@ -11,4 +11,5 @@
     <string name="button_inmail">InMail</string>
     <string name="button_connect">Connect</string>
     <string name="button_follow">+ Follow</string>
+    <string name="text_example_profile_people_counter">• 500+</string>
 </resources>

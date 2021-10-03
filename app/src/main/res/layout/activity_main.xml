@@ -1,150 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".views.activities.MainActivity">
+    android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        style="@style/card_view_style_default"
-        app:cardCornerRadius="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray_dark"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/size_default"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                android:src="@drawable/profile_pic" />
+                android:id="@+id/profile_image_view_background_top"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/profile_background"
+                android:scaleType="fitXY" />
 
-            <TextView
-                android:id="@+id/profile_text_view_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_example_profile_name" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@id/profile_image_view_background_top"
+                android:layout_marginTop="-60dp"
+                android:background="@drawable/gradient_to_bottom_gray_dark" />
 
-            <TextView
-                android:id="@+id/profile_text_view_description_main"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/profile_frame_layout_main"
+                style="@style/split_margin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/text_example_profile_description_main" />
+                android:layout_below="@id/profile_image_view_background_top"
+                android:layout_marginTop="-40dp"
+                android:layout_marginBottom="@dimen/size_zero">
 
-            <TextView
-                android:id="@+id/profile_text_view_workplace"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_example_profile_workplace" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/size_zero"
+                    app:cardCornerRadius="@dimen/size_small">
 
-            <TextView
-                android:id="@+id/profile_text_view_description_optional"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_example_profile_description_optional" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="80dp"
+                        android:orientation="vertical"
+                        android:padding="@dimen/size_double">
 
-            <TextView
-                android:id="@+id/profile_text_view_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_example_profile_location" />
+                        <Button
+                            android:layout_marginEnd="@dimen/size_default"
+                            android:id="@+id/profile_button_inmail"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/button_inmail"
+                            android:textAllCaps="false"
+                            android:textColor="@color/primary"
+                            app:layout_constraintEnd_toStartOf="@+id/profile_button_connect"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_people_counter"
+                            app:strokeColor="@color/primary"
+                            app:strokeWidth="1dp" />
+
+                        <Button
+                            android:id="@+id/profile_button_connect"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/button_connect"
+                            android:textAllCaps="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toEndOf="@+id/profile_button_inmail"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_people_counter" />
+
+                        <TextView
+                            android:id="@+id/profile_text_view_workplace"
+                            style="@style/text_view_style.center"
+                            android:text="@string/text_example_profile_workplace"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_description_main" />
+
+
+                        <TextView
+                            android:id="@+id/profile_text_view_location"
+                            style="@style/text_view_style"
+                            android:layout_width="wrap_content"
+                            android:text="@string/text_example_profile_location"
+                            app:layout_constraintEnd_toStartOf="@id/profile_text_view_people_counter"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_workplace" />
+
+                        <TextView
+                            android:layout_marginStart="@dimen/size_small"
+                            android:id="@+id/profile_text_view_people_counter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_example_profile_people_counter"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toEndOf="@+id/profile_text_view_location"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_workplace" />
+
+                        <TextView
+                            android:id="@+id/profile_text_view_name"
+                            style="@style/text_view_style.center"
+                            android:text="@string/text_example_profile_name"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_big"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/profile_text_view_description_main"
+                            style="@style/text_view_style.center"
+                            android:text="@string/text_example_profile_description_main"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_medium"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_name" />
+
+
+                        <TextView
+                            android:id="@+id/profile_text_view_description_optional"
+                            style="@style/text_view_style.center"
+                            android:text="@string/text_example_profile_description_optional"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_button_inmail" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_view_picture"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_below="@id/profile_image_view_background_top"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-100dp"
+                android:src="@drawable/profile_pic_placeholder_2"
+                app:civ_border_color="@color/gray_dark"
+                app:civ_border_width="4dp" />
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            style="@style/card_view_style"
+            app:cardCornerRadius="@dimen/size_small">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="@dimen/size_default"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-                <Button
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_inmail" />
+                    android:layout_marginTop="@dimen/size_default"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/post_4" />
 
-                <Button
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_connect" />
+                    android:scaleType="center"
+                    android:src="@drawable/post_2" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/post_1" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/post_3" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_follow"
+                        android:textAllCaps="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp" />
+
+                    <TextView
+                        android:id="@+id/profile_text_view_followers_counter"
+                        style="@style/text_view_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_example_profile_followers_counter"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/profile_text_view_posts_header" />
+
+                    <TextView
+                        android:id="@+id/profile_text_view_followers_header"
+                        style="@style/text_view_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/header_profile_followers"
+                        app:layout_constraintStart_toEndOf="@+id/profile_text_view_followers_counter"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_text_view_posts_header" />
+
+                    <TextView
+                        android:id="@+id/profile_text_view_posts_header"
+                        style="@style/text_view_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_example_profile_posts_header"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        style="@style/card_view_style_default"
-        app:cardCornerRadius="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/button_follow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/profile_text_view_followers_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_example_profile_followers_counter"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_text_view_posts_header" />
-
-                <TextView
-                    android:id="@+id/profile_text_view_followers_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/header_profile_followers"
-                    app:layout_constraintStart_toEndOf="@+id/profile_text_view_followers_counter"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_text_view_posts_header" />
-
-                <TextView
-                    android:id="@+id/profile_text_view_posts_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_example_profile_posts_header"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="center"
-                android:src="@drawable/post_2" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/post_1" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/post_3" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/post_4" />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>
