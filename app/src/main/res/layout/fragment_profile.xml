@@ -132,13 +132,12 @@
 
                         <TextView
                             android:id="@+id/profile_text_view_description_main"
-                            style="@style/text_view_style.header"
+                            style="@style/text_view_style"
                             android:layout_width="match_parent"
                             android:gravity="center_horizontal"
                             android:text="@string/text_example_profile_description_main"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_medium"
-                            android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/profile_text_view_name" />
@@ -161,7 +160,7 @@
                 android:layout_below="@id/profile_image_view_background_top"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-100dp"
-                android:src="@drawable/profile_pic_placeholder_2"
+                android:src="@drawable/profile_pic_placeholder_3"
                 app:civ_border_color="@color/gray_dark"
                 app:civ_border_width="4dp" />
         </RelativeLayout>
