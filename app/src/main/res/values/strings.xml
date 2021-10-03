@@ -12,4 +12,8 @@
     <string name="button_connect">Connect</string>
     <string name="button_follow">+ Follow</string>
     <string name="text_example_profile_people_counter">• 500+</string>
+    <string name="button_bottom_navigation_profile">Профиль</string>
+    <string name="button_bottom_navigation_edit">Редактировать</string>
+    <string name="hint_enter_profile_description">Введите описание профиля</string>
+    <string name="button_update_description">Update description</string>
 </resources>
