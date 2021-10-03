@@ -80,8 +80,8 @@
 
                         <ImageView
                             android:id="@+id/profile_image_view_people"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_marginStart="1dp"
                             android:scaleX="0.9"
                             android:scaleY="0.9"
@@ -102,6 +102,7 @@
 
                         <TextView
                             android:id="@+id/profile_text_view_people_counter"
+                            style="@style/text_view_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/size_small"
