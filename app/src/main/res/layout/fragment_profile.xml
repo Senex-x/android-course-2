@@ -2,6 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -77,13 +78,17 @@
                             app:layout_constraintStart_toEndOf="@+id/profile_button_inmail"
                             app:layout_constraintTop_toBottomOf="@id/profile_text_view_people_counter" />
 
-                        <TextView
-                            android:id="@+id/profile_text_view_workplace"
-                            style="@style/text_view_style.center"
-                            android:text="@string/text_example_profile_workplace"
+                        <ImageView
+                            android:id="@+id/profile_image_view_people"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="1dp"
+                            android:scaleX="0.9"
+                            android:scaleY="0.9"
+                            android:src="@drawable/ic_people_gray_24"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_description_main" />
+                            app:layout_constraintStart_toEndOf="@+id/profile_text_view_people_counter"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_text_view_workplace" />
 
                         <TextView
                             android:id="@+id/profile_text_view_location"
@@ -101,10 +106,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/size_small"
                             android:text="@string/text_example_profile_people_counter"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/profile_image_view_people"
                             app:layout_constraintHorizontal_chainStyle="packed"
                             app:layout_constraintStart_toEndOf="@+id/profile_text_view_location"
                             app:layout_constraintTop_toBottomOf="@id/profile_text_view_workplace" />
+
+                        <TextView
+                            android:id="@+id/profile_text_view_workplace"
+                            style="@style/text_view_style.center"
+                            android:text="@string/text_example_profile_workplace"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/profile_text_view_description_main" />
 
                         <TextView
                             android:id="@+id/profile_text_view_name"
@@ -118,8 +131,8 @@
 
                         <TextView
                             android:id="@+id/profile_text_view_description_main"
-                            android:layout_width="match_parent"
                             style="@style/text_view_style.header"
+                            android:layout_width="match_parent"
                             android:gravity="center_horizontal"
                             android:text="@string/text_example_profile_description_main"
                             android:textColor="@color/black"

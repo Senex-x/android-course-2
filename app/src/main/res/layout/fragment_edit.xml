@@ -26,7 +26,7 @@
         android:id="@+id/edit_button_update"
         style="@style/button_outline"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/bar_height_big"
         android:layout_marginTop="@dimen/size_default"
         android:text="@string/button_update_description"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
