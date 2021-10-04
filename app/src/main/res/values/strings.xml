@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Android Lab</string>
+    <string name="text_example_profile_description_main">Founder at OCEAN STREET * Social Media | Recruiting | Marketing | Sales | Blogging | Developing</string>
+    <string name="text_example_profile_name">Quintin Ford</string>
+    <string name="text_example_profile_workplace">Loyola Marymount University</string>
+    <string name="text_example_profile_location">Greater Los Angeles Area</string>
+    <string name="text_example_profile_description_optional">In the final quarter of my senior year at Loyola Marymount, I had the opportunity to take some very interesting</string>
+    <string name="header_profile_followers">Followers</string>
+    <string name="text_example_profile_followers_counter">4,816</string>
+    <string name="text_example_profile_posts_header">Quintin\'s Posts</string>
+    <string name="button_inmail">InMail</string>
+    <string name="button_connect">Connect</string>
+    <string name="button_follow">+ Follow</string>
+    <string name="text_example_profile_people_counter">• 500+</string>
+    <string name="button_bottom_navigation_profile">Профиль</string>
+    <string name="button_bottom_navigation_edit">Редактировать</string>
+    <string name="hint_enter_profile_description">Введите описание профиля</string>
+    <string name="button_update_description">Update description</string>
 </resources>

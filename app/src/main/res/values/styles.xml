@@ -1,23 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="edit_text_style_default">
+<resources>
+    <style name="edit_text_style">
         <item name="android:layout_height">@dimen/bar_height_default</item>
         <item name="android:textSize">@dimen/text_size_default</item>
         <item name="android:autofillHints">false</item>
     </style>
 
-    <style name="edit_text_theme_default">
+    <style name="button_outline" parent="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    <style name="button_outline.profile">
+        <item name="android:layout_marginTop">@dimen/size_default</item>
+        <item name="android:layout_marginBottom">@dimen/size_default</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_width">120dp</item>
+    </style>
+
+    <style name="edit_text_theme">
         <item name="colorAccent">@color/primary</item>
     </style>
 
-    <style name="text_style_default">
+    <style name="text_view_style">
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_default</item>
-        <item name="android:padding">@dimen/size_default</item>
     </style>
 
-    <style name="card_view_style_default">
+    <style name="text_view_style.header">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="text_view_style.center">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="card_view_style">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_marginTop">@dimen/size_default</item>
+        <item name="android:layout_marginBottom">@dimen/size_default</item>
+        <item name="android:layout_marginLeft">@dimen/size_default</item>
+        <item name="android:layout_marginRight">@dimen/size_default</item>
+    </style>
+
+    <style name="card_view_style.no_margin_bottom">
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="split_margin">
+        <item name="android:layout_marginTop">@dimen/size_default</item>
+        <item name="android:layout_marginBottom">@dimen/size_default</item>
+        <item name="android:layout_marginLeft">@dimen/size_default</item>
+        <item name="android:layout_marginRight">@dimen/size_default</item>
+    </style>
+
+    <style name="image_view_profile_post">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/size_default</item>
+        <item name="android:scaleType">fitXY</item>
     </style>
 </resources>
