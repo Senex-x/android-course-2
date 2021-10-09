@@ -9,6 +9,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
+        /*
+            1) отправляет неявный интент в систему(на ваш выбор)
+            и обрабатывает результат с помощью onActivityResult.
+            Ответ можете вывести на экран используя Snackbar.
+         */
+
+
+
+
     }
 }
 

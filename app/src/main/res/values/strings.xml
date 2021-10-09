@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Android Lab</string>
+    <string name="main_button_upload_image">Upload image</string>
 </resources>
