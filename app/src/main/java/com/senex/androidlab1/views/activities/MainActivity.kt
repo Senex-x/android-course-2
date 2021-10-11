@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,17 +15,14 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import com.senex.androidlab1.BuildConfig
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.ActivityMainBinding
 import com.senex.androidlab1.utils.toast
-
-
-/*
-            1) отправляет неявный интент в систему(на ваш выбор)
-            и обрабатывает результат с помощью onActivityResult.
-            Ответ можете вывести на экран используя Snackbar.
-         */
-
+import com.senex.androidlab1.views.dialogs.ShowImageDialogFragment
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -47,9 +45,48 @@ class MainActivity : AppCompatActivity() {
         binding.mainButtonUpload.setOnClickListener {
             selectImage()
         }
+
+        binding.mainButtonShare.setOnClickListener {
+            val imageFile = File(externalCacheDir.toString() + "/image.png")
+
+            // Puts image into imageFile to share it's URI
+            FileOutputStream(imageFile).use {
+                binding.mainImageViewPicture.getBitmap()
+                    .compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+
+            val uri = FileProvider.getUriForFile(
+                this,
+                BuildConfig.APPLICATION_ID + "." + localClassName + ".provider",
+                imageFile
+            )
+
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                setDataAndType(uri, "image/*")
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_TEXT, "Shared from Android Lab App")
+                startActivity(
+                    Intent.createChooser(this, "Share image using")
+                )
+            }
+        }
+
+        receiveImageIntent()
     }
 
-    private fun createLauncher(func : ActivityResult.() -> Unit) =
+    private fun receiveImageIntent() {
+        if (intent.action == Intent.ACTION_SEND && "image/*" == intent.type) {
+            obtainBitmapOrNull(intent.data)?.let {
+                ShowImageDialogFragment(it).show(
+                    supportFragmentManager,
+                    "ShowImageDialogFragment"
+                )
+            } ?: toast(R.string.error_unexpected_error)
+        }
+    }
+
+    private fun createLauncher(func: ActivityResult.() -> Unit) =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -60,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun  ActivityResult.pickImageAction() {
+    private fun ActivityResult.pickImageAction() {
         binding.mainImageViewPicture.setImageFromUri(
             data?.data
         ) ?: toast(R.string.error_unexpected_error)
@@ -104,6 +141,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+private fun ImageView.getBitmap() =
+    Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+        draw(Canvas(this))
+    }
 
 private fun ImageView.setImageFromUri(uri: Uri?) =
     context.obtainBitmapOrNull(uri)?.let { bitmap ->

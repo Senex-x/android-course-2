@@ -7,4 +7,7 @@
     <string name="title_choose_from_gallery">Choose from gallery</string>
     <string name="title_cancel">Cancel</string>
     <string name="title_choose_photo">Choose photo</string>
+    <string name="main_button_share_image">Share image</string>
+    <string name="title_received_image">Received image</string>
+    <string name="title_ok">Ok</string>
 </resources>

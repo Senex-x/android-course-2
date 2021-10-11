@@ -11,5 +11,5 @@
     <dimen name="icon_size_default">28dp</dimen>
     <dimen name="bar_height_default">42dp</dimen>
     <dimen name="bar_height_big">56dp</dimen>
-    <dimen name="main_image_view_min_height">300dp</dimen>
+    <dimen name="main_image_view_min_height">500dp</dimen>
 </resources>

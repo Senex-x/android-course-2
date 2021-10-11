@@ -14,9 +14,22 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.LAUNCHER" />
+                <data android:mimeType="text/plain"/>
+                <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.senex.androidlab1.views.activities.MainActivity.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path"/>
+        </provider>
     </application>
 </manifest>
