@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Android Lab</string>
     <string name="main_button_upload_image">Upload image</string>
+    <string name="error_unexpected_error">Unexpected error</string>
+    <string name="error_image_not_picked">You haven\'t picked Image</string>
+    <string name="title_take_photo">Take photo</string>
+    <string name="title_choose_from_gallery">Choose from gallery</string>
+    <string name="title_cancel">Cancel</string>
+    <string name="title_choose_photo">Choose photo</string>
 </resources>
