@@ -7,7 +7,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageView
@@ -23,16 +25,13 @@ import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.dialogs.ShowImageDialogFragment
 import java.io.File
 import java.io.FileOutputStream
-import android.widget.Toast
-
-import android.content.ContentResolver
-import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var launcherPickPhoto: ActivityResultLauncher<Intent>
     private lateinit var launcherTakePhoto: ActivityResultLauncher<Intent>
+    private lateinit var imageUri: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,19 +51,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.mainButtonShare.setOnClickListener {
-            val imageFile = File(externalCacheDir.toString() + "/image.png")
+            val imageFile = createTemporaryFile("image1.png")
 
-            // Puts image into imageFile to share it's URI
+            // Saves image into imageFile to share it's URI
             FileOutputStream(imageFile).use {
-                binding.mainImageViewPicture.getBitmap()
-                    .compress(Bitmap.CompressFormat.PNG, 100, it)
+                binding.mainImageViewPicture.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
             }
 
-            val uri = FileProvider.getUriForFile(
-                this,
-                BuildConfig.APPLICATION_ID + "." + localClassName + ".provider",
-                imageFile
-            )
+            val uri = getUriForExport(imageFile)
 
             Intent().apply {
                 action = Intent.ACTION_SEND
@@ -77,48 +71,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        receiveImageIntent()
+        tryToReceiveImageIntent()
     }
-
-    private fun receiveImageIntent() {
-        if (intent.action == Intent.ACTION_SEND && "image/*" == intent.type) {
-            obtainBitmapOrNull(intent.data)?.let {
-                ShowImageDialogFragment(it).show(
-                    supportFragmentManager,
-                    "ShowImageDialogFragment"
-                )
-            } ?: toast(R.string.error_unexpected_error)
-        }
-    }
-
-    private fun createLauncher(func: ActivityResult.() -> Unit) =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                func(result)
-            } else {
-                toast(R.string.error_image_not_picked)
-            }
-        }
-
-    private fun ActivityResult.pickImageAction() {
-        binding.mainImageViewPicture.setImageFromUri(
-            data?.data
-        ) ?: toast(R.string.error_unexpected_error)
-    }
-
-    private fun ActivityResult.takeImageAction() {
-        binding.mainImageViewPicture.setImageBitmap(grabImage(imageUri))
-
-        val bitmap = data?.extras?.get("data") as? Bitmap
-        bitmap?.let {
-            //toast("${it.height} ${it.width}")
-            //binding.mainImageViewPicture.setImageBitmap(it)
-        } ?: toast(R.string.error_unexpected_error)
-    }
-
-    lateinit var imageUri : Uri
 
     private fun selectImage() {
         val options = arrayOf(
@@ -131,8 +85,9 @@ class MainActivity : AppCompatActivity() {
             setItems(options) { dialog, item ->
                 when (options[item]) {
                     getString(R.string.title_take_photo) -> {
-
-                           imageUri = Uri.fromFile(File(externalCacheDir.toString() + "/image.png"))
+                        imageUri = getUriForExport(
+                            createTemporaryFile("image2.png")
+                        )
                         launcherTakePhoto.launch(
                             Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
                                 putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
@@ -155,47 +110,63 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun grabImage(uri: Uri): Bitmap {
-        this.contentResolver.notifyChange(uri, null)
-        val cr = this.contentResolver
-        val bitmap: Bitmap
+    private fun createLauncher(action: ActivityResult.() -> Unit) =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                action(result)
+            } else {
+                toast(R.string.error_image_not_picked)
+            }
+        }
 
-        bitmap = MediaStore.Images.Media.getBitmap(cr, uri)
-        return bitmap;
+    private fun ActivityResult.pickImageAction() =
+        binding.mainImageViewPicture.setImageFromUri(
+            data?.data
+        ) ?: toast(R.string.error_unexpected_error)
 
+    private fun takeImageAction() {
+        getBitmapFromMediaStore(imageUri)?.let {
+            binding.mainImageViewPicture.setImageBitmap(it)
+        } ?: toast(R.string.error_unexpected_error)
     }
 
-    fun internal() {
+    private fun getUriForExport(imageFile: File) = FileProvider.getUriForFile(
+        this,
+        "${BuildConfig.APPLICATION_ID}.$localClassName.provider",
+        imageFile
+    )
 
-        /*Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        File photo;
-        try {
-            // place where to store camera taken picture
-            photo = this.createTemporaryFile("picture", ".jpg");
-            photo.delete();
-        } catch (Exception e) {
-            Log.v(TAG, "Can't create file to take picture!");
-            Toast.makeText(activity, "Please check SD card! Image shot is impossible!", 10000);
-            return false;
+    private fun tryToReceiveImageIntent() {
+        if (intent.action == Intent.ACTION_SEND && "image/*" == intent.type) {
+            getBitmapOrNull(intent.data)?.let {
+                ShowImageDialogFragment(it).show(
+                    supportFragmentManager,
+                    "ShowImageDialogFragment"
+                )
+            } ?: toast(R.string.error_unexpected_error)
         }
-        mImageUri = Uri.fromFile(photo);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
-        //start camera intent
-        activity.startActivityForResult(this, intent, MenuShootImage);
-
-        private File createTemporaryFile(String part, String ext) throws Exception
-        {
-            File tempDir = Environment . getExternalStorageDirectory ();
-            tempDir = new File (tempDir.getAbsolutePath() + "/.temp/");
-            if (!tempDir.exists()) {
-                tempDir.mkdirs();
-            }
-            return File.createTempFile(part, ext, tempDir);
-        }
-
-         */
     }
 }
+
+private fun Context.getBitmapFromMediaStore(uri: Uri) =
+    if (Build.VERSION.SDK_INT < 28) {
+        MediaStore.Images.Media.getBitmap(
+            contentResolver,
+            uri
+        )
+    } else {
+        ImageDecoder.decodeBitmap(
+            ImageDecoder.createSource(
+                contentResolver,
+                uri
+            )
+        )
+    }
+
+private fun Context.createTemporaryFile(fileName: String) =
+    File("${externalCacheDir.toString()}/$fileName")
 
 private fun ImageView.getBitmap() =
     Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
@@ -203,11 +174,11 @@ private fun ImageView.getBitmap() =
     }
 
 private fun ImageView.setImageFromUri(uri: Uri?) =
-    context.obtainBitmapOrNull(uri)?.let { bitmap ->
+    context.getBitmapOrNull(uri)?.let { bitmap ->
         setImageBitmap(bitmap)
     }
 
-private fun Context.obtainBitmapOrNull(uri: Uri?) =
+private fun Context.getBitmapOrNull(uri: Uri?) =
     uri?.let {
         BitmapFactory.decodeStream(
             contentResolver.openInputStream(it)
