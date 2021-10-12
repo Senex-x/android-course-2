@@ -26,7 +26,6 @@ import com.senex.androidlab1.views.dialogs.ShowImageDialogFragment
 import java.io.File
 import java.io.FileOutputStream
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var launcherPickPhoto: ActivityResultLauncher<Intent>
@@ -51,11 +50,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.mainButtonShare.setOnClickListener {
-            val imageFile = createTemporaryFile("image1.png")
+            val imageFile = createTemporaryFile("image.png")
 
             // Saves image into imageFile to share it's URI
             FileOutputStream(imageFile).use {
-                binding.mainImageViewPicture.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+                binding.mainImageViewPicture.getBitmap()
+                    .compress(Bitmap.CompressFormat.PNG, 100, it)
             }
 
             val uri = getUriForExport(imageFile)
@@ -64,9 +64,9 @@ class MainActivity : AppCompatActivity() {
                 action = Intent.ACTION_SEND
                 setDataAndType(uri, "image/*")
                 putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_TEXT, "Shared from Android Lab App")
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.title_shared_from_android_lab))
                 startActivity(
-                    Intent.createChooser(this, "Share image using")
+                    Intent.createChooser(this, getString(R.string.title_share_image_using))
                 )
             }
         }
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 when (options[item]) {
                     getString(R.string.title_take_photo) -> {
                         imageUri = getUriForExport(
-                            createTemporaryFile("image2.png")
+                            createTemporaryFile("image.png")
                         )
                         launcherTakePhoto.launch(
                             Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
@@ -126,11 +126,10 @@ class MainActivity : AppCompatActivity() {
             data?.data
         ) ?: toast(R.string.error_unexpected_error)
 
-    private fun takeImageAction() {
+    private fun takeImageAction() =
         getBitmapFromMediaStore(imageUri)?.let {
             binding.mainImageViewPicture.setImageBitmap(it)
         } ?: toast(R.string.error_unexpected_error)
-    }
 
     private fun getUriForExport(imageFile: File) = FileProvider.getUriForFile(
         this,
