@@ -23,6 +23,11 @@ import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.dialogs.ShowImageDialogFragment
 import java.io.File
 import java.io.FileOutputStream
+import android.widget.Toast
+
+import android.content.ContentResolver
+import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -104,11 +109,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun ActivityResult.takeImageAction() {
+        binding.mainImageViewPicture.setImageBitmap(grabImage(imageUri))
+
         val bitmap = data?.extras?.get("data") as? Bitmap
         bitmap?.let {
-            binding.mainImageViewPicture.setImageBitmap(it)
+            //toast("${it.height} ${it.width}")
+            //binding.mainImageViewPicture.setImageBitmap(it)
         } ?: toast(R.string.error_unexpected_error)
     }
+
+    lateinit var imageUri : Uri
 
     private fun selectImage() {
         val options = arrayOf(
@@ -121,8 +131,12 @@ class MainActivity : AppCompatActivity() {
             setItems(options) { dialog, item ->
                 when (options[item]) {
                     getString(R.string.title_take_photo) -> {
+
+                           imageUri = Uri.fromFile(File(externalCacheDir.toString() + "/image.png"))
                         launcherTakePhoto.launch(
-                            Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                            Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+                                putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                            }
                         )
                     }
                     getString(R.string.title_choose_from_gallery) -> {
@@ -139,6 +153,47 @@ class MainActivity : AppCompatActivity() {
             }
             show()
         }
+    }
+
+    fun grabImage(uri: Uri): Bitmap {
+        this.contentResolver.notifyChange(uri, null)
+        val cr = this.contentResolver
+        val bitmap: Bitmap
+
+        bitmap = MediaStore.Images.Media.getBitmap(cr, uri)
+        return bitmap;
+
+    }
+
+    fun internal() {
+
+        /*Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        File photo;
+        try {
+            // place where to store camera taken picture
+            photo = this.createTemporaryFile("picture", ".jpg");
+            photo.delete();
+        } catch (Exception e) {
+            Log.v(TAG, "Can't create file to take picture!");
+            Toast.makeText(activity, "Please check SD card! Image shot is impossible!", 10000);
+            return false;
+        }
+        mImageUri = Uri.fromFile(photo);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+        //start camera intent
+        activity.startActivityForResult(this, intent, MenuShootImage);
+
+        private File createTemporaryFile(String part, String ext) throws Exception
+        {
+            File tempDir = Environment . getExternalStorageDirectory ();
+            tempDir = new File (tempDir.getAbsolutePath() + "/.temp/");
+            if (!tempDir.exists()) {
+                tempDir.mkdirs();
+            }
+            return File.createTempFile(part, ext, tempDir);
+        }
+
+         */
     }
 }
 
