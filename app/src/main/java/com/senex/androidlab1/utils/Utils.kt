@@ -21,7 +21,7 @@ internal fun String?.toast(context: Context) =
     context.toast(this)
 
 internal fun log(message: String?) =
-    Log.d("App-debug", message ?: "null")
+    Log.d("app-debug", message ?: "null")
 
 private fun String.present() =
     isNotEmpty() && isNotBlank()
