@@ -2,13 +2,61 @@ package com.senex.androidlab1.views.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.senex.androidlab1.R
+import com.senex.androidlab1.databinding.ActivityMainBinding
+import com.senex.androidlab1.views.fragments.PageOneFragment
+import com.senex.androidlab1.views.fragments.PageThreeFragment
+import com.senex.androidlab1.views.fragments.PageTwoFragment
+
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.init()
+    }
+
+    private fun ActivityMainBinding.init() {
+        supportFragmentManager.commit {
+            add(R.id.view_fragment_container, PageOneFragment(), "PageOneFragment")
+            setReorderingAllowed(true)
+        }
+
+        buttonPageOne.setOnClickListener {
+            replaceFragmentWith<PageOneFragment>("PageOneFragment")
+        }
+
+        buttonPageTwo.setOnClickListener {
+            replaceFragmentWith<PageTwoFragment>("PageTwoFragment")
+        }
+
+        buttonPageThree.setOnClickListener {
+            replaceFragmentWith<PageThreeFragment>("PageThreeFragment")
+        }
+    }
+
+    private inline fun <reified T : Fragment> replaceFragmentWith(
+        fragmentName: String
+    ) {
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                android.R.anim.fade_out,
+                android.R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace<T>(R.id.view_fragment_container, fragmentName)
+            setReorderingAllowed(true)
+            addToBackStack(null)
+        }
     }
 }
 
