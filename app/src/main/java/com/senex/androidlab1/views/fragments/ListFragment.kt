@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.models.User
 import com.senex.androidlab1.recyclers.adapters.UserRecyclerAdapter
+import com.senex.androidlab1.utils.log
 import java.util.*
 
 class ListFragment : Fragment() {
