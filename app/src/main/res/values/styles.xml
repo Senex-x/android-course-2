@@ -6,7 +6,7 @@
     </style>
 
     <style name="text_view_style.header">
-        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_default</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -33,5 +33,9 @@
         <item name="android:layout_marginBottom">@dimen/size_default</item>
         <item name="android:layout_marginLeft">@dimen/size_default</item>
         <item name="android:layout_marginRight">@dimen/size_default</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

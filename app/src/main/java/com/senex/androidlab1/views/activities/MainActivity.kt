@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.senex.androidlab1.R
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.User
+import com.senex.androidlab1.utils.generateUsers
 import com.senex.androidlab1.utils.log
 import io.github.serpro69.kfaker.faker
 import java.util.*
@@ -20,39 +21,11 @@ class MainActivity : AppCompatActivity() {
 
         val userDao = AppDatabaseMain.database.userDao()
 
-        userDao.insertAll(*generateUsers(5).toTypedArray())
+        //userDao.deleteAll()
 
-        val users: List<User> = userDao.getAll()
-
-        log(users.toString())
-    }
-
-    private fun generateUsers(amount: Int): MutableList<User> {
-        val list = ArrayList<User>()
-        val random = Random()
-
-        val faker = faker {
-            fakerConfig {
-                this.random = random
-                locale = "en"
-            }
-        }
-
-        for (i in 1..amount) {
-            list.add(
-                User(
-                    null,
-                    faker.funnyName.name(),
-                    random.nextBoolean(),
-                    faker.quote.famousLastWords(),
-                    faker.internet.email(),
-                    Date(random.nextLong()),
-                    faker.witcher.quotes()
-                )
-            )
-        }
-
-        return list
+        userDao.insertAll(
+            //*generateUsers(20).toTypedArray()
+        )
     }
 }
 

@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.senex.androidlab1.adapters.UserRecyclerAdapter
+import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
-import com.senex.androidlab1.models.User
-import com.senex.androidlab1.recyclers.adapters.UserRecyclerAdapter
-import com.senex.androidlab1.utils.log
-import java.util.*
+import com.senex.androidlab1.utils.MarginItemDecoration
+
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
@@ -25,21 +26,29 @@ class ListFragment : Fragment() {
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
 
-        initRecyclerView(binding.listRecyclerMain)
+        binding.listRecyclerMain.init()
 
         return binding.root
     }
 
-    private fun initRecyclerView(recycler: RecyclerView) {
-        recycler.layoutManager = LinearLayoutManager(requireContext())
-        //studentsList = generateRandomCardsData()
-
-        recycler.adapter = UserRecyclerAdapter(
-            listOf(User(1, "nicknam5678678e", email = "lul", birthDate = Date())),
+    private fun RecyclerView.init() {
+        layoutManager = LinearLayoutManager(
+            requireContext()
         )
-        //studentsList = generateRandomCardsData()
+        adapter = UserRecyclerAdapter(
+            AppDatabaseMain.database.userDao().getAll()
+        ) {
+            findNavController().navigate(
+                ListFragmentDirections
+                    .actionListFragmentToInfoFragment(
+                        it.id!! // id cannot be null
+                    )
+            )
+        }
+        addItemDecoration(
+            MarginItemDecoration(20)
+        )
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
