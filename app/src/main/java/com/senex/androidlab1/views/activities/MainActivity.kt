@@ -27,5 +27,10 @@ class MainActivity : AppCompatActivity() {
             //*generateUsers(20).toTypedArray()
         )
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }
 

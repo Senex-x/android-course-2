@@ -38,7 +38,7 @@
             android:layout_height="18dp"
             android:layout_marginStart="@dimen/size_small"
             android:layout_marginBottom="2dp"
-            android:src="@drawable/ic_check_circle_24"
+            android:src="@drawable/ic_check_24"
             app:layout_constraintBottom_toTopOf="@+id/list_item_user_status"
             app:layout_constraintStart_toEndOf="@+id/list_item_user_nickname"
             app:layout_constraintTop_toTopOf="parent"
