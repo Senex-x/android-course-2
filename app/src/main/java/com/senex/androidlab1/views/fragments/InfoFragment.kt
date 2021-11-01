@@ -38,7 +38,7 @@ class InfoFragment : Fragment() {
             fragmentInfoToolbar.init()
             fragmentInfoCollapsingToolbarLayout.init(user)
             fragmentInfoToolbarExpandedImage.init(user)
-            initFields(user)
+            initUi(user)
         }
 
         return binding.root
@@ -59,12 +59,14 @@ class InfoFragment : Fragment() {
     }
 }
 
-private fun FragmentInfoBinding.initFields(user: User) {
-    status.text = user.status
+private fun FragmentInfoBinding.initUi(user: User) {
+    verificationIcon.visibility = if (user.isVerified)
+        View.VISIBLE else View.INVISIBLE
     email.text = user.email
     val dateString = SimpleDateFormat("dd.MM.yyyy", Locale.US)
         .format(user.birthDate)
     birthDate.text = dateString.substring(0, dateString.lastIndexOf('.') + 5)
+    status.text = user.status
     description.text = user.description
 }
 

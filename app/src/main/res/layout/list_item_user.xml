@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/size_small"
+    app:cardCornerRadius="0dp"
     app:cardElevation="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_default">
+        android:layout_margin="@dimen/size_double">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/list_item_user_image"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +27,7 @@
             style="@style/text_view_style.header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_default"
+            android:layout_marginStart="@dimen/size_double"
             app:layout_constraintStart_toEndOf="@id/list_item_user_image"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Nickname" />
@@ -48,7 +48,8 @@
             android:id="@+id/list_item_user_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_default"
+            android:layout_marginStart="@dimen/size_double"
+            android:layout_marginEnd="@dimen/size_double"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@id/list_item_user_arrow_icon"
             app:layout_constraintStart_toEndOf="@id/list_item_user_image"

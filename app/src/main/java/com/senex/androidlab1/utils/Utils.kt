@@ -84,8 +84,6 @@ class MarginItemDecoration(
         if (parent.getChildAdapterPosition(view) == 0) {
             outRect.top = margin
         }
-        outRect.left = margin
-        outRect.right = margin
         outRect.bottom = margin
     }
 }
