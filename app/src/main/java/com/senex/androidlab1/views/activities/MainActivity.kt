@@ -2,25 +2,35 @@ package com.senex.androidlab1.views.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.senex.androidlab1.R
+import com.senex.androidlab1.database.AppDatabaseMain
+import com.senex.androidlab1.models.User
+import com.senex.androidlab1.utils.generateUsers
+import com.senex.androidlab1.utils.log
+import io.github.serpro69.kfaker.faker
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Setting up navigation host for Jetpack's Navigation component framework
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_main) as NavHostFragment
-        val navController = navHostFragment.navController
+        // Singleton initialization
+        AppDatabaseMain.init(this)
 
-        // Setting up navigation view for Jetpack's Navigation component framework
-        val bottomNavigationView: BottomNavigationView =
-            findViewById(R.id.main_bottom_navigation_view)
-        bottomNavigationView.setupWithNavController(navController)
+        val userDao = AppDatabaseMain.database.userDao()
+
+        //userDao.deleteAll()
+
+        userDao.insertAll(
+            //*generateUsers(20).toTypedArray()
+        )
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
 
