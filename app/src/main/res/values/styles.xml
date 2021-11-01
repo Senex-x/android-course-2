@@ -6,7 +6,7 @@
     </style>
 
     <style name="text_view_style.header">
-        <item name="android:textColor">@color/primary</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_default</item>
         <item name="android:textStyle">bold</item>
     </style>
