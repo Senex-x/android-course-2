@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.adapters.UserRecyclerAdapter
@@ -35,16 +34,13 @@ class ListFragment : Fragment() {
         layoutManager = LinearLayoutManager(
             requireContext()
         )
+
         adapter = UserRecyclerAdapter(
             AppDatabaseMain.database.userDao().getAll()
         ) {
-            findNavController().navigate(
-                ListFragmentDirections
-                    .actionListFragmentToInfoFragment(
-                        it.id!! // id cannot be null
-                    )
-            )
+            // Setup onclick listener
         }
+
         addItemDecoration(
             MarginItemDecoration(20)
         )

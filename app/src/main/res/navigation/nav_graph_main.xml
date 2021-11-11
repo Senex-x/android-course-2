@@ -11,20 +11,17 @@
         android:label="SampleFragment"
         tools:layout="@layout/fragment_list">
         <action
-            android:id="@+id/action_listFragment_to_infoFragment"
-            app:destination="@id/infoFragment" />
+            android:id="@+id/action_listFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/infoFragment"
-        android:name="com.senex.androidlab1.views.fragments.InfoFragment"
-        android:label="InfoFragment"
-        tools:layout="@layout/fragment_info">
-        <argument
-            android:name="userId"
-            app:argType="long" />
+        android:id="@+id/emptyFragment"
+        android:name="com.senex.androidlab1.views.fragments.EmptyFragment"
+        android:label="EmptyFragment"
+        tools:layout="@layout/fragment_empty" >
         <action
-            android:id="@+id/action_infoFragment_to_listFragment"
+            android:id="@+id/action_emptyFragment_to_listFragment"
             app:destination="@id/listFragment" />
     </fragment>
 </navigation>
