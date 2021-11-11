@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/listFragment">
+    app:startDestination="@id/emptyFragment">
 
     <fragment
         android:id="@+id/listFragment"
@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_listFragment_to_emptyFragment"
             app:destination="@id/emptyFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_interactiveListFragment"
+            app:destination="@id/interactiveListFragment" />
     </fragment>
 
     <fragment
@@ -23,5 +26,20 @@
         <action
             android:id="@+id/action_emptyFragment_to_listFragment"
             app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_emptyFragment_to_interactiveListFragment"
+            app:destination="@id/interactiveListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/interactiveListFragment"
+        android:name="com.senex.androidlab1.views.fragments.InteractiveListFragment"
+        android:label="InteractiveListFragment"
+        tools:layout="@layout/fragment_interactive_list">
+        <action
+            android:id="@+id/action_interactiveListFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_interactiveListFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment" />
     </fragment>
 </navigation>
