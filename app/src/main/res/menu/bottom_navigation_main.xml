@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/emptyFragment"
         android:icon="@drawable/ic_flask_primary_24"
-        android:title="@string/app_name"/>
+        android:title="EmptyFragment"/>
+    <item
+        android:id="@+id/listFragment"
+        android:icon="@drawable/ic_flask_primary_24"
+        android:title="ListFragment"/>
+    <item
+        android:id="@+id/interactiveListFragment"
+        android:icon="@drawable/ic_flask_primary_24"
+        android:title="InteractiveListFragment"/>
 </menu>
