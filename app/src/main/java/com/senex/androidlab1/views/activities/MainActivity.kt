@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.activities
+package com.senex.java.androidlab1.views.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
