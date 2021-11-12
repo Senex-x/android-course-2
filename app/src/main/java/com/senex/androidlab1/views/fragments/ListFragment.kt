@@ -25,7 +25,14 @@ class ListFragment : Fragment() {
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
 
-        binding.listRecyclerMain.init()
+        binding.run {
+            listRecyclerMain.init()
+
+            floatingActionButton.setOnClickListener {
+
+            }
+        }
+
 
         return binding.root
     }
