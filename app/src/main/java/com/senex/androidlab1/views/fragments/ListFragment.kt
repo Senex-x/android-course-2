@@ -11,6 +11,7 @@ import com.senex.androidlab1.adapters.ListRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.utils.MarginItemDecoration
+import com.senex.androidlab1.views.dialogs.AddItemDialog
 
 
 class ListFragment : Fragment() {
@@ -29,7 +30,7 @@ class ListFragment : Fragment() {
             listRecyclerMain.init()
 
             floatingActionButton.setOnClickListener {
-
+                AddItemDialog().show(parentFragmentManager, "??")
             }
         }
 
