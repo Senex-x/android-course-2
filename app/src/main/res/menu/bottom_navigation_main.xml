@@ -6,10 +6,10 @@
         android:title="EmptyFragment"/>
     <item
         android:id="@+id/listFragment"
-        android:icon="@drawable/ic_flask_primary_24"
+        android:icon="@drawable/ic_list_24"
         android:title="ListFragment"/>
     <item
         android:id="@+id/interactiveListFragment"
-        android:icon="@drawable/ic_flask_primary_24"
+        android:icon="@drawable/ic_view_list_24"
         android:title="InteractiveListFragment"/>
 </menu>

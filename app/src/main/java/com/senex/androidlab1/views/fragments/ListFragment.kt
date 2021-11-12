@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.senex.androidlab1.adapters.UserRecyclerAdapter
+import com.senex.androidlab1.adapters.ListRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.utils.MarginItemDecoration
@@ -35,11 +35,9 @@ class ListFragment : Fragment() {
             requireContext()
         )
 
-        adapter = UserRecyclerAdapter(
+        adapter = ListRecyclerAdapter(
             AppDatabaseMain.database.userDao().getAll()
-        ) {
-            // Setup onclick listener
-        }
+        )
 
         addItemDecoration(
             MarginItemDecoration(20)
