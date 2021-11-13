@@ -34,15 +34,27 @@ internal fun log(message: String?) =
 internal fun String.present() =
     isNotEmpty() && isNotBlank()
 
-internal fun generateUsers(amount: Int): MutableList<User> {
+internal fun generateImageResources(amount: Int): List<Int> {
+    val list = ArrayList<Int>()
+    val random = Random()
+
     val imageIdList = listOf(
         R.drawable.image_profile_1,
         R.drawable.image_profile_2,
         R.drawable.image_profile_3,
         R.drawable.image_profile_4,
-        null
     )
 
+    for(i in 0 until amount) {
+        list.add(
+            imageIdList[random.nextInt(imageIdList.size)]
+        )
+    }
+
+    return list
+}
+
+internal fun generateUsers(amount: Int): MutableList<User> {
     val list = ArrayList<User>()
     val random = Random()
 
@@ -53,7 +65,7 @@ internal fun generateUsers(amount: Int): MutableList<User> {
         }
     }
 
-    for (i in 1..amount) {
+    for (i in 0 until amount) {
         list.add(
             User(
                 null,

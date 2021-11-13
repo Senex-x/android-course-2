@@ -1,19 +1,22 @@
-package com.senex.androidlab1.adapters
+package com.senex.androidlab1.adapters.interactive
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.R
+import com.senex.androidlab1.adapters.diffutils.UserDiffCallback
 import com.senex.androidlab1.databinding.ListItemBinding
 import com.senex.androidlab1.models.User
 
-class InteractiveRecyclerAdapter(
-    private val users: List<User>,
-) : RecyclerView.Adapter<InteractiveRecyclerAdapter.ViewHolder>() {
+class ListRecyclerAdapter(
+    private val onItemDelete: (position: Int) -> Unit
+) : ListAdapter<User, ListRecyclerAdapter.ViewHolder>(UserDiffCallback) {
 
     class ViewHolder(
-        itemView: View
+        itemView: View,
+        private val onItemDelete: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val binding = ListItemBinding.bind(itemView)
 
@@ -21,6 +24,9 @@ class InteractiveRecyclerAdapter(
             binding.run {
                 listItemUserNickname.text = user.name
                 listItemUserDescription.text = user.description
+                listItemUserDelete.setOnClickListener {
+                    onItemDelete(layoutPosition)
+                }
             }
     }
 
@@ -30,16 +36,14 @@ class InteractiveRecyclerAdapter(
     ) = ViewHolder(
         LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
+            .inflate(R.layout.list_item, parent, false),
+        onItemDelete
     )
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         currentPosition: Int
     ) = holder.bind(
-        users[currentPosition]
+        getItem(currentPosition)
     )
-
-    override fun getItemCount() =
-        users.size
 }

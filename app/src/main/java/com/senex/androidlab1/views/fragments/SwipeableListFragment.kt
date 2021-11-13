@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.senex.androidlab1.adapters.InteractiveRecyclerAdapter
-import com.senex.androidlab1.adapters.ListRecyclerAdapter
+import com.senex.androidlab1.adapters.swipeable.SwipeableRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
-import com.senex.androidlab1.databinding.FragmentInteractiveListBinding
+import com.senex.androidlab1.databinding.FragmentSwipeableListBinding
 import com.senex.androidlab1.utils.MarginItemDecoration
 
-class InteractiveListFragment : Fragment() {
-    private var _binding: FragmentInteractiveListBinding? = null
+class SwipeableListFragment : Fragment() {
+    private var _binding: FragmentSwipeableListBinding? = null
     private val binding
         get() = _binding!!
 
@@ -23,7 +22,7 @@ class InteractiveListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInteractiveListBinding.inflate(inflater, container, false)
+        _binding = FragmentSwipeableListBinding.inflate(inflater, container, false)
 
         binding.recyclerMain.init()
 
@@ -35,7 +34,7 @@ class InteractiveListFragment : Fragment() {
             requireContext()
         )
 
-        adapter = InteractiveRecyclerAdapter(
+        adapter = SwipeableRecyclerAdapter(
             AppDatabaseMain.database.userDao().getAll()
         )
 
