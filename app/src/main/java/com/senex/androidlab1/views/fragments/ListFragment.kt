@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.adapters.ListRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
+import com.senex.androidlab1.models.User
 import com.senex.androidlab1.utils.MarginItemDecoration
 import com.senex.androidlab1.views.dialogs.AddItemDialog
-
+import java.util.*
 
 class ListFragment : Fragment() {
+    private lateinit var listAdapter: ListRecyclerAdapter
     private var _binding: FragmentListBinding? = null
     private val binding
         get() = _binding!!
@@ -41,20 +43,36 @@ class ListFragment : Fragment() {
 
     private val onAddItemClick = { name: String,
                                    description: String,
-                                   position: Int ->
+                                   position: String ->
 
+        val mutableList = AppDatabaseMain.database.userDao().getAll().toMutableList()
+
+        val index = if (
+            position.isEmpty() ||
+            position.toInt() > mutableList.size
+        ) mutableList.size else position.toInt()
+
+        listAdapter.submitList(
+            mutableList.apply {
+                add(
+                    index,
+                    User(Random().nextLong(), name, description)
+                )
+            }
+        )
     }
 
     private fun RecyclerView.init() {
-        layoutManager = LinearLayoutManager(
-            requireContext()
-        )
-
-        adapter = ListRecyclerAdapter().apply {
+        listAdapter = ListRecyclerAdapter().apply {
             submitList(
                 AppDatabaseMain.database.userDao().getAll()
             )
         }
+        adapter = listAdapter
+
+        layoutManager = LinearLayoutManager(
+            requireContext()
+        )
 
         addItemDecoration(
             MarginItemDecoration(20)

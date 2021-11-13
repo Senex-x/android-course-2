@@ -9,7 +9,7 @@ import com.senex.androidlab1.databinding.FragmentDialogAddItemBinding
 import com.senex.androidlab1.utils.toast
 
 class AddItemDialog(
-    val onPositiveClick: (String, String, Int) -> Unit
+    val onPositiveClick: (String, String, String) -> Unit
 ) : DialogFragment() {
     private lateinit var binding: FragmentDialogAddItemBinding
 
@@ -31,14 +31,11 @@ class AddItemDialog(
         binding.run {
             val name = textInputName.text.toString()
             val description = textInputDescription.text.toString()
-            val positionString = textInputPosition.text.toString()
+            val position = textInputPosition.text.toString()
 
             if (name.isNotEmpty() &&
-                description.isNotEmpty() &&
-                positionString.isNotEmpty()
+                description.isNotEmpty()
             ) {
-                val position = positionString.toInt()
-
                 onPositiveClick(name, description, position)
             } else {
                 requireContext().toast("Please, fill in all fields")

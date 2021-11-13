@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
 
         // Debugging block
         val userDao = AppDatabaseMain.database.userDao()
-        //userDao.deleteAll()
+       // userDao.deleteAll()
         userDao.insertAll(
-            //*generateUsers(20).toTypedArray()
+            //*generateUsers(8).toTypedArray()
         )
     }
 }
