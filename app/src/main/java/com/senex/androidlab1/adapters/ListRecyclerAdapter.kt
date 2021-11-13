@@ -10,11 +10,13 @@ import com.senex.androidlab1.adapters.diffutils.UserDiffCallback
 import com.senex.androidlab1.databinding.ListItemBinding
 import com.senex.androidlab1.models.User
 
-class ListRecyclerAdapter :
-    ListAdapter<User, ListRecyclerAdapter.ViewHolder>(UserDiffCallback) {
+class ListRecyclerAdapter(
+    private val onItemDelete: (position: Int) -> Unit
+) : ListAdapter<User, ListRecyclerAdapter.ViewHolder>(UserDiffCallback) {
 
     class ViewHolder(
-        itemView: View
+        itemView: View,
+        private val onItemDelete: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val binding = ListItemBinding.bind(itemView)
 
@@ -22,6 +24,9 @@ class ListRecyclerAdapter :
             binding.run {
                 listItemUserNickname.text = user.name
                 listItemUserDescription.text = user.description
+                listItemUserDelete.setOnClickListener {
+                    onItemDelete(layoutPosition)
+                }
             }
     }
 
@@ -31,7 +36,8 @@ class ListRecyclerAdapter :
     ) = ViewHolder(
         LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
+            .inflate(R.layout.list_item, parent, false),
+        onItemDelete
     )
 
     override fun onBindViewHolder(

@@ -16,6 +16,7 @@ import com.senex.androidlab1.views.dialogs.AddItemDialog
 import java.util.*
 
 class ListFragment : Fragment() {
+    private val runtimeUsers = AppDatabaseMain.database.userDao().getAll().toMutableList()
     private lateinit var listAdapter: ListRecyclerAdapter
     private var _binding: FragmentListBinding? = null
     private val binding
@@ -45,29 +46,34 @@ class ListFragment : Fragment() {
                                    description: String,
                                    position: String ->
 
-        val mutableList = AppDatabaseMain.database.userDao().getAll().toMutableList()
-
         val index = if (
             position.isEmpty() ||
-            position.toInt() > mutableList.size
-        ) mutableList.size else position.toInt()
+            position.toInt() > runtimeUsers.size
+        ) runtimeUsers.size else position.toInt()
 
         listAdapter.submitList(
-            mutableList.apply {
+            runtimeUsers.apply {
                 add(
                     index,
                     User(Random().nextLong(), name, description)
                 )
-            }
+            }.toList()
         )
     }
 
     private fun RecyclerView.init() {
-        listAdapter = ListRecyclerAdapter().apply {
-            submitList(
-                AppDatabaseMain.database.userDao().getAll()
+        listAdapter = ListRecyclerAdapter { deletedItemPosition ->
+            listAdapter.submitList(
+                runtimeUsers.apply {
+                    removeAt(deletedItemPosition)
+                }.toList()
             )
         }
+
+        listAdapter.submitList(
+            runtimeUsers.toList()
+        )
+
         adapter = listAdapter
 
         layoutManager = LinearLayoutManager(
