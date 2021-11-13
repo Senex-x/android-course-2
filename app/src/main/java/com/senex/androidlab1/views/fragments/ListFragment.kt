@@ -11,6 +11,7 @@ import com.senex.androidlab1.adapters.ListRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.utils.MarginItemDecoration
+import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.dialogs.AddItemDialog
 
 
@@ -30,13 +31,22 @@ class ListFragment : Fragment() {
             listRecyclerMain.init()
 
             floatingActionButton.setOnClickListener {
-                AddItemDialog().show(parentFragmentManager, "??")
+                val addItemDialog = AddItemDialog(onAddItemClick)
+
+                addItemDialog.show(parentFragmentManager, "??")
             }
         }
 
-
         return binding.root
     }
+
+    private val onAddItemClick = { name: String,
+                                   description: String,
+                                   position: Int ->
+
+        requireContext().toast("$name $description $position")
+    }
+
 
     private fun RecyclerView.init() {
         layoutManager = LinearLayoutManager(

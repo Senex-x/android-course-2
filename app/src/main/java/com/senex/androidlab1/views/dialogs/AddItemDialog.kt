@@ -5,24 +5,45 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.senex.androidlab1.databinding.FragmentDialogAddItemBinding
+import com.senex.androidlab1.utils.toast
 
+class AddItemDialog(
+    val onPositiveClick: (String, String, Int) -> Unit
+) : DialogFragment() {
+    private lateinit var binding: FragmentDialogAddItemBinding
 
-class AddItemDialog : DialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-            // Use the Builder class for convenient dialog construction
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle("Title")
-                .setPositiveButton("add",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // FIRE ZE MISSILES!
-                    })
-                .setNegativeButton("cancel",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // User cancelled the dialog
-                    })
-            // Create the AlertDialog object and return it
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        activity?.let {
+            FragmentDialogAddItemBinding
+                .inflate(layoutInflater)
+                .run {
+                    AlertDialog.Builder(it)
+                        .setView(root)
+                        .setPositiveButton("R.string.ok", onPositiveButtonClick)
+                        .setNegativeButton("R.string.cancel") { dialog, _ ->
+                            dialog.cancel()
+                        }
+                        .create()
+                }
+        } ?: throw IllegalStateException("Activity is null")
+
+    private val onPositiveButtonClick = { _: DialogInterface, _: Int ->
+        binding.run {
+            val name = textInputName.text.toString()
+            val description = textInputDescription.text.toString()
+            val positionString = textInputPosition.text.toString()
+
+            if (name.isNotEmpty() &&
+                description.isNotEmpty() &&
+                positionString.isNotEmpty()
+            ) {
+                val position = positionString.toInt()
+
+                onPositiveClick(name, description, position)
+            } else {
+                requireContext().toast("Please, fill in all fields")
+            }
+        }
     }
 }
