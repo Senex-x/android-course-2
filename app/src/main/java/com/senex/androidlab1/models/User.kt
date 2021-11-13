@@ -12,14 +12,6 @@ import java.util.*
 data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
-    val nickname: String,
-    val imageId: Int? = null,
-    @ColumnInfo(name = "is_verified")
-    val isVerified: Boolean = false,
-    val status: String = "",
-    val email: String,
-    @TypeConverters(Converters::class)
-    @ColumnInfo(name = "birth_date")
-    val birthDate: Date,
+    val name: String,
     val description: String = ""
 )

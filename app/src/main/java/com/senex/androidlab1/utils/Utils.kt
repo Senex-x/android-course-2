@@ -58,12 +58,7 @@ internal fun generateUsers(amount: Int): MutableList<User> {
             User(
                 null,
                 faker.funnyName.name(),
-                imageIdList[random.nextInt(imageIdList.size)],
-                random.nextBoolean(),
-                faker.quote.famousLastWords(),
-                faker.internet.email(),
-                Date(random.nextLong()),
-                faker.witcher.quotes()
+                faker.quote.famousLastWords()
             )
         )
     }

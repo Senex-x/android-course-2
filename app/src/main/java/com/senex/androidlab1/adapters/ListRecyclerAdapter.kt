@@ -3,14 +3,15 @@ package com.senex.androidlab1.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.R
+import com.senex.androidlab1.adapters.diffutils.UserDiffCallback
 import com.senex.androidlab1.databinding.ListItemBinding
 import com.senex.androidlab1.models.User
 
-class ListRecyclerAdapter(
-    private val users: List<User>,
-) : RecyclerView.Adapter<ListRecyclerAdapter.ViewHolder>() {
+class ListRecyclerAdapter :
+    ListAdapter<User, ListRecyclerAdapter.ViewHolder>(UserDiffCallback) {
 
     class ViewHolder(
         itemView: View
@@ -19,8 +20,8 @@ class ListRecyclerAdapter(
 
         fun bind(user: User) =
             binding.run {
-                listItemUserNickname.text = user.nickname
-                listItemUserStatus.text = user.status
+                listItemUserNickname.text = user.name
+                listItemUserDescription.text = user.description
             }
     }
 
@@ -37,9 +38,6 @@ class ListRecyclerAdapter(
         holder: ViewHolder,
         currentPosition: Int
     ) = holder.bind(
-        users[currentPosition]
+        getItem(currentPosition)
     )
-
-    override fun getItemCount() =
-        users.size
 }

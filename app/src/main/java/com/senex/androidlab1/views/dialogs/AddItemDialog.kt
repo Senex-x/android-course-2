@@ -15,9 +15,8 @@ class AddItemDialog(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         activity?.let {
-            FragmentDialogAddItemBinding
-                .inflate(layoutInflater)
-                .run {
+            binding = FragmentDialogAddItemBinding.inflate(layoutInflater)
+            binding.run {
                     AlertDialog.Builder(it)
                         .setView(root)
                         .setPositiveButton("R.string.ok", onPositiveButtonClick)

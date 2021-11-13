@@ -11,7 +11,6 @@ import com.senex.androidlab1.adapters.ListRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.utils.MarginItemDecoration
-import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.dialogs.AddItemDialog
 
 
@@ -44,18 +43,18 @@ class ListFragment : Fragment() {
                                    description: String,
                                    position: Int ->
 
-        requireContext().toast("$name $description $position")
     }
-
 
     private fun RecyclerView.init() {
         layoutManager = LinearLayoutManager(
             requireContext()
         )
 
-        adapter = ListRecyclerAdapter(
-            AppDatabaseMain.database.userDao().getAll()
-        )
+        adapter = ListRecyclerAdapter().apply {
+            submitList(
+                AppDatabaseMain.database.userDao().getAll()
+            )
+        }
 
         addItemDecoration(
             MarginItemDecoration(20)

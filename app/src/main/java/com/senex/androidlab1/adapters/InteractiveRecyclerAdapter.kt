@@ -19,8 +19,8 @@ class InteractiveRecyclerAdapter(
 
         fun bind(user: User) =
             binding.run {
-                listItemUserNickname.text = user.nickname
-                listItemUserStatus.text = user.status
+                listItemUserNickname.text = user.name
+                listItemUserDescription.text = user.description
             }
     }
 

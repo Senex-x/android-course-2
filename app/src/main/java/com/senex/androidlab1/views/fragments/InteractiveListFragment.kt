@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.senex.androidlab1.adapters.InteractiveRecyclerAdapter
 import com.senex.androidlab1.adapters.ListRecyclerAdapter
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentInteractiveListBinding
@@ -34,7 +35,7 @@ class InteractiveListFragment : Fragment() {
             requireContext()
         )
 
-        adapter = ListRecyclerAdapter(
+        adapter = InteractiveRecyclerAdapter(
             AppDatabaseMain.database.userDao().getAll()
         )
 
