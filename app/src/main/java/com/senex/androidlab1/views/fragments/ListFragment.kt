@@ -17,7 +17,6 @@ import com.senex.androidlab1.utils.MarginItemDecoration
 import com.senex.androidlab1.views.dialogs.AddItemDialog
 import java.util.*
 
-
 class ListFragment : Fragment() {
     private val runtimeUsers = AppDatabaseMain.database.userDao().getAll().toMutableList()
     private lateinit var listAdapter: ListRecyclerAdapter
@@ -38,7 +37,10 @@ class ListFragment : Fragment() {
             floatingActionButton.setOnClickListener {
                 val addItemDialog = AddItemDialog(onAddItemClick)
 
-                addItemDialog.show(parentFragmentManager, "??")
+                addItemDialog.show(
+                    parentFragmentManager,
+                    addItemDialog::class.java.simpleName
+                )
             }
         }
 
@@ -78,28 +80,7 @@ class ListFragment : Fragment() {
         )
 
         ItemTouchHelper(
-            ListTouchHelper(
-                object : ListTouchHelper.Adapter {
-                    override fun onItemMove(fromPosition: Int, toPosition: Int) {
-                        listAdapter.submitList(
-                            runtimeUsers.apply {
-                                add(
-                                    toPosition,
-                                    runtimeUsers.removeAt(fromPosition)
-                                )
-                            }.toList()
-                        )
-                    }
-
-                    override fun onItemDismiss(position: Int) {
-                        listAdapter.submitList(
-                            runtimeUsers.apply {
-                                removeAt(position)
-                            }.toList()
-                        )
-                    }
-                }
-            )
+            ListTouchHelper(listTouchHelperAdapter)
         ).attachToRecyclerView(this)
 
         adapter = listAdapter
@@ -116,5 +97,26 @@ class ListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private val listTouchHelperAdapter = object : ListTouchHelper.Adapter {
+        override fun onItemMove(fromPosition: Int, toPosition: Int) {
+            listAdapter.submitList(
+                runtimeUsers.apply {
+                    add(
+                        toPosition,
+                        runtimeUsers.removeAt(fromPosition)
+                    )
+                }.toList()
+            )
+        }
+
+        override fun onItemDismiss(position: Int) {
+            listAdapter.submitList(
+                runtimeUsers.apply {
+                    removeAt(position)
+                }.toList()
+            )
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentDialogAddItemBinding
 import com.senex.androidlab1.utils.toast
 
@@ -19,8 +20,8 @@ class AddItemDialog(
             binding.run {
                     AlertDialog.Builder(it)
                         .setView(root)
-                        .setPositiveButton("R.string.ok", onPositiveButtonClick)
-                        .setNegativeButton("R.string.cancel") { dialog, _ ->
+                        .setPositiveButton(getString(R.string.title_add), onPositiveButtonClick)
+                        .setNegativeButton(getString(R.string.title_cancel)) { dialog, _ ->
                             dialog.cancel()
                         }
                         .create()
@@ -38,7 +39,9 @@ class AddItemDialog(
             ) {
                 onPositiveClick(name, description, position)
             } else {
-                requireContext().toast("Please, fill in all fields")
+                requireContext().toast(
+                    R.string.error_fields_not_filled
+                )
             }
         }
     }
