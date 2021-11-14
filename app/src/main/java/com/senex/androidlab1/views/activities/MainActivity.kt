@@ -4,16 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.senex.androidlab1.R
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.ActivityMainBinding
-import com.senex.androidlab1.models.User
 import com.senex.androidlab1.utils.generateUsers
-import com.senex.androidlab1.utils.log
-import io.github.serpro69.kfaker.faker
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -36,9 +30,9 @@ class MainActivity : AppCompatActivity() {
 
         // Debugging block
         val userDao = AppDatabaseMain.database.userDao()
-       // userDao.deleteAll()
+        userDao.deleteAll()
         userDao.insertAll(
-            //*generateUsers(8).toTypedArray()
+            *generateUsers(8).toTypedArray()
         )
     }
 }

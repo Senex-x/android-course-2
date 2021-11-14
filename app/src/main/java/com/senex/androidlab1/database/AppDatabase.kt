@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.senex.androidlab1.models.User
 
 @Database(entities = [User::class], version = 1)
-@TypeConverters(Converters::class)
+@TypeConverters(TypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 }

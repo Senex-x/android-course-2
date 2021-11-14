@@ -21,7 +21,7 @@ class SwipeableRecyclerAdapter(
                 listItemUserNickname.text = user.name
                 listItemUserDescription.text = user.description
                 listItemUserPager.adapter = SwipeablePagerAdapter(
-                    generateImageResources(Random.nextInt(3, 6))
+                    user.imageResources
                 )
             }
     }

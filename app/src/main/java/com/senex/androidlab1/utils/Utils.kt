@@ -11,6 +11,7 @@ import com.senex.androidlab1.models.User
 import io.github.serpro69.kfaker.faker
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.random.asJavaRandom
 
 internal fun Context.toast(message: String?) =
     message?.let {
@@ -56,11 +57,11 @@ internal fun generateImageResources(amount: Int): List<Int> {
 
 internal fun generateUsers(amount: Int): MutableList<User> {
     val list = ArrayList<User>()
-    val random = Random()
+    val random = kotlin.random.Random
 
     val faker = faker {
         fakerConfig {
-            this.random = random
+            this.random = random.asJavaRandom()
             locale = "en"
         }
     }
@@ -70,7 +71,8 @@ internal fun generateUsers(amount: Int): MutableList<User> {
             User(
                 null,
                 faker.funnyName.name(),
-                faker.quote.famousLastWords()
+                faker.quote.famousLastWords(),
+                generateImageResources(random.nextInt(3, 6))
             )
         )
     }
