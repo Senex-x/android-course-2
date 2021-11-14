@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         // Setting up navigation view for Jetpack's Navigation component framework
         binding.bottomNavigationViewMain.setupWithNavController(navController)
 
-        // Debugging block
+        // Unnecessary
         val userDao = AppDatabaseMain.database.userDao()
         userDao.deleteAll()
         userDao.insertAll(

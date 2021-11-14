@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.adapters.interactive.ListRecyclerAdapter
+import com.senex.androidlab1.adapters.interactive.ListTouchHelper
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.models.User
 import com.senex.androidlab1.utils.MarginItemDecoration
 import com.senex.androidlab1.views.dialogs.AddItemDialog
 import java.util.*
+
 
 class ListFragment : Fragment() {
     private val runtimeUsers = AppDatabaseMain.database.userDao().getAll().toMutableList()
@@ -73,6 +76,31 @@ class ListFragment : Fragment() {
         listAdapter.submitList(
             runtimeUsers.toList()
         )
+
+        ItemTouchHelper(
+            ListTouchHelper(
+                object : ListTouchHelper.Adapter {
+                    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+                        listAdapter.submitList(
+                            runtimeUsers.apply {
+                                add(
+                                    toPosition,
+                                    runtimeUsers.removeAt(fromPosition)
+                                )
+                            }.toList()
+                        )
+                    }
+
+                    override fun onItemDismiss(position: Int) {
+                        listAdapter.submitList(
+                            runtimeUsers.apply {
+                                removeAt(position)
+                            }.toList()
+                        )
+                    }
+                }
+            )
+        ).attachToRecyclerView(this)
 
         adapter = listAdapter
 
