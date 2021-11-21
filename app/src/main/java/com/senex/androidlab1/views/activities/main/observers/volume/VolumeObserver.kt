@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.activities.main.observers
+package com.senex.androidlab1.views.activities.main.observers.volume
 
 import android.content.Context
 import android.database.ContentObserver
