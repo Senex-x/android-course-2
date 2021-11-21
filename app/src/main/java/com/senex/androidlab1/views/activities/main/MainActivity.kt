@@ -1,6 +1,11 @@
 package com.senex.androidlab1.views.activities.main
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.database.ContentObserver
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -10,9 +15,14 @@ import android.os.Looper
 import android.provider.Settings.System.CONTENT_URI
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.google.android.material.button.MaterialButton
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.ActivityMainBinding
+import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.activities.main.observers.VolumeObserver
+import com.senex.androidlab1.views.activities.wake.WakeActivity
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +42,12 @@ class MainActivity : AppCompatActivity() {
 
         registerObserver(volumeObserver)
 
-        binding.timePicker.configure()
+        createNotificationChannel()
+
+        binding.run {
+            timePicker.configure()
+            buttonSet.configure(timePicker)
+        }
     }
 
     override fun onResume() {
@@ -61,6 +76,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun MaterialButton.configure(timePicker: TimePicker) {
+        setOnClickListener {
+            val minute = timePicker.minute
+            val hour = timePicker.hour
+
+            val intent = Intent(this@MainActivity, WakeActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(this@MainActivity, 0, intent, 0)
+
+            val builder = NotificationCompat
+                .Builder(this@MainActivity, "CHANNEL_ID")
+                .setSmallIcon(R.drawable.flask_icon)
+                .setContentTitle("textTitle")
+                .setContentText("textContent")
+                .setStyle(
+                    NotificationCompat
+                        .BigTextStyle()
+                        .bigText("Much longer text that cannot fit one line in a notification")
+                )
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+
+            NotificationManagerCompat
+                .from(this@MainActivity)
+                .notify(Random().nextInt(), builder.build())
+
+            toast("Notification set for time $hour:$minute")
+        }
+    }
+
+    private fun createNotificationChannel() {
+        val name = getString(R.string.channel_notifications)
+        val descriptionText = "R.string.channel_description"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel =
+            NotificationChannel("CHANNEL_ID", name, importance).apply {
+                description = descriptionText
+            }
+        // Register the channel with the system
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
     private fun configureVolumeObserver() =
         VolumeObserver(
             context = this,
@@ -83,7 +144,7 @@ class MainActivity : AppCompatActivity() {
     ): Unit = contentResolver.unregisterContentObserver(observer)
 
     private fun configureMediaPlayer() = MediaPlayer
-        .create(this, R.raw.time_picker_tick)
+        .create(this, R.raw.tick_2)
         .apply {
             setAudioAttributes(
                 AudioAttributes
@@ -99,4 +160,5 @@ class MainActivity : AppCompatActivity() {
         return if (value == 1f) 0.05f else 1 - value
     }
 }
+
 
