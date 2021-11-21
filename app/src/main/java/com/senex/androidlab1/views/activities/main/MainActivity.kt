@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var volumeObserver: VolumeObserver
     private lateinit var mediaPlayer: MediaPlayer
 
+    private var currentNotificationId: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -45,8 +47,9 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
 
         binding.run {
-            timePicker.configure()
-            buttonSet.configure(timePicker)
+            timePicker.configureButtonSet()
+            buttonSet.configureButtonSet(timePicker)
+            buttonCancel.configureButtonCancel()
         }
     }
 
@@ -67,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         unregisterObserver(volumeObserver)
     }
 
-    private fun TimePicker.configure() {
+    private fun TimePicker.configureButtonSet() {
         setIs24HourView(true)
 
         setOnTimeChangedListener { _, _, _ ->
@@ -76,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun MaterialButton.configure(timePicker: TimePicker) {
+    private fun MaterialButton.configureButtonSet(timePicker: TimePicker) {
         setOnClickListener {
             val minute = timePicker.minute
             val hour = timePicker.hour
@@ -84,7 +87,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, WakeActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(this@MainActivity, 0, intent, 0)
+            val pendingIntent: PendingIntent =
+                PendingIntent.getActivity(this@MainActivity, 0, intent, 0)
 
             val builder = NotificationCompat
                 .Builder(this@MainActivity, "CHANNEL_ID")
@@ -100,11 +104,19 @@ class MainActivity : AppCompatActivity() {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
 
+            currentNotificationId = Random().nextInt()
+
             NotificationManagerCompat
                 .from(this@MainActivity)
-                .notify(Random().nextInt(), builder.build())
+                .notify(currentNotificationId!!, builder.build())
 
             toast("Notification set for time $hour:$minute")
+        }
+    }
+
+    private fun MaterialButton.configureButtonCancel() {
+        setOnClickListener {
+            cancelNotification(currentNotificationId)
         }
     }
 
@@ -159,6 +171,14 @@ class MainActivity : AppCompatActivity() {
         val value = section * (systemVolumeLevel - 1)
         return if (value == 1f) 0.05f else 1 - value
     }
+
+    private fun Context.cancelNotification(notificationId: Int?): Unit =
+        notificationId?.let {
+            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                .cancel(it)
+        } ?: Unit
+
 }
+
 
 
