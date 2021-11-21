@@ -3,4 +3,5 @@
     <string name="title_cancel">Cancel</string>
     <string name="title_set">Set</string>
     <string name="channel_notifications">NotificationsChannelMain</string>
+    <string name="message_you_are_awake">You are awake!</string>
 </resources>

@@ -8,7 +8,7 @@
         style="@style/text_view_style.header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wake Activity"
+        android:text="@string/message_you_are_awake"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
