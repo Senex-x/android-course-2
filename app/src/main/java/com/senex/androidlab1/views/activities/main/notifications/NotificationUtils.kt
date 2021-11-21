@@ -55,10 +55,13 @@ internal fun Context.fireNotification(
     .notify(id, notification)
 
 internal fun Context.cancelNotification(
-    id: Int
-): Unit = (getSystemService(AppCompatActivity.NOTIFICATION_SERVICE)
-        as NotificationManager)
-    .cancel(id)
+    id: Int?
+): Unit? = id?.let {
+    (getSystemService(AppCompatActivity.NOTIFICATION_SERVICE)
+                    as NotificationManager)
+        .cancel(it)
+}
+
 
 
 
