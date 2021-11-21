@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android Lab</string>
+    <string name="title_cancel">Cancel</string>
+    <string name="title_set">Set</string>
 </resources>

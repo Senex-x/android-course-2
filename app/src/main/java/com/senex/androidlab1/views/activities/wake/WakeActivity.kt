@@ -12,6 +12,5 @@ class WakeActivity : AppCompatActivity() {
         binding = ActivityWakeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
     }
 }

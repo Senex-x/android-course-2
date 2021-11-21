@@ -2,7 +2,7 @@ package com.senex.androidlab1.views.activities.main
 
 import android.app.Activity
 import android.database.ContentObserver
-import android.media.AudioManager
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -70,20 +70,27 @@ class MainActivity : AppCompatActivity() {
             mediaPlayer.setVolume(volumeLevel, volumeLevel)
         }
 
-    private fun Activity.registerObserver(observer: ContentObserver): Unit =
-        contentResolver.registerContentObserver(
-            CONTENT_URI,
-            true,
-            observer
-        )
+    private fun Activity.registerObserver(
+        observer: ContentObserver
+    ): Unit = contentResolver.registerContentObserver(
+        CONTENT_URI,
+        true,
+        observer
+    )
 
-    private fun Activity.unregisterObserver(observer: ContentObserver): Unit =
-        contentResolver.unregisterContentObserver(observer)
+    private fun Activity.unregisterObserver(
+        observer: ContentObserver
+    ): Unit = contentResolver.unregisterContentObserver(observer)
 
     private fun configureMediaPlayer() = MediaPlayer
         .create(this, R.raw.time_picker_tick)
         .apply {
-            setAudioStreamType(AudioManager.STREAM_MUSIC)
+            setAudioAttributes(
+                AudioAttributes
+                    .Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
         }
 
     private fun calculateVolumeLevel(systemVolumeLevel: Int): Float {

@@ -47,4 +47,9 @@
     <style name="ShapeAppearanceOverlay.Rounded">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="time_picker">
+        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:textSize">@dimen/text_size_big</item>
+    </style>
 </resources>
