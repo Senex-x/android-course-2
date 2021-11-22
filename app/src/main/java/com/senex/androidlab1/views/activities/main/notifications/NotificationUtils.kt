@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,6 +22,7 @@ internal fun Context.createNotificationChannel(
     notificationManager.createNotificationChannel(channel)
 }
 
+// TODO: Add backstack handling
 internal inline fun <reified T> Context.createPendingIntentFor(): PendingIntent {
     val intent = Intent(this, T::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -35,7 +37,7 @@ internal fun Context.buildNotification(
     onClickIntent: PendingIntent?,
 ) = NotificationCompat
     .Builder(this, channelId)
-    .setSmallIcon(R.drawable.flask_icon)
+    .setSmallIcon(R.drawable.ic_flask_primary_24)
     .setContentTitle(title)
     .setStyle(
         NotificationCompat
@@ -45,6 +47,7 @@ internal fun Context.buildNotification(
     .setPriority(priority)
     .setContentIntent(onClickIntent)
     .setAutoCancel(true)
+    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
     .build()
 
 internal fun Context.fireNotification(

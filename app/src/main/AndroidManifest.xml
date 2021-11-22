@@ -33,13 +33,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".views.activities.main.notifications.NotificationSender"
-            android:exported="true"
-            android:enabled="true">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="ALARM"/>
-            </intent-filter>
-        </receiver>
+        <receiver android:name=".views.activities.main.notifications.NotificationSender" />
     </application>
 </manifest>
