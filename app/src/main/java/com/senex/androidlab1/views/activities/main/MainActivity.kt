@@ -15,28 +15,15 @@ import com.senex.androidlab1.views.activities.main.observers.registerObserver
 import com.senex.androidlab1.views.activities.main.observers.unregisterObserver
 import com.senex.androidlab1.views.activities.main.observers.volume.VolumeObserver
 import java.util.*
-import android.app.AlarmManager
-
-import android.os.SystemClock
-
-import android.app.PendingIntent
-import android.content.Context
-
-import android.content.Intent
-import android.content.IntentFilter
 
 import com.senex.androidlab1.utils.log
-import android.widget.Toast
 
 import android.content.pm.PackageManager
 
 import android.content.ComponentName
-import android.view.View
-import android.widget.Filter
-import android.widget.EditText
-
-
-
+import android.content.Context
+import android.content.Intent
+import com.senex.androidlab1.views.activities.main.notifications.receivers.NotificationSender
 
 
 private const val NOTIFICATION_CHANNEL_ID = "MAIN_NOTIFICATION_CHANNEL_ID"
@@ -134,43 +121,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendNotification() {
 
-       // activateBroadcastReceiver()
+        // Get AlarmManager instance
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-/*
-        val intent = Intent()
-        // In reality, you would want to have a unique variable for the request
-        // code
-        // In reality, you would want to have a unique variable for the request
-        // code
-        intent.action = "ALARM"
-
-        val sender = PendingIntent.getBroadcast(
-            this,
-            0,
-            intent,
-            0
-        )
-
-
-        val elapsedRealtime = SystemClock.elapsedRealtime()
-        val triggerTime = elapsedRealtime + 3000
-        // Get the AlarmManager service
-        val am = getSystemService(ALARM_SERVICE) as AlarmManager
-        am.set(AlarmManager.ELAPSED_REALTIME, triggerTime, sender)
-*/
-        /*
-        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
+        // Intent part
         val intent = Intent(this, NotificationSender::class.java)
-
+        intent.action = "FOO_ACTION"
+        intent.putExtra("KEY_FOO_STRING", "Medium AlarmManager Demo")
 
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
 
-        val triggerTime = SystemClock.elapsedRealtime() + 3000
-
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
-*/
+        // Alarm time
+        val ALARM_DELAY_IN_SECOND = 5
+        val alarmTimeAtUTC = System.currentTimeMillis() + ALARM_DELAY_IN_SECOND * 1_000L
         log("sending")
+
+
+        // Set with system Alarm Service
+        // Other possible functions: setExact() / setRepeating() / setWindow(), etc
+        alarmManager.set(
+            AlarmManager.RTC_WAKEUP,
+            alarmTimeAtUTC,
+            pendingIntent
+        )
 
 /*
         val alarmMgr: AlarmManager
