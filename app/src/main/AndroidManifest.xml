@@ -37,10 +37,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".views.activities.main.notifications.receivers.NotificationSender"
-            android:exported="false" />
-
         <!-- Allows only implicit intents -->
         <receiver
             android:name=".views.activities.main.notifications.receivers.AlarmReceiver"
