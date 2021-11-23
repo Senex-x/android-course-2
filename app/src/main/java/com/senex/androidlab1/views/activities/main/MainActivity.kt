@@ -1,32 +1,26 @@
 package com.senex.androidlab1.views.activities.main
 
-import android.app.AlarmManager
-import android.app.Notification
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import com.senex.androidlab1.R
+import com.senex.androidlab1.database.MainDatabase
 import com.senex.androidlab1.databinding.ActivityMainBinding
 import com.senex.androidlab1.utils.log
-import com.senex.androidlab1.views.activities.main.notifications.*
-import com.senex.androidlab1.views.activities.main.notifications.receivers.AlarmReceiver
-import com.senex.androidlab1.views.activities.main.notifications.receivers.BootReceiver
+import com.senex.androidlab1.views.activities.main.notifications.cancelNotification
+import com.senex.androidlab1.views.activities.main.notifications.createNotificationChannel
+import com.senex.androidlab1.views.activities.main.notifications.setAlarmUtc
 import com.senex.androidlab1.views.activities.main.observers.configureVolumeObserver
 import com.senex.androidlab1.views.activities.main.observers.registerObserver
 import com.senex.androidlab1.views.activities.main.observers.unregisterObserver
 import com.senex.androidlab1.views.activities.main.observers.volume.VolumeObserver
-import com.senex.androidlab1.views.activities.wake.WakeActivity
 import java.util.*
 
-private const val NOTIFICATION_CHANNEL_ID = "ALERT_CHANNEL_MAIN"
-private const val NOTIFICATION_CHANNEL_NAME = "ALERT_CHANNEL"
+internal const val ALERT_CHANNEL_ID = "ALERT_CHANNEL_MAIN"
+internal const val ALERT_CHANNEL_NAME = "ALERT_CHANNEL"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -34,12 +28,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var volumeObserver: VolumeObserver
     private lateinit var mediaPlayer: MediaPlayer
 
-    private var currentNotificationId: Int? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        MainDatabase.init(this)
+        log("Database state snapshot: " +
+                MainDatabase.instance.alarmDao().getAll().toString())
+        MainDatabase.instance.alarmDao().deleteAll()
 
         // These two are not available before onCreate()
         mediaPlayer = configureMediaPlayer()
@@ -48,14 +45,25 @@ class MainActivity : AppCompatActivity() {
         registerObserver(volumeObserver)
 
         createNotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
+            ALERT_CHANNEL_ID,
+            ALERT_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_DEFAULT
         )
 
         configureTimePicker()
         configureButtonSet(binding.timePicker)
         configureButtonCancel()
+    }
+
+    private fun initAlarmStatus() {
+        val allAlerts = MainDatabase.instance.alarmDao().getAll()
+
+        if (allAlerts.isNotEmpty()) {
+            val alert = allAlerts[0]
+            setAlarmStatus(alert.hour, alert.minute)
+        } else {
+            setAlarmStatusDefault()
+        }
     }
 
     override fun onResume() {
@@ -67,6 +75,8 @@ class MainActivity : AppCompatActivity() {
             hour = calendar.get(Calendar.HOUR_OF_DAY)
             minute = calendar.get(Calendar.MINUTE)
         }
+
+        initAlarmStatus()
     }
 
     override fun onDestroy() {
@@ -89,55 +99,28 @@ class MainActivity : AppCompatActivity() {
     private fun configureButtonSet(timePicker: TimePicker): Unit =
         binding.buttonSet.run {
             setOnClickListener {
-                val minute = timePicker.minute
                 val hour = timePicker.hour
+                val minute = timePicker.minute
 
-                setAlarmFor(minute, hour)
+                setAlarmUtc(hour, minute)
+                setAlarmStatus(hour, minute)
             }
         }
-
-    private fun setAlarmFor(minute: Int, hour: Int) {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val notification = buildNotification(
-            channelId = NOTIFICATION_CHANNEL_ID,
-            title = "Title",
-            content = "Content",
-            priority = NotificationCompat.PRIORITY_DEFAULT,
-            onClickIntent = createImplicitPendingIntent<WakeActivity>(),
-        )
-
-        currentNotificationId = Random().nextInt()
-
-        val pendingIntent = createImplicitBroadcastIntent<AlarmReceiver>(
-            notification
-        )
-
-        val delaySeconds = 5
-        val alarmTime = System.currentTimeMillis() + delaySeconds * 1000
-        log("sending")
-
-        alarmManager.setExact(
-            AlarmManager.RTC_WAKEUP,
-            alarmTime,
-            pendingIntent
-        )
-
-        enableBootReceiver<BootReceiver>()
-    }
 
     private fun configureButtonCancel(): Unit =
         binding.buttonCancel.run {
             setOnClickListener {
-                currentNotificationId?.let {
-                    cancelNotification(it)
+                val allAlarms = MainDatabase.instance.alarmDao().getAll()
+
+                if (allAlarms.isNotEmpty()) {
+                    cancelNotification(allAlarms[0].notificationId)
                     setAlarmStatusDefault()
                 }
             }
         }
 
     private fun configureMediaPlayer() = MediaPlayer
-        .create(this, R.raw.tick_2)
+        .create(this, R.raw.time_picker_tick)
         .apply {
             setAudioAttributes(
                 AudioAttributes

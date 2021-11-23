@@ -35,8 +35,9 @@ internal inline fun <reified T> Context.createImplicitPendingIntent(): PendingIn
     return PendingIntent.getActivity(this, 0, intent, 0)
 }
 
-internal inline fun <reified T> Context.createImplicitBroadcastIntent(notification: Notification): PendingIntent {
+internal inline fun <reified T> Context.createImplicitBroadcastIntent(id: Int, notification: Notification): PendingIntent {
     val intent = Intent(this, T::class.java)
+    intent.putExtra("notification_id", id)
     intent.putExtra("notification", notification)
     return PendingIntent.getBroadcast(this, 0, intent, 0)
 }
@@ -45,14 +46,13 @@ internal fun Context.buildNotification(
     channelId: String,
     title: String,
     content: String,
-    priority: Int,
     onClickIntent: PendingIntent?,
 ) = NotificationCompat
     .Builder(this, channelId)
     .setSmallIcon(R.drawable.ic_flask_primary_24)
     .setContentTitle(title)
     .setContentText(content)
-    .setPriority(priority)
+    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
     .setAutoCancel(true)
