@@ -6,7 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
+import android.media.AudioAttributes
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -17,13 +18,18 @@ internal fun Context.createNotificationChannel(
     name: String,
     importance: Int,
 ) {
-    val channel = NotificationChannel(idString, name, importance)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val channel = NotificationChannel(idString, name, importance)
+    channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+    channel.setSound(
+        Uri.parse("android.resource://$packageName/${R.raw.tick_2}"),
+        AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
+    )
     notificationManager.createNotificationChannel(channel)
 }
 
 // TODO: Add backstack handling
-internal inline fun <reified T> Context.createPendingIntentFor(): PendingIntent {
+internal inline fun <reified T> Context.createImplicitPendingIntent(): PendingIntent {
     val intent = Intent(this, T::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     return PendingIntent.getActivity(this, 0, intent, 0)
@@ -46,9 +52,15 @@ internal fun Context.buildNotification(
     )
     .setPriority(priority)
     .setContentIntent(onClickIntent)
+
     .setAutoCancel(true)
-    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-    .build()
+    .setSound(Uri.parse("android.resource://$packageName/${R.raw.tick_2}"))
+    .setDefaults(Notification.DEFAULT_SOUND)
+    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+    .build().apply {
+        sound = Uri.parse("android.resource://$packageName/${R.raw.tick_2}")
+    }
 
 internal fun Context.fireNotification(
     id: Int,
@@ -61,7 +73,7 @@ internal fun Context.cancelNotification(
     id: Int?
 ): Unit? = id?.let {
     (getSystemService(AppCompatActivity.NOTIFICATION_SERVICE)
-                    as NotificationManager)
+            as NotificationManager)
         .cancel(it)
 }
 

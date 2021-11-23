@@ -18,16 +18,14 @@ import java.util.*
 
 import com.senex.androidlab1.utils.log
 
-import android.content.pm.PackageManager
-
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import com.senex.androidlab1.views.activities.main.notifications.receivers.NotificationSender
+import androidx.core.app.NotificationCompat
+import com.senex.androidlab1.views.activities.main.notifications.receivers.AlarmReceiver
+import com.senex.androidlab1.views.activities.wake.WakeActivity
 
-
-private const val NOTIFICATION_CHANNEL_ID = "MAIN_NOTIFICATION_CHANNEL_ID"
-private const val NOTIFICATION_CHANNEL_NAME = "MAIN_NOTIFICATION_CHANNEL_NAME"
+private const val NOTIFICATION_CHANNEL_ID = "MAIN_CHANNEL_ID"
+private const val NOTIFICATION_CHANNEL_NAME = "MAIN_CHANNEL"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -89,16 +87,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun configureButtonSet(timePicker: TimePicker): Unit =
         binding.buttonSet.run {
-
             setOnClickListener {
+                val minute = timePicker.minute
+                val hour = timePicker.hour
 
-                sendNotification()
+                setAlarmFor(minute, hour)
 
                 /*
                 cancelNotification(currentNotificationId)
-
-                val minute = timePicker.minute
-                val hour = timePicker.hour
 
                 val pendingIntent = createPendingIntentFor<WakeActivity>()
 
@@ -119,60 +115,39 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun sendNotification() {
+    private fun setAlarmFor(minute: Int, hour: Int) {
 
-        // Get AlarmManager instance
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        // Intent part
-        val intent = Intent(this, NotificationSender::class.java)
-        intent.action = "FOO_ACTION"
-        intent.putExtra("KEY_FOO_STRING", "Medium AlarmManager Demo")
+        val pendingIntent = createBroadcastIntent<AlarmReceiver>("senex.intent.action.START_ALARM")
 
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
-
-        // Alarm time
-        val ALARM_DELAY_IN_SECOND = 5
-        val alarmTimeAtUTC = System.currentTimeMillis() + ALARM_DELAY_IN_SECOND * 1_000L
+        val delaySeconds = 5
+        val alarmTime = System.currentTimeMillis() + delaySeconds * 1000
         log("sending")
 
-
-        // Set with system Alarm Service
-        // Other possible functions: setExact() / setRepeating() / setWindow(), etc
-        alarmManager.set(
+        alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
-            alarmTimeAtUTC,
+            alarmTime,
             pendingIntent
         )
-
-/*
-        val alarmMgr: AlarmManager
-        val alarmIntent: PendingIntent
-
-        alarmMgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmIntent = Intent(this, NotificationSender::class.java).let { intent ->
-            intent.setAction("com.senex.androidlab1.alarms")
-            PendingIntent.getBroadcast(this, 0, intent, 0)
-        }
-
-        alarmMgr.set(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 3000,
-            alarmIntent
-        )*/
     }
 
+    private inline fun <reified T> Context.createBroadcastIntent(action: String): PendingIntent {
+        currentNotificationId = Random().nextInt()
 
-    private fun activateBroadcastReceiver() {
-        val pm: PackageManager = packageManager
-        val componentName = ComponentName(this, NotificationSender::class.java)
-        pm.setComponentEnabledSetting(
-            componentName,
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
+        val notification = buildNotification(
+            channelId = NOTIFICATION_CHANNEL_ID,
+            title = "Title",
+            content = "Content",
+            priority = NotificationCompat.PRIORITY_DEFAULT,
+            onClickIntent = createImplicitPendingIntent<WakeActivity>(),
         )
 
-        log("receiver activated")
+        val intent = Intent(this, T::class.java)
+        intent.action = action
+        intent.putExtra("notification", notification)
+
+        return PendingIntent.getBroadcast(this, 0, intent, 0)
     }
 
     private fun configureButtonCancel(): Unit =
