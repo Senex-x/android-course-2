@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.senex.androidlab1">
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SET_ALARM" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -23,18 +24,26 @@
         </activity>
         <activity
             android:name=".views.activities.wake.WakeActivity"
-            android:parentActivityName=".views.activities.main.MainActivity">
-        </activity>
-        <receiver android:name=".views.activities.main.notifications.receivers.BootReceiver"
-            android:exported="true"
-            android:enabled="true">
+            android:parentActivityName=".views.activities.main.MainActivity" />
+
+        <receiver
+            android:name=".views.activities.main.notifications.receivers.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".views.activities.main.notifications.receivers.NotificationSender"
-            android:enabled="true"
-            android:exported="true"/>
+        <receiver
+            android:name=".views.activities.main.notifications.receivers.NotificationSender"
+            android:exported="false">
+
+        </receiver>
+
+        <!-- Allows only implicit intents -->
+        <receiver
+            android:name=".views.activities.main.notifications.receivers.AlarmReceiver"
+            android:exported="false" />
     </application>
 </manifest>
