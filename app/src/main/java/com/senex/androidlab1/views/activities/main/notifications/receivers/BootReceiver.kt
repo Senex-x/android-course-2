@@ -6,8 +6,9 @@ import android.content.Intent
 import com.senex.androidlab1.utils.log
 
 class BootReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        log("RECEIVED")
-        println("RECEIVED>?????")
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == "android.intent.action.BOOT_COMPLETED") {
+            log("RECEIVED")
+        }
     }
 }

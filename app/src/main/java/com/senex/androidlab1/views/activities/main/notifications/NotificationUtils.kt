@@ -35,6 +35,12 @@ internal inline fun <reified T> Context.createImplicitPendingIntent(): PendingIn
     return PendingIntent.getActivity(this, 0, intent, 0)
 }
 
+internal inline fun <reified T> Context.createImplicitBroadcastIntent(notification: Notification): PendingIntent {
+    val intent = Intent(this, T::class.java)
+    intent.putExtra("notification", notification)
+    return PendingIntent.getBroadcast(this, 0, intent, 0)
+}
+
 internal fun Context.buildNotification(
     channelId: String,
     title: String,
@@ -45,22 +51,13 @@ internal fun Context.buildNotification(
     .Builder(this, channelId)
     .setSmallIcon(R.drawable.ic_flask_primary_24)
     .setContentTitle(title)
-    .setStyle(
-        NotificationCompat
-            .BigTextStyle()
-            .bigText(content)
-    )
+    .setContentText(content)
     .setPriority(priority)
-    .setContentIntent(onClickIntent)
-
-    .setAutoCancel(true)
-    .setSound(Uri.parse("android.resource://$packageName/${R.raw.tick_2}"))
-    .setDefaults(Notification.DEFAULT_SOUND)
-    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-    .build().apply {
-        sound = Uri.parse("android.resource://$packageName/${R.raw.tick_2}")
-    }
+    .setAutoCancel(true)
+    .setContentIntent(onClickIntent)
+    .build()
 
 internal fun Context.fireNotification(
     id: Int,

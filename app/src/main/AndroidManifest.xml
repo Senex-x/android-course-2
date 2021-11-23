@@ -22,24 +22,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".views.activities.wake.WakeActivity"
             android:parentActivityName=".views.activities.main.MainActivity" />
 
         <receiver
             android:name=".views.activities.main.notifications.receivers.BootReceiver"
-            android:enabled="true"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".views.activities.main.notifications.receivers.NotificationSender"
-            android:exported="false">
-
-        </receiver>
+            android:exported="false" />
 
         <!-- Allows only implicit intents -->
         <receiver
