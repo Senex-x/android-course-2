@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.net.Uri
+import android.os.PowerManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -25,6 +26,7 @@ internal fun Context.createNotificationChannel(
         Uri.parse("android.resource://$packageName/${R.raw.tick_2}"),
         AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
     )
+    channel.vibrationPattern = longArrayOf()
     notificationManager.createNotificationChannel(channel)
 }
 
@@ -35,7 +37,10 @@ internal inline fun <reified T> Context.createImplicitPendingIntent(): PendingIn
     return PendingIntent.getActivity(this, 0, intent, 0)
 }
 
-internal inline fun <reified T> Context.createImplicitBroadcastIntent(id: Int, notification: Notification): PendingIntent {
+internal inline fun <reified T> Context.createImplicitBroadcastIntent(
+    id: Int,
+    notification: Notification,
+): PendingIntent {
     val intent = Intent(this, T::class.java)
     intent.putExtra("notification_id", id)
     intent.putExtra("notification", notification)
@@ -67,12 +72,26 @@ internal fun Context.fireNotification(
     .notify(id, notification)
 
 internal fun Context.cancelNotification(
-    id: Int?
+    id: Int?,
 ): Unit? = id?.let {
     (getSystemService(AppCompatActivity.NOTIFICATION_SERVICE)
             as NotificationManager)
         .cancel(it)
 }
+
+internal fun Context.wakeUpScreen() {
+    val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+
+    if (!powerManager.isInteractive) {
+        val wakeLock = powerManager.newWakeLock(
+            PowerManager.SCREEN_DIM_WAKE_LOCK or
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP,
+            "senex.androidlab:notificationLock"
+        )
+        wakeLock.acquire(3000)
+    }
+}
+
 
 
 

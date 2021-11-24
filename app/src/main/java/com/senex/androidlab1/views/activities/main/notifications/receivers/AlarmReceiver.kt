@@ -6,14 +6,13 @@ import android.content.Context
 import android.content.Intent
 import com.senex.androidlab1.database.MainDatabase
 import com.senex.androidlab1.utils.log
+import com.senex.androidlab1.views.activities.main.notifications.*
 import com.senex.androidlab1.views.activities.main.notifications.fireNotification
 import com.senex.androidlab1.views.activities.main.notifications.rtcToTime
-import com.senex.androidlab1.views.activities.main.notifications.setAlarmUtc
+import com.senex.androidlab1.views.activities.main.notifications.wakeUpScreen
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        log("Alarm received at: ${System.currentTimeMillis()} Time: ${rtcToTime(System.currentTimeMillis())}")
-
         val notification = intent.getParcelableExtra<Notification>("notification")
         val alarmDao = MainDatabase.instance.alarmDao()
         val allAlerts = alarmDao.getAll()
@@ -22,7 +21,13 @@ class AlarmReceiver : BroadcastReceiver() {
             val id = allAlerts[0].notificationId
 
             context.fireNotification(id, notification)
+            context.wakeUpScreen()
+            context.disableBootReceiver()
             alarmDao.deleteByKey(id)
+
+            log("Alarm received at " +
+                    "time: ${rtcToTime(System.currentTimeMillis())}, " +
+                    "RTC: ${System.currentTimeMillis()}")
         }
     }
 }
