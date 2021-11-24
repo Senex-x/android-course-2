@@ -25,4 +25,7 @@ interface AlarmDao {
 
     @Query("DELETE FROM alarms")
     fun deleteAll()
+
+    @Query("DELETE FROM alarms WHERE rtcTime < :rtc")
+    fun deleteAllOutdated(rtc: Long)
 }

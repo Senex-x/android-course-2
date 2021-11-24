@@ -12,14 +12,14 @@ import com.senex.androidlab1.databinding.ActivityMainBinding
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.main.notifications.cancelNotification
 import com.senex.androidlab1.views.activities.main.notifications.createNotificationChannel
-import com.senex.androidlab1.views.activities.main.notifications.setAlarmUtc
+import com.senex.androidlab1.views.activities.main.notifications.setAlarmForRtc
 import com.senex.androidlab1.views.activities.main.observers.configureVolumeObserver
 import com.senex.androidlab1.views.activities.main.observers.registerObserver
 import com.senex.androidlab1.views.activities.main.observers.unregisterObserver
 import com.senex.androidlab1.views.activities.main.observers.volume.VolumeObserver
 import java.util.*
 
-internal const val ALERT_CHANNEL_ID = "ALERT_CHANNEL_MAIN"
+internal const val ALERT_CHANNEL_ID = "ALERT_CHANNEL_ID"
 internal const val ALERT_CHANNEL_NAME = "ALERT_CHANNEL"
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +36,10 @@ class MainActivity : AppCompatActivity() {
         MainDatabase.init(this)
         log("Database state snapshot: " +
                 MainDatabase.instance.alarmDao().getAll().toString())
-        MainDatabase.instance.alarmDao().deleteAll()
+        // If an alarm should have been triggered while a device was turned off
+        MainDatabase.instance.alarmDao().deleteAllOutdated(System.currentTimeMillis())
+        // For debug
+        //MainDatabase.instance.alarmDao().deleteAll()
 
         // These two are not available before onCreate()
         mediaPlayer = configureMediaPlayer()
@@ -102,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 val hour = timePicker.hour
                 val minute = timePicker.minute
 
-                setAlarmUtc(hour, minute)
+                setAlarmForRtc(hour, minute)
                 setAlarmStatus(hour, minute)
             }
         }
