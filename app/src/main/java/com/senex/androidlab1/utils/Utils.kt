@@ -25,3 +25,9 @@ internal fun log(message: String?) =
 
 private fun String.present() =
     isNotEmpty() && isNotBlank()
+
+internal fun toMillis(minutes: Int, seconds: Int) =
+    (minutes * 60 + seconds) * 1000
+
+internal fun fromMillis(millis: Int) =
+    Pair(millis / 1000 / 60, millis / 1000 % 60)
