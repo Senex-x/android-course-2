@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import com.senex.androidlab1.database.MainDatabase
 import com.senex.androidlab1.model.Alarm
@@ -14,7 +15,6 @@ import com.senex.androidlab1.views.activities.main.notifications.receivers.BootR
 import com.senex.androidlab1.views.activities.wake.WakeActivity
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 internal fun Context.enableBootReceiver() {
     setReceiverEnabledState<BootReceiver>(PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
@@ -85,9 +85,9 @@ internal fun timeToRtc(dayRtc: Long, hour: Int, minute: Int): Long =
         time.time
     }
 
-
 internal fun rtcToTime(rtc: Long): Pair<Int, Int> {
-    val dateString = (SimpleDateFormat("HH:mm", Locale.US)).format(Date(rtc))
+    val dateString = (SimpleDateFormat("HH:mm", Locale.US))
+        .format(Date(rtc))
 
     return Pair(
         dateString.substring(0, 2).toInt(),
@@ -95,6 +95,12 @@ internal fun rtcToTime(rtc: Long): Pair<Int, Int> {
     )
 }
 
-internal fun Context.cancelAlarm(intent: PendingIntent): Unit =
-    (getSystemService(Context.ALARM_SERVICE) as AlarmManager)
-        .cancel(intent)
+internal inline fun <reified T> Context.cancelAlarmForReceiver() {
+    val intent = Intent(this, T::class.java)
+    val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE)
+    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    if (pendingIntent != null) {
+        alarmManager.cancel(pendingIntent)
+    }
+    log("Alarm has been cancelled")
+}

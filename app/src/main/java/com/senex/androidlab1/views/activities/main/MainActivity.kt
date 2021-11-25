@@ -10,8 +10,10 @@ import com.senex.androidlab1.R
 import com.senex.androidlab1.database.MainDatabase
 import com.senex.androidlab1.databinding.ActivityMainBinding
 import com.senex.androidlab1.utils.log
+import com.senex.androidlab1.views.activities.main.notifications.cancelAlarmForReceiver
 import com.senex.androidlab1.views.activities.main.notifications.cancelNotification
 import com.senex.androidlab1.views.activities.main.notifications.createNotificationChannel
+import com.senex.androidlab1.views.activities.main.notifications.receivers.AlarmReceiver
 import com.senex.androidlab1.views.activities.main.notifications.setAlarmForRtc
 import com.senex.androidlab1.views.activities.main.observers.configureVolumeObserver
 import com.senex.androidlab1.views.activities.main.observers.registerObserver
@@ -100,27 +102,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureButtonSet(timePicker: TimePicker): Unit =
-        binding.buttonSet.run {
-            setOnClickListener {
-                val hour = timePicker.hour
-                val minute = timePicker.minute
+        binding.buttonSet.setOnClickListener {
+            cancelCurrentAlarm()
 
-                setAlarmForRtc(hour, minute)
-                setAlarmStatus(hour, minute)
-            }
+            val hour = timePicker.hour
+            val minute = timePicker.minute
+
+            setAlarmForRtc(hour, minute)
+            setAlarmStatus(hour, minute)
         }
+
 
     private fun configureButtonCancel(): Unit =
-        binding.buttonCancel.run {
-            setOnClickListener {
-                val allAlarms = MainDatabase.instance.alarmDao().getAll()
-
-                if (allAlarms.isNotEmpty()) {
-                    cancelNotification(allAlarms[0].notificationId)
-                    setAlarmStatusDefault()
-                }
-            }
+        binding.buttonCancel.setOnClickListener {
+            cancelCurrentAlarm()
         }
+
+    private fun cancelCurrentAlarm() {
+        val allAlarms = MainDatabase.instance.alarmDao().getAll()
+
+        if (allAlarms.isNotEmpty()) {
+            handleAlarmCancelForReceiver<AlarmReceiver>(
+                allAlarms[0].notificationId
+            )
+        }
+    }
+
+    private inline fun <reified T> handleAlarmCancelForReceiver(notificationId: Int) {
+        cancelNotification(notificationId)
+        MainDatabase.instance.alarmDao().deleteByKey(notificationId)
+        cancelAlarmForReceiver<T>()
+        setAlarmStatusDefault()
+    }
 
     private fun configureMediaPlayer() = MediaPlayer
         .create(this, R.raw.time_picker_tick)

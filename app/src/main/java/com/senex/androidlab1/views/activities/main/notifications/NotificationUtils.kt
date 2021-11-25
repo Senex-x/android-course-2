@@ -46,7 +46,7 @@ internal inline fun <reified T> Context.createImplicitBroadcastIntent(
     val intent = Intent(this, T::class.java)
     intent.putExtra("notification_id", id)
     intent.putExtra("notification", notification)
-    return PendingIntent.getBroadcast(this, 0, intent, 0)
+    return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 }
 
 internal fun Context.buildNotification(
@@ -69,18 +69,14 @@ internal fun Context.buildNotification(
 internal fun Context.fireNotification(
     id: Int,
     notification: Notification,
-) {
-    cancelNotification(id)
-    NotificationManagerCompat
-        .from(this)
-        .notify(id, notification)
-}
+): Unit = NotificationManagerCompat
+    .from(this)
+    .notify(id, notification)
 
 internal fun Context.cancelNotification(
     id: Int,
 ): Unit = getSystemServiceAs<NotificationManager>(AppCompatActivity.NOTIFICATION_SERVICE)
     .cancel(id)
-
 
 internal fun Context.wakeUpScreen() {
     val powerManager = getSystemServiceAs<PowerManager>(Context.POWER_SERVICE)
