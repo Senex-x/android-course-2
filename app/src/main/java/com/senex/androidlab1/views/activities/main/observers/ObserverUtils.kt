@@ -1,6 +1,5 @@
 package com.senex.androidlab1.views.activities.main.observers
 
-import android.app.Activity
 import android.content.Context
 import android.database.ContentObserver
 import android.media.MediaPlayer

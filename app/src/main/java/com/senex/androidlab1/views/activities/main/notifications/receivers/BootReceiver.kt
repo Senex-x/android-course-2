@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.senex.androidlab1.database.MainDatabase
 import com.senex.androidlab1.utils.log
-import com.senex.androidlab1.views.activities.main.notifications.setAlarmUtc
+import com.senex.androidlab1.views.activities.main.notifications.setAlarmForRtc
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -14,11 +14,10 @@ class BootReceiver : BroadcastReceiver() {
             val allAlarms = alarmDao.getAll()
 
             if (allAlarms.isNotEmpty()) {
+                log("Setting alarm from saved state after reboot.")
                 val alarm = allAlarms[0]
-                context.setAlarmUtc(alarm.rtcTime)
+                context.setAlarmForRtc(alarm.rtcTime)
                 alarmDao.deleteByKey(alarm.notificationId)
-                log("Setting alarm from saved state after reboot." +
-                        "\nTime: ${alarm.hour}:${alarm.minute}")
             }
         }
     }

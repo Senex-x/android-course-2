@@ -19,15 +19,17 @@ internal fun Context.createNotificationChannel(
     name: String,
     importance: Int,
 ) {
-    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    val channel = NotificationChannel(idString, name, importance)
-    channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-    channel.setSound(
-        Uri.parse("android.resource://$packageName/${R.raw.tick_2}"),
-        AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
-    )
-    channel.vibrationPattern = longArrayOf()
-    notificationManager.createNotificationChannel(channel)
+    val channel = NotificationChannel(idString, name, importance).apply {
+        lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        vibrationPattern = longArrayOf(0, 1000) // wait before start, keep enabled
+        setSound(
+            Uri.parse("android.resource://$packageName/${R.raw.alarm_sound}"),
+            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
+        )
+    }
+
+    getSystemServiceAs<NotificationManager>(AppCompatActivity.NOTIFICATION_SERVICE)
+        .createNotificationChannel(channel)
 }
 
 // TODO: Add backstack handling
@@ -67,20 +69,21 @@ internal fun Context.buildNotification(
 internal fun Context.fireNotification(
     id: Int,
     notification: Notification,
-): Unit = NotificationManagerCompat
-    .from(this)
-    .notify(id, notification)
-
-internal fun Context.cancelNotification(
-    id: Int?,
-): Unit? = id?.let {
-    (getSystemService(AppCompatActivity.NOTIFICATION_SERVICE)
-            as NotificationManager)
-        .cancel(it)
+) {
+    cancelNotification(id)
+    NotificationManagerCompat
+        .from(this)
+        .notify(id, notification)
 }
 
+internal fun Context.cancelNotification(
+    id: Int,
+): Unit = getSystemServiceAs<NotificationManager>(AppCompatActivity.NOTIFICATION_SERVICE)
+    .cancel(id)
+
+
 internal fun Context.wakeUpScreen() {
-    val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+    val powerManager = getSystemServiceAs<PowerManager>(Context.POWER_SERVICE)
 
     if (!powerManager.isInteractive) {
         val wakeLock = powerManager.newWakeLock(
@@ -92,8 +95,5 @@ internal fun Context.wakeUpScreen() {
     }
 }
 
-
-
-
-
-
+private inline fun <reified T> Context.getSystemServiceAs(name: String) =
+    getSystemService(name) as T

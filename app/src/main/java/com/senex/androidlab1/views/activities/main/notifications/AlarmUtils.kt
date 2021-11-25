@@ -16,12 +16,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal inline fun <reified T> Context.enableBootReceiver() {
-    setReceiverEnabledState<T>(PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+internal fun Context.enableBootReceiver() {
+    setReceiverEnabledState<BootReceiver>(PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
 }
 
-internal inline fun <reified T> Context.disableBootReceiver() {
-    setReceiverEnabledState<T>(PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
+internal fun Context.disableBootReceiver() {
+    setReceiverEnabledState<BootReceiver>(PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
 }
 
 private inline fun <reified T> Context.setReceiverEnabledState(stateCode: Int) {
@@ -34,11 +34,11 @@ private inline fun <reified T> Context.setReceiverEnabledState(stateCode: Int) {
     )
 }
 
-internal fun Context.setAlarmUtc(hour: Int, minute: Int) {
-    setAlarmUtc(timeToRtc(System.currentTimeMillis(), hour, minute))
+internal fun Context.setAlarmForRtc(hour: Int, minute: Int) {
+    setAlarmForRtc(timeToRtc(System.currentTimeMillis(), hour, minute))
 }
 
-internal fun Context.setAlarmUtc(rtcTime: Long) {
+internal fun Context.setAlarmForRtc(rtcTime: Long) {
     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     val notification = buildNotification(
@@ -54,7 +54,6 @@ internal fun Context.setAlarmUtc(rtcTime: Long) {
         newNotificationId,
         notification
     )
-
 
     alarmManager.setExact(
         AlarmManager.RTC_WAKEUP,
@@ -73,14 +72,16 @@ internal fun Context.setAlarmUtc(rtcTime: Long) {
         rtcTime = rtcTime,
     ))
 
-    enableBootReceiver<BootReceiver>()
+    enableBootReceiver()
 }
 
-internal fun timeToRtc(currentRtc: Long, hour: Int, minute: Int): Long =
+internal fun timeToRtc(dayRtc: Long, hour: Int, minute: Int): Long =
     Calendar.getInstance().run {
-        time = Date(currentRtc)
+        time = Date(dayRtc)
         set(Calendar.HOUR_OF_DAY, hour)
         set(Calendar.MINUTE, minute)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
         time.time
     }
 
