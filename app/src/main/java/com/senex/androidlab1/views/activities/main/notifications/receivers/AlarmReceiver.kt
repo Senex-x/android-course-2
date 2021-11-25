@@ -25,8 +25,9 @@ class AlarmReceiver : BroadcastReceiver() {
             context.disableBootReceiver()
             alarmDao.deleteByKey(id)
 
+            val timePair = rtcToTime(System.currentTimeMillis())
             log("Alarm received at " +
-                    "time: ${rtcToTime(System.currentTimeMillis())}, " +
+                    "time: ${prettyPrintTime(timePair.first, timePair.second)}, " +
                     "RTC: ${System.currentTimeMillis()}")
         }
     }

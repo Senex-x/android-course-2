@@ -43,10 +43,12 @@ internal fun Context.setAlarmForRtc(hour: Int, minute: Int) {
 internal fun Context.setAlarmForRtc(rtcTime: Long) {
     val alarmManager = getSystemServiceAs<AlarmManager>(Context.ALARM_SERVICE)
 
+    val (hour, minute) = rtcToTime(rtcTime)
+
     val notification = buildNotification(
         channelId = ALERT_CHANNEL_ID,
-        title = "Title",
-        content = "Content",
+        title = "Alarm",
+        content = "Alarm was set for: ${prettyPrintTime(hour, minute)}",
         onClickIntent = this.createImplicitPendingIntent<WakeActivity>(),
     )
 
@@ -62,8 +64,6 @@ internal fun Context.setAlarmForRtc(rtcTime: Long) {
         rtcTime,
         pendingIntent
     )
-
-    val (hour, minute) = rtcToTime(rtcTime)
 
     log("Setting alarm for: $hour:$minute, RTC: $rtcTime")
 
