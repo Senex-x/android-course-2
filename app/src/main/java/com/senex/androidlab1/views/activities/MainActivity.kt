@@ -11,16 +11,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Setting up navigation host for Jetpack's Navigation component framework
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_main) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        // Setting up navigation view for Jetpack's Navigation component framework
-        val bottomNavigationView: BottomNavigationView =
-            findViewById(R.id.main_bottom_navigation_view)
-        bottomNavigationView.setupWithNavController(navController)
     }
 }
 
