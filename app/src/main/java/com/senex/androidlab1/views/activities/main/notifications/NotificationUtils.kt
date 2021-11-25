@@ -23,7 +23,7 @@ internal fun Context.createNotificationChannel(
         lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         vibrationPattern = longArrayOf(0, 1000) // wait before start, keep enabled
         setSound(
-            Uri.parse("android.resource://$packageName/${R.raw.alarm_sound}"),
+            Uri.parse("android.resource://$packageName/${R.raw.alert_misic_2}"),
             AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
         )
     }
@@ -32,12 +32,12 @@ internal fun Context.createNotificationChannel(
         .createNotificationChannel(channel)
 }
 
-// TODO: Add backstack handling
-internal inline fun <reified T> Context.createImplicitPendingIntent(): PendingIntent {
-    val intent = Intent(this, T::class.java)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-    return PendingIntent.getActivity(this, 0, intent, 0)
-}
+internal inline fun <reified T> Context.createImplicitPendingIntent() = PendingIntent
+    .getActivity(this,
+        0,
+        Intent(this, T::class.java),
+        PendingIntent.FLAG_ONE_SHOT
+    )
 
 internal inline fun <reified T> Context.createImplicitBroadcastIntent(
     id: Int,

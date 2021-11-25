@@ -47,7 +47,7 @@ internal fun Context.setAlarmForRtc(rtcTime: Long) {
         channelId = ALERT_CHANNEL_ID,
         title = "Title",
         content = "Content",
-        onClickIntent = createImplicitPendingIntent<WakeActivity>(),
+        onClickIntent = this.createImplicitPendingIntent<WakeActivity>(),
     )
 
     val newNotificationId = Random().nextInt()
