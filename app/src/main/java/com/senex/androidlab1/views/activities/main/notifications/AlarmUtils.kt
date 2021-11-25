@@ -16,13 +16,15 @@ import com.senex.androidlab1.views.activities.wake.WakeActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
-internal fun Context.enableBootReceiver() {
-    setReceiverEnabledState<BootReceiver>(PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
-}
+internal fun Context.enableBootReceiver() =
+    setReceiverEnabledState<BootReceiver>(
+        PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+    )
 
-internal fun Context.disableBootReceiver() {
-    setReceiverEnabledState<BootReceiver>(PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
-}
+internal fun Context.disableBootReceiver() =
+    setReceiverEnabledState<BootReceiver>(
+        PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+    )
 
 private inline fun <reified T> Context.setReceiverEnabledState(stateCode: Int) {
     val receiver = ComponentName(this, T::class.java)
@@ -39,7 +41,7 @@ internal fun Context.setAlarmForRtc(hour: Int, minute: Int) {
 }
 
 internal fun Context.setAlarmForRtc(rtcTime: Long) {
-    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val alarmManager = getSystemServiceAs<AlarmManager>(Context.ALARM_SERVICE)
 
     val notification = buildNotification(
         channelId = ALERT_CHANNEL_ID,
@@ -98,9 +100,15 @@ internal fun rtcToTime(rtc: Long): Pair<Int, Int> {
 internal inline fun <reified T> Context.cancelAlarmForReceiver() {
     val intent = Intent(this, T::class.java)
     val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE)
-    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val alarmManager = getSystemServiceAs<AlarmManager>(Context.ALARM_SERVICE)
     if (pendingIntent != null) {
         alarmManager.cancel(pendingIntent)
     }
     log("Alarm has been cancelled")
+}
+
+internal fun prettyPrintTime(hour: Int, minute: Int): String {
+    val hourString = if (hour / 10 == 0) "0$hour" else hour.toString()
+    val minuteString = if (minute / 10 == 0) "0$minute" else minute.toString()
+    return "$hourString:$minuteString"
 }

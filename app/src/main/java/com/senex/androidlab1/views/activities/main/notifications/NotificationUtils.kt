@@ -91,5 +91,5 @@ internal fun Context.wakeUpScreen() {
     }
 }
 
-private inline fun <reified T> Context.getSystemServiceAs(name: String) =
+internal inline fun <reified T> Context.getSystemServiceAs(name: String) =
     getSystemService(name) as T

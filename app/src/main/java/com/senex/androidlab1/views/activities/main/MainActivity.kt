@@ -10,11 +10,8 @@ import com.senex.androidlab1.R
 import com.senex.androidlab1.database.MainDatabase
 import com.senex.androidlab1.databinding.ActivityMainBinding
 import com.senex.androidlab1.utils.log
-import com.senex.androidlab1.views.activities.main.notifications.cancelAlarmForReceiver
-import com.senex.androidlab1.views.activities.main.notifications.cancelNotification
-import com.senex.androidlab1.views.activities.main.notifications.createNotificationChannel
+import com.senex.androidlab1.views.activities.main.notifications.*
 import com.senex.androidlab1.views.activities.main.notifications.receivers.AlarmReceiver
-import com.senex.androidlab1.views.activities.main.notifications.setAlarmForRtc
 import com.senex.androidlab1.views.activities.main.observers.configureVolumeObserver
 import com.senex.androidlab1.views.activities.main.observers.registerObserver
 import com.senex.androidlab1.views.activities.main.observers.unregisterObserver
@@ -71,25 +68,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        val calendar = Calendar.getInstance()
-
-        binding.timePicker.apply {
-            hour = calendar.get(Calendar.HOUR_OF_DAY)
-            minute = calendar.get(Calendar.MINUTE)
-        }
-
-        initAlarmStatus()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        unregisterObserver(volumeObserver)
-    }
-
     private fun configureTimePicker() {
         binding.timePicker.run {
             setIs24HourView(true)
@@ -112,7 +90,6 @@ class MainActivity : AppCompatActivity() {
             setAlarmStatus(hour, minute)
         }
 
-
     private fun configureButtonCancel(): Unit =
         binding.buttonCancel.setOnClickListener {
             cancelCurrentAlarm()
@@ -120,7 +97,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun cancelCurrentAlarm() {
         val allAlarms = MainDatabase.instance.alarmDao().getAll()
-
         if (allAlarms.isNotEmpty()) {
             handleAlarmCancelForReceiver<AlarmReceiver>(
                 allAlarms[0].notificationId
@@ -153,7 +129,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAlarmStatus(hour: Int, minute: Int) {
         binding.alarmStatus.text =
-            getString(R.string.message_alarm_status, hour, minute)
+            getString(
+                R.string.message_alarm_status,
+                prettyPrintTime(hour, minute)
+            )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val calendar = Calendar.getInstance()
+
+        binding.timePicker.apply {
+            hour = calendar.get(Calendar.HOUR_OF_DAY)
+            minute = calendar.get(Calendar.MINUTE)
+        }
+
+        initAlarmStatus()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        unregisterObserver(volumeObserver)
     }
 }
 

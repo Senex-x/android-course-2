@@ -4,5 +4,5 @@
     <string name="title_set">Set</string>
     <string name="message_you_are_awake">You are awake!</string>
     <string name="message_alarm_is_not_set">Alarm is not set yet</string>
-    <string name="message_alarm_status">Alarm is set on %1$d:%2$d</string>
+    <string name="message_alarm_status">Alarm is set on %1$s</string>
 </resources>
