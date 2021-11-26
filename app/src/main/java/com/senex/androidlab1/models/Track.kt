@@ -15,7 +15,7 @@ data class Track(
     val durationMillis: Int,
 )
 
-enum class Genre(name: String) {
+enum class Genre(val value: String) {
     ROCK("Rock"),
     METAL("Metal"),
     INDUSTRIAL("Industrial"),

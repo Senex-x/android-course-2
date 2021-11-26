@@ -14,10 +14,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/zeromancer_eurotrash_cover" />
+        tools:src="@drawable/zeromancer_eurotrash_cover"
+        android:contentDescription="@string/title_album_cover_image" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/track_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Track name"
@@ -25,14 +26,15 @@
         app:layout_constraintTop_toBottomOf="@+id/image_track_cover" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/track_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Track description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/track_name" />
 
     <TextView
+        android:id="@+id/track_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Duration"
@@ -40,19 +42,18 @@
         app:layout_constraintTop_toBottomOf="@+id/image_track_cover" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/genre_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Track genre"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/track_description" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/genre_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Track genre description bundled into enumeration instance"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
+        app:layout_constraintTop_toBottomOf="@+id/genre_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

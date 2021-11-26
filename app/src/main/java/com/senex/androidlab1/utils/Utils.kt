@@ -31,3 +31,9 @@ internal fun toMillis(minutes: Int, seconds: Int) =
 
 internal fun fromMillis(millis: Int) =
     Pair(millis / 1000 / 60, millis / 1000 % 60)
+
+internal fun printTime(time: Pair<Int, Int>) =
+    "${time.first}:${time.second}"
+
+internal fun printTime(timeMillis: Int) =
+    printTime(fromMillis(timeMillis))

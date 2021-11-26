@@ -10,6 +10,8 @@ import androidx.navigation.fragment.navArgs
 import com.senex.androidlab1.databinding.FragmentMusicInfoBinding
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.repository.TrackRepository
+import com.senex.androidlab1.utils.fromMillis
+import com.senex.androidlab1.utils.printTime
 import com.senex.androidlab1.utils.toast
 
 class MusicInfoFragment : Fragment() {
@@ -36,12 +38,16 @@ class MusicInfoFragment : Fragment() {
             track = nullableTrack
         }
 
-        initTextViews()
+        binding.initTextViews()
 
         return binding.root
     }
 
-    private fun initTextViews() {
+    private fun FragmentMusicInfoBinding.initTextViews() {
+        trackName.text = track.name
+        trackDescription.text = track.description
+        trackDuration.text = printTime(track.durationMillis)
+        genreName.text = track.genre.value
     }
 
     override fun onDestroyView() {
