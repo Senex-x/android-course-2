@@ -14,8 +14,8 @@ import com.senex.androidlab1.utils.fromMillis
 import com.senex.androidlab1.utils.printTime
 import com.senex.androidlab1.utils.toast
 
-class MusicInfoFragment : Fragment() {
-    private val args: MusicInfoFragmentArgs by navArgs()
+class TrackInfoFragment : Fragment() {
+    private val args: TrackInfoFragmentArgs by navArgs()
     private var _binding: FragmentMusicInfoBinding? = null
     private val binding
         get() = _binding!!

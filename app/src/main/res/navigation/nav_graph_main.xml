@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/musicListFragment"
-        android:name="com.senex.androidlab1.views.fragments.list.MusicListFragment"
+        android:name="com.senex.androidlab1.views.fragments.list.TrackListFragment"
         android:label="MusicListFragment"
         tools:layout="@layout/fragment_music_list">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/musicInfoFragment"
-        android:name="com.senex.androidlab1.views.fragments.info.MusicInfoFragment"
+        android:name="com.senex.androidlab1.views.fragments.info.TrackInfoFragment"
         android:label="MusicInfoFragment"
         tools:layout="@layout/fragment_music_info">
 

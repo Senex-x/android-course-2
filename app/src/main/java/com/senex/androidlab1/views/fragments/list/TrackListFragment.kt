@@ -15,7 +15,7 @@ import com.senex.androidlab1.utils.toMillis
 import com.senex.androidlab1.views.fragments.list.recycler.MarginItemDecoration
 import com.senex.androidlab1.views.fragments.list.recycler.TrackRecyclerAdapter
 
-class MusicListFragment : Fragment() {
+class TrackListFragment : Fragment() {
     private var _binding: FragmentMusicListBinding? = null
     private val binding
         get() = _binding!!
@@ -40,7 +40,7 @@ class MusicListFragment : Fragment() {
 
             adapter = TrackRecyclerAdapter(getTrackList()) { clickedTrackId ->
                 findNavController().navigate(
-                    MusicListFragmentDirections
+                    TrackListFragmentDirections
                         .actionMusicListFragmentToMusicInfoFragment(clickedTrackId)
                 )
             }
