@@ -8,18 +8,18 @@ import com.senex.androidlab1.models.Track
 
 class TrackRecyclerAdapter(
     private val tracks: List<Track>,
-    private val onItemClick: (Track) -> Unit,
+    private val onItemClick: (Long) -> Unit,
 ) : RecyclerView.Adapter<TrackRecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(
         private val binding: ListItemMusicTrackBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: Track, onItemClick: (Track) -> Unit) =
+        fun bind(track: Track, onItemClick: (Long) -> Unit) =
             binding.run {
 
                 root.setOnClickListener {
-                    onItemClick(user)
+                    onItemClick(track.id)
                 }
             }
     }
