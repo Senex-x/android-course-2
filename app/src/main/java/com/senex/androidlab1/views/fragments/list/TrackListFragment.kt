@@ -7,11 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentMusicListBinding
-import com.senex.androidlab1.models.Genre
-import com.senex.androidlab1.models.Track
-import com.senex.androidlab1.utils.toMillis
+import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.views.fragments.list.recycler.MarginItemDecoration
 import com.senex.androidlab1.views.fragments.list.recycler.TrackRecyclerAdapter
 
@@ -38,7 +35,9 @@ class TrackListFragment : Fragment() {
                 requireContext()
             )
 
-            adapter = TrackRecyclerAdapter(getTrackList()) { clickedTrackId ->
+            adapter = TrackRecyclerAdapter(
+                TrackRepository.getAll()
+            ) { clickedTrackId ->
                 findNavController().navigate(
                     TrackListFragmentDirections
                         .actionMusicListFragmentToMusicInfoFragment(clickedTrackId)
@@ -49,22 +48,6 @@ class TrackListFragment : Fragment() {
                 MarginItemDecoration(20)
             )
         }
-    }
-
-    // Redundant
-    private fun getTrackList(): List<Track> {
-        val element = Track(
-            1,
-            "Dr. Online",
-            "Cool music track which you will definitely like",
-            Genre.INDUSTRIAL,
-            R.drawable.zeromancer_eurotrash_cover,
-            R.raw.zeromancer_dr_online,
-            toMillis(3, 18)
-        )
-        return mutableListOf(
-            element, element, element, element, element, element, element, element
-        )
     }
 
     override fun onDestroyView() {

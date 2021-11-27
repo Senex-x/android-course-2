@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.databinding.ListItemMusicTrackBinding
 import com.senex.androidlab1.models.Track
+import com.senex.androidlab1.utils.formatTime
 
 class TrackRecyclerAdapter(
     private val tracks: List<Track>,
@@ -17,6 +18,9 @@ class TrackRecyclerAdapter(
 
         fun bind(track: Track, onItemClick: (Long) -> Unit) =
             binding.run {
+                trackName.text = track.artistName
+                trackDescription.text = track.releaseYear.toString()
+                trackDuration.text = formatTime(track.durationMillis)
 
                 root.setOnClickListener {
                     onItemClick(track.id)
@@ -28,7 +32,7 @@ class TrackRecyclerAdapter(
         parent: ViewGroup,
         viewType: Int,
     ) = ViewHolder(
-        ListItemMusicTrackBinding.inflate(LayoutInflater.from(parent.context))
+        ListItemMusicTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
     override fun onBindViewHolder(
