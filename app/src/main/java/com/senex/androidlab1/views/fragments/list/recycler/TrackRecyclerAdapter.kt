@@ -21,6 +21,7 @@ class TrackRecyclerAdapter(
                 trackName.text = track.artistName
                 trackDescription.text = track.releaseYear.toString()
                 trackDuration.text = formatTime(track.durationMillis)
+                artistName.text = track.artistName
 
                 root.setOnClickListener {
                     onItemClick(track.id)
