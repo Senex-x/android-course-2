@@ -4,12 +4,46 @@ import com.senex.androidlab1.R
 import com.senex.androidlab1.models.Genre
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.utils.toMillis
+import java.util.*
 
 object TrackRepository {
     fun getAll() = trackList
 
-    fun getByPrimaryKey(key: Long) = trackList
-        .find { track -> track.id == key }
+    fun get(id: Long) = trackList
+        .find { track -> track.id == id }
+
+    fun getNextFor(id: Long): Track {
+        val trackIndex = getIndex(id)
+
+        return if (trackIndex + 1 < trackList.size) {
+            trackList[trackIndex + 1]
+        } else {
+            trackList.first()
+        }
+    }
+
+    fun getPrevFor(id: Long): Track {
+        val trackIndex = getIndex(id)
+
+        return if (trackIndex - 1 >= 0) {
+            trackList[trackIndex - 1]
+        } else {
+            trackList.last()
+        }
+    }
+
+    private fun getWithIndex(id: Long): IndexedValue<Track> {
+        for ((index, track) in trackList.withIndex()) {
+            if (track.id == id) {
+                return IndexedValue(index, track)
+            }
+        }
+
+        throw NoSuchElementException("Track with id: $id does not exist")
+    }
+
+    private fun getIndex(id: Long) =
+        getWithIndex(id).index
 
     private val trackList = listOf(
         Track(

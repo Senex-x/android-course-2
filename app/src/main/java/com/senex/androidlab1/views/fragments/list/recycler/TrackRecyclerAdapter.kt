@@ -19,7 +19,7 @@ class TrackRecyclerAdapter(
         fun bind(track: Track, onItemClick: (Long) -> Unit) =
             binding.run {
                 trackName.text = track.artistName
-                trackDescription.text = track.releaseYear.toString()
+                trackReleaseYear.text = track.releaseYear.toString()
                 trackDuration.text = formatTime(track.durationMillis)
                 artistName.text = track.artistName
 
