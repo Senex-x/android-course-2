@@ -26,7 +26,9 @@
             app:destination="@id/musicListFragment" />
         <action
             android:id="@+id/action_musicInfoFragment_self"
-            app:destination="@id/musicInfoFragment" />
+            app:destination="@id/musicInfoFragment"
+            app:popUpTo="@id/musicInfoFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="trackId"
             app:argType="long" />
