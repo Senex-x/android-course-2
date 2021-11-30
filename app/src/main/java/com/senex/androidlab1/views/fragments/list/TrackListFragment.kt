@@ -24,13 +24,13 @@ class TrackListFragment : Fragment() {
     ): View {
         _binding = FragmentMusicListBinding.inflate(inflater, container, false)
 
-        initRecycler()
+        binding.initRecycler()
 
         return binding.root
     }
 
-    private fun initRecycler() {
-        binding.listRecyclerMain.apply {
+    private fun FragmentMusicListBinding.initRecycler() {
+        listRecyclerMain.apply {
             layoutManager = LinearLayoutManager(
                 requireContext()
             )

@@ -17,7 +17,6 @@ import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.formatTime
 import com.senex.androidlab1.utils.toast
 
-
 class TrackInfoFragment : Fragment() {
     private val args: TrackInfoFragmentArgs by navArgs()
     private var _binding: FragmentMusicInfoBinding? = null
@@ -73,9 +72,11 @@ class TrackInfoFragment : Fragment() {
             setOnClickListener {
                 if (isMusicPlaying) {
                     mediaPlayer.pause()
+
                     icon = setThemedIcon(R.drawable.ic_play_24)
                 } else {
                     mediaPlayer.start()
+
                     icon = setThemedIcon(R.drawable.ic_pause_24)
                 }
 
@@ -129,7 +130,3 @@ class TrackInfoFragment : Fragment() {
             id
         )
 }
-
-
-
-
