@@ -18,10 +18,10 @@ class TrackRecyclerAdapter(
 
         fun bind(track: Track, onItemClick: (Long) -> Unit) =
             binding.run {
-                trackName.text = track.artistName
-                trackReleaseYear.text = track.releaseYear.toString()
+                trackAlbumCover.setImageResource(track.coverRes)
+                trackName.text = track.trackName
                 trackDuration.text = formatTime(track.durationMillis)
-                artistName.text = track.artistName
+                trackArtistName.text = track.artistName
 
                 root.setOnClickListener {
                     onItemClick(track.id)
@@ -33,7 +33,11 @@ class TrackRecyclerAdapter(
         parent: ViewGroup,
         viewType: Int,
     ) = ViewHolder(
-        ListItemMusicTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        ListItemMusicTrackBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
     )
 
     override fun onBindViewHolder(
