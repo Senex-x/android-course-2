@@ -60,7 +60,8 @@ class TrackInfoFragment : Fragment() {
 
     private fun FragmentMusicInfoBinding.initTextViews() {
         imageTrackCover.setImageResource(currentTrack.coverRes)
-        trackName.text = currentTrack.artistName
+        trackName.text = currentTrack.trackName
+        trackArtistName.text = currentTrack.artistName
         trackReleaseYear.text = currentTrack.releaseYear.toString()
         trackDuration.text = formatTime(currentTrack.durationMillis)
         genreName.text = currentTrack.genre.value
