@@ -12,25 +12,11 @@ object TrackRepository {
     fun get(id: Long) = trackList
         .find { track -> track.id == id }
 
-    fun getNextFor(id: Long): Track {
-        val trackIndex = getIndex(id)
+    fun getNextFor(id: Long) =
+        trackList[(getIndex(id) + 1) % trackList.size]
 
-        return if (trackIndex + 1 < trackList.size) {
-            trackList[trackIndex + 1]
-        } else {
-            trackList.first()
-        }
-    }
-
-    fun getPrevFor(id: Long): Track {
-        val trackIndex = getIndex(id)
-
-        return if (trackIndex - 1 >= 0) {
-            trackList[trackIndex - 1]
-        } else {
-            trackList.last()
-        }
-    }
+    fun getPrevFor(id: Long) =
+        trackList[(getIndex(id) - 1 + trackList.size) % trackList.size]
 
     private fun getWithIndex(id: Long): IndexedValue<Track> {
         for ((index, track) in trackList.withIndex()) {
