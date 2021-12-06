@@ -4,41 +4,46 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Binder
-import android.os.IBinder
 import android.os.Parcel
 import androidx.core.app.NotificationCompat
 import com.senex.androidlab1.R
 import com.senex.androidlab1.models.PlayerControlAction
+import com.senex.androidlab1.models.Track
+import com.senex.androidlab1.player.notifications.MAIN_NOTIFICATION_CHANNEL_ID
 import com.senex.androidlab1.player.notifications.createNotificationChannel
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.MainActivity
 
 class PlayerControlService : Service() {
-    private val binder = BinderImpl()
+    lateinit var mediaPlayer: MediaPlayer
+    private val binder = MainBinder()
+    var currentTrackId: Long? = null
 
     override fun onCreate() {
         super.onCreate()
 
-        startService()
+        mediaPlayer = MediaPlayer()
+        //startService()
     }
 
     fun nextTrack() {
         log("Next track service command")
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        return binder
-    }
+    override fun onBind(intent: Intent) = binder
 
-    inner class BinderImpl: Binder() {
+    inner class MainBinder : Binder() {
         fun getService(): PlayerControlService = this@PlayerControlService
 
-
-        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+        override fun onTransact(
+            code: Int,
+            data: Parcel,
+            reply: Parcel?,
+            flags: Int,
+        ): Boolean {
             val playerControlAction = PlayerControlAction.create(data)
-
-            log("onTransact(): $playerControlAction")
 
             playerControlAction.writeToParcel(reply!!, 0)
 
@@ -46,13 +51,35 @@ class PlayerControlService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
+    fun play(track: Track) {
+        mediaPlayer = MediaPlayer.create(
+            this,
+            track.trackRes
+        ).also {
+            it.start()
+        }
+    }
+
+    fun pauseOrResume(): Int {
+        return if (mediaPlayer.isPlaying) {
+            mediaPlayer.pause()
+            1
+        } else {
+            mediaPlayer.start()
+            0
+        }
+    }
+
+    fun stop() {
+        with(mediaPlayer) {
+            stop()
+            release()
+        }
     }
 
     private fun startService() {
         createNotificationChannel(
-            "CHANNEL_ID",
+            MAIN_NOTIFICATION_CHANNEL_ID,
             "CHANNEL",
             NotificationCompat.PRIORITY_DEFAULT
         )

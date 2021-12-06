@@ -1,7 +1,12 @@
 package com.senex.androidlab1.views.fragments.info
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +18,13 @@ import androidx.navigation.fragment.navArgs
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentMusicInfoBinding
 import com.senex.androidlab1.models.Track
+import com.senex.androidlab1.player.PlayerControlService
+import com.senex.androidlab1.player.notifications.buildNotification
+import com.senex.androidlab1.player.notifications.sendNotification
 import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.formatTime
+import com.senex.androidlab1.utils.fromMillis
+import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.utils.toast
 
 class TrackInfoFragment : Fragment() {
@@ -112,6 +122,16 @@ class TrackInfoFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        musicService?.let {
+            currentTrack = TrackRepository.get(it.currentTrackId!!)!!
+            //updateSeekBar(it.getService().mediaPlayer)
+        }
+        initService()
+    }
+
     override fun onStop() {
         super.onStop()
 
@@ -130,4 +150,41 @@ class TrackInfoFragment : Fragment() {
             requireActivity(),
             id
         )
+
+    private fun initService() = requireActivity().bindService(
+        Intent(context, PlayerControlService::class.java),
+        connection,
+        Context.BIND_AUTO_CREATE
+    )
+
+    private var musicService: PlayerControlService? = null
+    private var connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            log("onServiceConnected()")
+            musicService = (service as PlayerControlService.MainBinder).getService()
+            musicService.also {
+                log("also")
+
+                context?.let { context ->
+                    log("let")
+                    activity?.intent?.removeExtra("TRACK")
+                    buildNotification(requireContext()).sendNotification(requireContext(), currentTrack.id)
+                }
+
+                if (currentTrack.id != it?.currentTrackId) {
+                    if (it?.mediaPlayer?.isPlaying == true) musicService?.stop()
+                    musicService?.play(currentTrack)
+                }
+
+                it?.mediaPlayer.let { it1 ->
+                    binding.trackDuration.text = fromMillis(it1?.duration!!).toString()
+                }
+                //it?.currentTrackId = track.id
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+    }
 }

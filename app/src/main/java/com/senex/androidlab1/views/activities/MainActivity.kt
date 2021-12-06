@@ -12,22 +12,25 @@ import com.senex.androidlab1.player.PlayerControlService
 import com.senex.androidlab1.utils.log
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mService: PlayerControlService
-    private var mBound: Boolean = false
+    private lateinit var controlService: PlayerControlService
+    private var isServiceBound: Boolean = false
 
     private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+        override fun onServiceConnected(
+            className: ComponentName,
+            service: IBinder,
+        ) {
             log("Connected")
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder = service as PlayerControlService.BinderImpl
-            mService = binder.getService()
-            mBound = true
 
-            mService.nextTrack()
+            val binder = service as PlayerControlService.MainBinder
+            controlService = binder.getService()
+            isServiceBound = true
         }
 
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            mBound = false
+        override fun onServiceDisconnected(
+            arg0: ComponentName
+        ) {
+            isServiceBound = false
         }
     }
 
@@ -35,9 +38,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bindService(Intent(this, PlayerControlService::class.java), connection, Context.BIND_AUTO_CREATE)
+    }
 
-        log("Service status: $mBound")
+    override fun onStart() {
+        super.onStart()
+
+        bindService(
+            Intent(this, PlayerControlService::class.java),
+            connection,
+            Context.BIND_AUTO_CREATE
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unbindService(connection)
+        isServiceBound = false
     }
 }
 
