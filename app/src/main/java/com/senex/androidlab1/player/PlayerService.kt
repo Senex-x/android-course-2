@@ -5,12 +5,15 @@ import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.IBinder
 import android.os.IInterface
 import android.os.Parcel
 import androidx.core.app.NotificationCompat
 import com.senex.androidlab1.R
+import com.senex.androidlab1.models.PlayerControlAction
 import com.senex.androidlab1.player.notifications.createNotificationChannel
+import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.MainActivity
 import java.io.FileDescriptor
 
@@ -22,44 +25,20 @@ class PlayerService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        return object : IBinder {
-            override fun getInterfaceDescriptor(): String? {
-                TODO("Not yet implemented")
-            }
 
-            override fun pingBinder(): Boolean {
-                TODO("Not yet implemented")
-            }
+        return BinderImpl()
+    }
 
-            override fun isBinderAlive(): Boolean {
-                TODO("Not yet implemented")
-            }
+    class BinderImpl: Binder() {
+        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+            log("onTransact(): ${PlayerControlAction.create(data)}")
 
-            override fun queryLocalInterface(descriptor: String): IInterface? {
-                TODO("Not yet implemented")
-            }
-
-            override fun dump(fd: FileDescriptor, args: Array<out String>?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun dumpAsync(fd: FileDescriptor, args: Array<out String>?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun transact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-                TODO("Not yet implemented")
-            }
-
-            override fun linkToDeath(recipient: IBinder.DeathRecipient, flags: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun unlinkToDeath(recipient: IBinder.DeathRecipient, flags: Int): Boolean {
-                TODO("Not yet implemented")
-            }
-
+            return super.onTransact(code, data, reply, flags)
         }
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return super.onStartCommand(intent, flags, startId)
     }
 
     private fun startService() {
