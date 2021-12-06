@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class PlayerControlAction(val action: Action) : Parcelable {
+data class PlayerControlAction(val action: Action) : Parcelable {
 
     companion object : Parceler<PlayerControlAction> {
         override fun PlayerControlAction.write(parcel: Parcel, flags: Int) {

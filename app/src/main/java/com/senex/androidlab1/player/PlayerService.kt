@@ -1,13 +1,11 @@
 package com.senex.androidlab1.player
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.os.IInterface
 import android.os.Parcel
 import androidx.core.app.NotificationCompat
 import com.senex.androidlab1.R
@@ -15,23 +13,34 @@ import com.senex.androidlab1.models.PlayerControlAction
 import com.senex.androidlab1.player.notifications.createNotificationChannel
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.MainActivity
-import java.io.FileDescriptor
 
 class PlayerService : Service() {
+    private val binder = BinderImpl()
+
     override fun onCreate() {
         super.onCreate()
 
         startService()
     }
 
-    override fun onBind(intent: Intent): IBinder {
-
-        return BinderImpl()
+    fun nextTrack() {
+        log("Next track service command")
     }
 
-    class BinderImpl: Binder() {
+    override fun onBind(intent: Intent): IBinder {
+        return binder
+    }
+
+    inner class BinderImpl: Binder() {
+        fun getService(): PlayerService = this@PlayerService
+
+
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            log("onTransact(): ${PlayerControlAction.create(data)}")
+            val playerControlAction = PlayerControlAction.create(data)
+
+            log("onTransact(): $playerControlAction")
+
+            playerControlAction.writeToParcel(reply!!, 0)
 
             return super.onTransact(code, data, reply, flags)
         }
