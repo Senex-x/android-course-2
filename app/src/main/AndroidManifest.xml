@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".player.PlayerService"
+            android:name=".player.PlayerControlService"
             android:exported="false" />
     </application>
 </manifest>

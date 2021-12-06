@@ -14,7 +14,7 @@ import com.senex.androidlab1.player.notifications.createNotificationChannel
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.MainActivity
 
-class PlayerService : Service() {
+class PlayerControlService : Service() {
     private val binder = BinderImpl()
 
     override fun onCreate() {
@@ -32,7 +32,7 @@ class PlayerService : Service() {
     }
 
     inner class BinderImpl: Binder() {
-        fun getService(): PlayerService = this@PlayerService
+        fun getService(): PlayerControlService = this@PlayerControlService
 
 
         override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
