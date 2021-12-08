@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
@@ -15,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentMusicInfoBinding
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.player.PlayerControlService
@@ -31,9 +29,7 @@ class TrackInfoFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var currentTrack: Track
-    private var isMusicPlaying = false
+    private lateinit var thisTrack: Track
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,16 +41,11 @@ class TrackInfoFragment : Fragment() {
         val nullableTrack = TrackRepository.get(args.trackId)
 
         if (nullableTrack != null) {
-            currentTrack = nullableTrack
+            thisTrack = nullableTrack
         } else {
             requireContext().toast("Unknown track identifier")
             findNavController().popBackStack()
         }
-
-        mediaPlayer = MediaPlayer.create(
-            requireContext(),
-            currentTrack.trackRes
-        )
 
         binding.run {
             initTextViews()
@@ -67,36 +58,26 @@ class TrackInfoFragment : Fragment() {
     }
 
     private fun FragmentMusicInfoBinding.initTextViews() {
-        imageTrackCover.setImageResource(currentTrack.coverRes)
-        trackName.text = currentTrack.trackName
-        trackArtistName.text = currentTrack.artistName
-        trackReleaseYear.text = currentTrack.releaseYear.toString()
-        trackDuration.text = formatTime(currentTrack.durationMillis)
-        genreName.text = currentTrack.genre.value
-        genreDescription.text = currentTrack.genre.desc
+        imageTrackCover.setImageResource(thisTrack.coverRes)
+        trackName.text = thisTrack.trackName
+        trackArtistName.text = thisTrack.artistName
+        trackReleaseYear.text = thisTrack.releaseYear.toString()
+        trackDuration.text = formatTime(thisTrack.durationMillis)
+        genreName.text = thisTrack.genre.value
+        genreDescription.text = thisTrack.genre.desc
     }
 
     private fun FragmentMusicInfoBinding.initPlayButton() {
         playPauseButton.apply {
             setOnClickListener {
-                if (isMusicPlaying) {
-                    mediaPlayer.pause()
-
-                    icon = setThemedIcon(R.drawable.ic_play_24)
-                } else {
-                    mediaPlayer.start()
-
-                    icon = setThemedIcon(R.drawable.ic_pause_24)
-                }
-
-                isMusicPlaying = !isMusicPlaying
+                musicService.play(thisTrack)
             }
         }
     }
 
     private fun FragmentMusicInfoBinding.initNextButton() {
         nextButton.setOnClickListener {
-            val nextTrack = TrackRepository.getNextFor(currentTrack.id)
+            val nextTrack = TrackRepository.getNextFor(thisTrack.id)
 
             findNavController().navigate(
                 TrackInfoFragmentDirections
@@ -109,7 +90,7 @@ class TrackInfoFragment : Fragment() {
 
     private fun FragmentMusicInfoBinding.initPrevButton() {
         previousButton.setOnClickListener {
-            val prevTrack = TrackRepository.getPrevFor(currentTrack.id)
+            val prevTrack = TrackRepository.getPrevFor(thisTrack.id)
 
             findNavController().navigate(
                 TrackInfoFragmentDirections
@@ -123,17 +104,7 @@ class TrackInfoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        musicService?.let {
-            currentTrack = TrackRepository.get(it.currentTrackId!!)!!
-            //updateSeekBar(it.getService().mediaPlayer)
-        }
         initService()
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        mediaPlayer.release()
     }
 
     override fun onDestroyView() {
@@ -155,30 +126,25 @@ class TrackInfoFragment : Fragment() {
         Context.BIND_AUTO_CREATE
     )
 
-    private var musicService: PlayerControlService? = null
+    private lateinit var musicService: PlayerControlService
+
     private var connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             log("onServiceConnected()")
             musicService = (service as PlayerControlService.MainBinder).getService()
-            musicService.also {
-                log("also")
 
-                context?.let { context ->
-                    log("let")
-                    activity?.intent?.removeExtra("TRACK")
-                    //buildNotification(requireContext()).sendNotification(requireContext(), currentTrack.id)
+            /*
+            musicService.run {
+                if (thisTrack.id != currentTrack.id) {
+                    if (mediaPlayer.isPlaying) musicService.stop()
+                    musicService.play(thisTrack)
                 }
 
-                if (currentTrack.id != it?.currentTrackId) {
-                    if (it?.mediaPlayer?.isPlaying == true) musicService?.stop()
-                    musicService?.play(currentTrack)
-                }
+                binding.trackDuration.text = fromMillis(mediaPlayer.duration).toString()
 
-                it?.mediaPlayer.let { it1 ->
-                    binding.trackDuration.text = fromMillis(it1?.duration!!).toString()
-                }
-                //it?.currentTrackId = track.id
+                currentTrack = TrackRepository.getNextFor(thisTrack.id)
             }
+            */
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

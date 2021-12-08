@@ -12,48 +12,21 @@ import com.senex.androidlab1.utils.log
 class PlayerControlService : Service() {
     lateinit var mediaPlayer: MediaPlayer
     private val binder = MainBinder()
-    var currentTrackId: Long? = null
-
-    override fun onCreate() {
-        super.onCreate()
-
-        mediaPlayer = MediaPlayer()
-        //startService()
-    }
-
-    fun nextTrack() {
-        log("Next track service command")
-    }
-
-    override fun onBind(intent: Intent) = binder
-
-    inner class MainBinder : Binder() {
-        fun getService(): PlayerControlService = this@PlayerControlService
-
-        override fun onTransact(
-            code: Int,
-            data: Parcel,
-            reply: Parcel?,
-            flags: Int,
-        ): Boolean {
-            val playerControlAction = PlayerControlAction.create(data)
-
-            playerControlAction.writeToParcel(reply!!, 0)
-
-            return super.onTransact(code, data, reply, flags)
-        }
-    }
+    lateinit var currentTrack: Track
 
     fun play(track: Track) {
+        log("play()")
+        currentTrack = track
         mediaPlayer = MediaPlayer.create(
             this,
-            track.trackRes
-        ).also {
-            it.start()
+            currentTrack.trackRes
+        ).apply {
+            start()
         }
     }
 
-    fun pauseOrResume(): Int {
+    private fun pauseOrResume(): Int {
+        log("pauseOrResume()")
         return if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
             1
@@ -64,9 +37,22 @@ class PlayerControlService : Service() {
     }
 
     fun stop() {
-        with(mediaPlayer) {
+        log("stop()")
+        mediaPlayer.apply {
             stop()
             release()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        stop()
+    }
+
+    override fun onBind(intent: Intent) = binder
+
+    inner class MainBinder : Binder() {
+        fun getService(): PlayerControlService = this@PlayerControlService
     }
 }
