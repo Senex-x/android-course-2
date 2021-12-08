@@ -71,13 +71,25 @@ class TrackInfoFragment : Fragment() {
     private fun FragmentMusicInfoBinding.initPlayPauseButton() {
         playPauseButton.apply {
             setOnClickListener {
-                log(musicService.isPlaying.toString())
-                if (musicService.isPlaying) {
-                    musicService.stop()
-                } else {
-                    musicService.play(thisTrack)
+                musicService.run {
+                    log(isPlaying.toString())
+
+                    if (isPlaying) {
+                        if (currentTrack == thisTrack) {
+                            pause()
+                        } else {
+                            stop()
+                        }
+                    } else {
+                        if (getState() != PlayerState.NOT_STARTED && currentTrack == thisTrack) {
+                            resume()
+                        } else {
+                            play(thisTrack)
+                        }
+                    }
+
+                    log(currentTrack.toString())
                 }
-                log(musicService.currentTrack.toString())
             }
         }
     }

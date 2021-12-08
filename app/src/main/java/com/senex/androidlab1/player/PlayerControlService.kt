@@ -8,8 +8,7 @@ import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.utils.log
 
 class PlayerControlService : Service() {
-    private var currentPlayerState = PlayerState.CREATED
-    private var isInitialized = false
+    private var currentPlayerState = PlayerState.NOT_STARTED
     private val stateSubscribersList = mutableListOf<(PlayerState) -> Unit>()
     private lateinit var mediaPlayer: MediaPlayer
     private val binder = MainBinder()
@@ -24,13 +23,12 @@ class PlayerControlService : Service() {
         )
         mediaPlayer.start()
 
-        isInitialized = true
         currentPlayerState = PlayerState.PLAYING
         notifySubscribers()
     }
 
     val isPlaying
-        get() = isInitialized && mediaPlayer.isPlaying
+        get() = currentPlayerState == PlayerState.PLAYING
 
     fun resume() {
         mediaPlayer.start()
@@ -53,12 +51,11 @@ class PlayerControlService : Service() {
             release()
         }
 
-        isInitialized = false
         currentPlayerState = PlayerState.STOPPED
         notifySubscribers()
     }
 
-    fun subscribeForStateChange (callback: (PlayerState) -> Unit) {
+    fun subscribeForStateChange(callback: (PlayerState) -> Unit) {
         stateSubscribersList.add(callback)
         notifySubscriber(callback)
     }
@@ -83,6 +80,8 @@ class PlayerControlService : Service() {
         stop()
     }
 
+    fun getState() = currentPlayerState
+
     override fun onBind(intent: Intent) = binder
 
     inner class MainBinder : Binder() {
@@ -91,7 +90,7 @@ class PlayerControlService : Service() {
 }
 
 enum class PlayerState {
-    CREATED,
+    NOT_STARTED,
     PLAYING,
     PAUSED,
     STOPPED
