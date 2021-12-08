@@ -98,6 +98,13 @@ class TrackInfoFragment : Fragment() {
         nextButton.setOnClickListener {
             val nextTrack = TrackRepository.getNextFor(thisTrack.id)
 
+            musicService.run {
+                if(isPlaying) {
+                    stop()
+                    play(nextTrack)
+                }
+            }
+
             findNavController().navigate(
                 TrackInfoFragmentDirections
                     .actionMusicInfoFragmentSelf(
@@ -110,6 +117,13 @@ class TrackInfoFragment : Fragment() {
     private fun FragmentMusicInfoBinding.initPrevButton() {
         previousButton.setOnClickListener {
             val prevTrack = TrackRepository.getPrevFor(thisTrack.id)
+
+            musicService.run {
+                if(isPlaying) {
+                    stop()
+                    play(prevTrack)
+                }
+            }
 
             findNavController().navigate(
                 TrackInfoFragmentDirections
