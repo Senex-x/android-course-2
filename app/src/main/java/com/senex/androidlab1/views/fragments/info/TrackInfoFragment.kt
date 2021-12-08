@@ -19,8 +19,6 @@ import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentMusicInfoBinding
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.player.PlayerControlService
-import com.senex.androidlab1.player.notifications.buildNotification
-import com.senex.androidlab1.player.notifications.sendNotification
 import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.formatTime
 import com.senex.androidlab1.utils.fromMillis
@@ -168,7 +166,7 @@ class TrackInfoFragment : Fragment() {
                 context?.let { context ->
                     log("let")
                     activity?.intent?.removeExtra("TRACK")
-                    buildNotification(requireContext()).sendNotification(requireContext(), currentTrack.id)
+                    //buildNotification(requireContext()).sendNotification(requireContext(), currentTrack.id)
                 }
 
                 if (currentTrack.id != it?.currentTrackId) {
