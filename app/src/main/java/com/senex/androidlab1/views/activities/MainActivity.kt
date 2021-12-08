@@ -12,15 +12,18 @@ import com.senex.androidlab1.player.PlayerControlService
 
 class MainActivity : AppCompatActivity() {
     private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder, ) { }
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
 
-        override fun onServiceDisconnected(arg0: ComponentName) { }
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
     }
 
     override fun onStart() {
