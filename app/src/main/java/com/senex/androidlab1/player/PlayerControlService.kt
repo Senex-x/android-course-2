@@ -4,13 +4,14 @@ import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
-import android.os.Parcel
-import com.senex.androidlab1.models.PlayerControlAction
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.utils.log
 
 class PlayerControlService : Service() {
-    lateinit var mediaPlayer: MediaPlayer
+    private var currentPlayerState = PlayerState.CREATED
+    private var isInitialized = false
+    private val stateSubscribersList = mutableListOf<(PlayerState) -> Unit>()
+    private lateinit var mediaPlayer: MediaPlayer
     private val binder = MainBinder()
     lateinit var currentTrack: Track
 
@@ -20,20 +21,29 @@ class PlayerControlService : Service() {
         mediaPlayer = MediaPlayer.create(
             this,
             currentTrack.trackRes
-        ).apply {
-            start()
-        }
+        )
+        mediaPlayer.start()
+
+        isInitialized = true
+        currentPlayerState = PlayerState.PLAYING
+        notifySubscribers()
     }
 
-    private fun pauseOrResume(): Int {
-        log("pauseOrResume()")
-        return if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-            1
-        } else {
-            mediaPlayer.start()
-            0
-        }
+    val isPlaying
+        get() = isInitialized && mediaPlayer.isPlaying
+
+    fun resume() {
+        mediaPlayer.start()
+
+        currentPlayerState = PlayerState.PLAYING
+        notifySubscribers()
+    }
+
+    fun pause() {
+        mediaPlayer.pause()
+
+        currentPlayerState = PlayerState.PAUSED
+        notifySubscribers()
     }
 
     fun stop() {
@@ -42,6 +52,29 @@ class PlayerControlService : Service() {
             stop()
             release()
         }
+
+        isInitialized = false
+        currentPlayerState = PlayerState.STOPPED
+        notifySubscribers()
+    }
+
+    fun subscribeForStateChange (callback: (PlayerState) -> Unit) {
+        stateSubscribersList.add(callback)
+        notifySubscriber(callback)
+    }
+
+    fun unsubscribeForStateChange(callbackToInvalidate: (PlayerState) -> Unit) {
+        stateSubscribersList.removeIf { callback -> callback == callbackToInvalidate }
+    }
+
+    private fun notifySubscribers() {
+        for (callback in stateSubscribersList) {
+            callback(currentPlayerState)
+        }
+    }
+
+    private fun notifySubscriber(callback: (PlayerState) -> Unit) {
+        callback(currentPlayerState)
     }
 
     override fun onDestroy() {
@@ -55,4 +88,11 @@ class PlayerControlService : Service() {
     inner class MainBinder : Binder() {
         fun getService(): PlayerControlService = this@PlayerControlService
     }
+}
+
+enum class PlayerState {
+    CREATED,
+    PLAYING,
+    PAUSED,
+    STOPPED
 }

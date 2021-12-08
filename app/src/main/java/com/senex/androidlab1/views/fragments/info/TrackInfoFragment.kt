@@ -14,12 +14,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentMusicInfoBinding
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.player.PlayerControlService
+import com.senex.androidlab1.player.PlayerState
 import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.formatTime
-import com.senex.androidlab1.utils.fromMillis
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.utils.toast
 
@@ -49,7 +50,7 @@ class TrackInfoFragment : Fragment() {
 
         binding.run {
             initTextViews()
-            initPlayButton()
+            initPlayPauseButton()
             initNextButton()
             initPrevButton()
         }
@@ -67,10 +68,16 @@ class TrackInfoFragment : Fragment() {
         genreDescription.text = thisTrack.genre.desc
     }
 
-    private fun FragmentMusicInfoBinding.initPlayButton() {
+    private fun FragmentMusicInfoBinding.initPlayPauseButton() {
         playPauseButton.apply {
             setOnClickListener {
-                musicService.play(thisTrack)
+                log(musicService.isPlaying.toString())
+                if (musicService.isPlaying) {
+                    musicService.stop()
+                } else {
+                    musicService.play(thisTrack)
+                }
+                log(musicService.currentTrack.toString())
             }
         }
     }
@@ -101,16 +108,24 @@ class TrackInfoFragment : Fragment() {
         }
     }
 
+    private fun FragmentMusicInfoBinding.displayPlayerState(state: PlayerState) {
+        val icon = if (state == PlayerState.PLAYING)
+            R.drawable.ic_pause_24 else R.drawable.ic_play_24
+
+        playPauseButton.icon = setThemedIcon(icon)
+    }
+
     override fun onResume() {
         super.onResume()
 
         initService()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
 
-        _binding = null
+        requireActivity().unbindService(connection)
+        musicService.unsubscribeForStateChange(stateListener)
     }
 
     // Get resource themed accordingly to an activity's theme
@@ -128,23 +143,17 @@ class TrackInfoFragment : Fragment() {
 
     private lateinit var musicService: PlayerControlService
 
+    private val stateListener: (PlayerState) -> Unit = {
+        log("Player state changed to: $it")
+        binding.displayPlayerState(it)
+    }
+
     private var connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             log("onServiceConnected()")
             musicService = (service as PlayerControlService.MainBinder).getService()
 
-            /*
-            musicService.run {
-                if (thisTrack.id != currentTrack.id) {
-                    if (mediaPlayer.isPlaying) musicService.stop()
-                    musicService.play(thisTrack)
-                }
-
-                binding.trackDuration.text = fromMillis(mediaPlayer.duration).toString()
-
-                currentTrack = TrackRepository.getNextFor(thisTrack.id)
-            }
-            */
+            musicService.subscribeForStateChange(stateListener)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
