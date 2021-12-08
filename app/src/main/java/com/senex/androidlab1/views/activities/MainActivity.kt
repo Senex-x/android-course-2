@@ -9,29 +9,12 @@ import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import com.senex.androidlab1.R
 import com.senex.androidlab1.player.PlayerControlService
-import com.senex.androidlab1.utils.log
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var controlService: PlayerControlService
-    private var isServiceBound: Boolean = false
-
     private val connection = object : ServiceConnection {
-        override fun onServiceConnected(
-            className: ComponentName,
-            service: IBinder,
-        ) {
-            log("Connected")
+        override fun onServiceConnected(className: ComponentName, service: IBinder, ) { }
 
-            val binder = service as PlayerControlService.MainBinder
-            controlService = binder.getService()
-            isServiceBound = true
-        }
-
-        override fun onServiceDisconnected(
-            arg0: ComponentName
-        ) {
-            isServiceBound = false
-        }
+        override fun onServiceDisconnected(arg0: ComponentName) { }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +36,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        unbindService(connection)
-        isServiceBound = false
+        // If you want to stop the music service immediately
+        // unbindService(connection)
     }
 }
 

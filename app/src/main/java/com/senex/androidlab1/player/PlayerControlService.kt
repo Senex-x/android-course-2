@@ -11,7 +11,6 @@ class PlayerControlService : Service() {
     private var currentPlayerState = PlayerState.NOT_STARTED
     private val stateSubscribersList = mutableListOf<(PlayerState) -> Unit>()
     private lateinit var mediaPlayer: MediaPlayer
-    private val binder = MainBinder()
     lateinit var currentTrack: Track
 
     fun play(track: Track) {
@@ -23,25 +22,19 @@ class PlayerControlService : Service() {
         )
         mediaPlayer.start()
 
-        currentPlayerState = PlayerState.PLAYING
-        notifySubscribers()
+        updatePlayerState(PlayerState.PLAYING)
     }
-
-    val isPlaying
-        get() = currentPlayerState == PlayerState.PLAYING
 
     fun resume() {
         mediaPlayer.start()
 
-        currentPlayerState = PlayerState.PLAYING
-        notifySubscribers()
+        updatePlayerState(PlayerState.PLAYING)
     }
 
     fun pause() {
         mediaPlayer.pause()
 
-        currentPlayerState = PlayerState.PAUSED
-        notifySubscribers()
+        updatePlayerState(PlayerState.PAUSED)
     }
 
     fun stop() {
@@ -51,17 +44,28 @@ class PlayerControlService : Service() {
             release()
         }
 
-        currentPlayerState = PlayerState.STOPPED
+        updatePlayerState(PlayerState.STOPPED)
+    }
+
+    val isPlaying
+        get() = currentPlayerState == PlayerState.PLAYING
+
+    private fun updatePlayerState(newState: PlayerState) {
+        currentPlayerState = newState
         notifySubscribers()
     }
 
-    fun subscribeForStateChange(callback: (PlayerState) -> Unit) {
+    fun subscribeForStateChange(
+        callback: (PlayerState) -> Unit
+    ) {
         stateSubscribersList.add(callback)
         notifySubscriber(callback)
     }
 
-    fun unsubscribeForStateChange(callbackToInvalidate: (PlayerState) -> Unit) {
-        stateSubscribersList.removeIf { callback -> callback == callbackToInvalidate }
+    fun unsubscribeFromStateChange(
+        callbackToUnsubscribe: (PlayerState) -> Unit,
+    ) = stateSubscribersList.removeIf { callback ->
+        callback == callbackToUnsubscribe
     }
 
     private fun notifySubscribers() {
@@ -74,18 +78,19 @@ class PlayerControlService : Service() {
         callback(currentPlayerState)
     }
 
+    fun isTrackCurrent(track: Track) =
+        currentPlayerState != PlayerState.NOT_STARTED && track == currentTrack
+
+    override fun onBind(intent: Intent) = MainBinder()
+
+    inner class MainBinder : Binder() {
+        fun getService(): PlayerControlService = this@PlayerControlService
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         stop()
-    }
-
-    fun getState() = currentPlayerState
-
-    override fun onBind(intent: Intent) = binder
-
-    inner class MainBinder : Binder() {
-        fun getService(): PlayerControlService = this@PlayerControlService
     }
 }
 

@@ -30,6 +30,7 @@ class TrackInfoFragment : Fragment() {
     private val binding
         get() = _binding!!
 
+    private lateinit var musicService: PlayerControlService
     private lateinit var thisTrack: Track
 
     override fun onCreateView(
@@ -69,29 +70,24 @@ class TrackInfoFragment : Fragment() {
     }
 
     private fun FragmentMusicInfoBinding.initPlayPauseButton() {
-        playPauseButton.apply {
-            setOnClickListener {
-                musicService.run {
-                    log(isPlaying.toString())
-
-                    if (isPlaying) {
-                        if (currentTrack == thisTrack) {
-                            pause()
-                        } else {
-                            stop()
-                        }
+        playPauseButton.setOnClickListener {
+            musicService.run {
+                if (isPlaying) {
+                    if (isTrackCurrent(thisTrack)) {
+                        pause()
                     } else {
-                        if (getState() != PlayerState.NOT_STARTED && currentTrack == thisTrack) {
-                            resume()
-                        } else {
-                            play(thisTrack)
-                        }
+                        stop()
                     }
-
-                    log(currentTrack.toString())
+                } else {
+                    if (isTrackCurrent(thisTrack)) {
+                        resume()
+                    } else {
+                        play(thisTrack)
+                    }
                 }
             }
         }
+
     }
 
     private fun FragmentMusicInfoBinding.initNextButton() {
@@ -99,7 +95,7 @@ class TrackInfoFragment : Fragment() {
             val nextTrack = TrackRepository.getNextFor(thisTrack.id)
 
             musicService.run {
-                if(isPlaying) {
+                if (isPlaying) {
                     stop()
                     play(nextTrack)
                 }
@@ -119,7 +115,7 @@ class TrackInfoFragment : Fragment() {
             val prevTrack = TrackRepository.getPrevFor(thisTrack.id)
 
             musicService.run {
-                if(isPlaying) {
+                if (isPlaying) {
                     stop()
                     play(prevTrack)
                 }
@@ -147,11 +143,31 @@ class TrackInfoFragment : Fragment() {
         initService()
     }
 
+    private fun initService() = requireActivity().bindService(
+        Intent(context, PlayerControlService::class.java),
+        connection,
+        Context.BIND_AUTO_CREATE
+    )
+
+    private var connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            musicService = (service as PlayerControlService.MainBinder).getService()
+            musicService.subscribeForStateChange(stateListener)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) { }
+    }
+
+    private val stateListener: (PlayerState) -> Unit = {
+        log("Music player state has changed: $it")
+        binding.displayPlayerState(it)
+    }
+
     override fun onStop() {
         super.onStop()
 
         requireActivity().unbindService(connection)
-        musicService.unsubscribeForStateChange(stateListener)
+        musicService.unsubscribeFromStateChange(stateListener)
     }
 
     // Get resource themed accordingly to an activity's theme
@@ -160,30 +176,4 @@ class TrackInfoFragment : Fragment() {
             requireActivity(),
             id
         )
-
-    private fun initService() = requireActivity().bindService(
-        Intent(context, PlayerControlService::class.java),
-        connection,
-        Context.BIND_AUTO_CREATE
-    )
-
-    private lateinit var musicService: PlayerControlService
-
-    private val stateListener: (PlayerState) -> Unit = {
-        log("Player state changed to: $it")
-        binding.displayPlayerState(it)
-    }
-
-    private var connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            log("onServiceConnected()")
-            musicService = (service as PlayerControlService.MainBinder).getService()
-
-            musicService.subscribeForStateChange(stateListener)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-
-        }
-    }
 }
