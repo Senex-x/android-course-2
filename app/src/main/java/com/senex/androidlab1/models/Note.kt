@@ -9,7 +9,7 @@ import java.util.*
 @Entity(tableName = "notes")
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long?,
     val header: String,
     val content: String,
     @TypeConverters(TypeConverter::class)
