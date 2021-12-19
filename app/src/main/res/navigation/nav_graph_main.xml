@@ -10,18 +10,22 @@
         android:name="com.senex.androidlab1.views.fragments.list.ListFragment"
         android:label="ListFragment"
         tools:layout="@layout/fragment_list">
+
         <action
-            android:id="@+id/action_listFragment_to_editFragment"
-            app:destination="@id/editFragment" />
+            android:id="@+id/action_listFragment_to_addEditFragment"
+            app:destination="@id/addEditFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/editFragment"
-        android:name="com.senex.androidlab1.views.fragments.edit.EditFragment"
-        android:label="EditFragment"
-        tools:layout="@layout/fragment_edit">
+        android:id="@+id/addEditFragment"
+        android:name="com.senex.androidlab1.views.fragments.edit.AddEditFragment"
+        android:label="AddEditFragment"
+        tools:layout="@layout/fragment_add_edit">
+
         <action
             android:id="@+id/action_editFragment_to_listFragment"
             app:destination="@id/listFragment" />
+
         <argument
             android:name="noteId"
             app:argType="long" />

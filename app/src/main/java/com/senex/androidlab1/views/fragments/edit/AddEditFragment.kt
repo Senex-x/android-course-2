@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.senex.androidlab1.databinding.FragmentEditBinding
+import com.senex.androidlab1.databinding.FragmentAddEditBinding
 
-class EditFragment : Fragment() {
-    private var _binding: FragmentEditBinding? = null
+class AddEditFragment : Fragment() {
+    private var _binding: FragmentAddEditBinding? = null
     private val binding
         get() = _binding!!
 
@@ -17,7 +17,7 @@ class EditFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentEditBinding.inflate(inflater, container, false)
+        _binding = FragmentAddEditBinding.inflate(inflater, container, false)
 
         binding.run {
 

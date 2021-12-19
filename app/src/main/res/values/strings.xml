@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Android Lab</string>
     <string name="text_indefinite_term">Indefinite term</string>
+    <string name="title_save">Save</string>
+    <string name="title_save_current_location">Save current location</string>
+    <string name="hint_content">Content</string>
+    <string name="hint_header">Header</string>
+    <string name="title_set_target_date">Set target date</string>
+    <string name="text_target_date_indefinite">Target date is indefinite</string>
 </resources>

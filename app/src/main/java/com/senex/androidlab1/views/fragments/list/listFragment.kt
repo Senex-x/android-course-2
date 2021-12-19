@@ -55,7 +55,7 @@ class ListFragment : Fragment() {
             listAdapter = ListRecyclerAdapter(
                 { clickedNote ->
                     findNavController().navigate(
-                        ListFragmentDirections.actionListFragmentToEditFragment(
+                        ListFragmentDirections.actionListFragmentToAddEditFragment(
                             clickedNote.id!!
                         )
                     )

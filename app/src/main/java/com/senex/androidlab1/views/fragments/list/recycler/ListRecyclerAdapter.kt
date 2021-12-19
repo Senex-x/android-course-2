@@ -28,7 +28,9 @@ class ListRecyclerAdapter(
                 content.text = note.content
 
                 if(note.targetDate != null) {
-                    targetDate.text = formatDate(note.targetDate)
+                    targetDate.text = formatDate(
+                        note.targetDate
+                    )
                 } else {
                     targetDate.text = binding.root.context.getString(
                         R.string.text_indefinite_term
