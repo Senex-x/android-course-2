@@ -21,7 +21,10 @@ class MainActivity : AppCompatActivity() {
             null,
             "Header",
             "Content",
-            Date()
+            Date(),
+            null,
+            null,
+            null,
         ))
 
         log(NoteRepository.get(100).toString())

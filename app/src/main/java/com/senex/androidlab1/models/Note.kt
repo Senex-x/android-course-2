@@ -14,4 +14,7 @@ data class Note(
     val content: String,
     @TypeConverters(TypeConverter::class)
     val openingDate: Date,
+    val targetDate: Date?,
+    val longitude: String?,
+    val latitude: String?,
 )
