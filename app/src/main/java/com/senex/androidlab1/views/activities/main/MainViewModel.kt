@@ -18,6 +18,10 @@ class MainViewModel : ViewModel() {
         return notes[index]
     }
 
+    fun get(id: Long): Note? {
+        return notes.find { note -> note.id == id }
+    }
+
     fun getAll(): List<Note> {
         return notes
     }

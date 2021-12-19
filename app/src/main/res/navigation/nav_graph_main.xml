@@ -28,6 +28,7 @@
 
         <argument
             android:name="noteId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
 </navigation>

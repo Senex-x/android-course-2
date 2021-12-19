@@ -7,4 +7,5 @@
     <string name="hint_header">Header</string>
     <string name="title_set_target_date">Set target date</string>
     <string name="text_target_date_indefinite">Target date is indefinite</string>
+    <string name="error_note_must_have_header">Note must have a header</string>
 </resources>

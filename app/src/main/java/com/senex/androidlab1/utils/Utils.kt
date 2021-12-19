@@ -25,9 +25,6 @@ internal fun String?.toast(context: Context) =
 internal fun log(message: String?) =
     Log.d("app-debug", message ?: "null")
 
-internal fun String.present() =
-    isNotEmpty() && isNotBlank()
-
 internal fun formatDate(date: Date): String {
     return SimpleDateFormat(
         "HH:mm dd.MM.yyyy",
