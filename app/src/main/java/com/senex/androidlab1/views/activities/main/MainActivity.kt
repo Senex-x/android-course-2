@@ -27,7 +27,9 @@ class MainActivity : AppCompatActivity() {
             null,
         ))
 
-        log(NoteRepository.get(100).toString())
+        log("Database snapshot: " +
+                AppDatabaseMain.database.noteDao().getAll().toString()
+        )
     }
 }
 

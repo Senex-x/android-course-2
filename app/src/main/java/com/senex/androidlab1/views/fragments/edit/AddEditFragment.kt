@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentAddEditBinding
@@ -26,6 +27,7 @@ class AddEditFragment : Fragment() {
 
     private val args: AddEditFragmentArgs by navArgs()
     private var oldNote: Note? = null
+
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
     }
@@ -51,33 +53,59 @@ class AddEditFragment : Fragment() {
         return binding.root
     }
 
+    private var targetDateCalendar: Calendar? = null
+
     private fun FragmentAddEditBinding.initSetDateButton() {
         setTargetDateButton.setOnClickListener {
-
+            DatePickerFragment { _, year, month, day ->
+                targetDate.text = requireContext().getString(
+                    R.string.text_target_date_is, day, month, year
+                )
+                targetDateCalendar = Calendar.getInstance().apply {
+                    set(year, month, day, 0, 0, 0)
+                }
+            }.show(
+                parentFragmentManager,
+                DatePickerFragment::class.java.simpleName
+            )
         }
     }
 
     private fun FragmentAddEditBinding.initSaveButton() {
         val oldNote = this@AddEditFragment.oldNote
-        // TODO: add handling
-        val targetDate: Date? = null
-        val longitude: String? = null
-        val latitude: String? = null
 
-        if(headerEditText.text.toString().isBlank()) {
-            requireContext().toast(
-                getString(R.string.error_note_must_have_header)
+        saveButton.setOnClickListener {
+            // TODO: add handling
+            val targetDate: Date? = targetDateCalendar?.time
+            val longitude: String? = null
+            val latitude: String? = null
+
+            if (headerEditText.text.toString().isBlank()) {
+                requireContext().toast(
+                    getString(R.string.error_note_must_have_header)
+                )
+                return@setOnClickListener
+            }
+
+            val note = Note(
+                if (isEditing && oldNote != null) oldNote.id else null,
+                headerEditText.text.toString(),
+                contentEditText.text.toString(),
+                Date(), targetDate,
+                longitude, latitude,
             )
-            return
-        }
 
-        Note(
-            if (isEditing && oldNote != null) oldNote.id else null,
-            headerEditText.text.toString(),
-            contentEditText.text.toString(),
-            Date(), targetDate,
-            longitude, latitude
-        )
+            if(isEditing) {
+                mainViewModel.update(note)
+            } else {
+                mainViewModel.add(note)
+            }
+
+            findNavController().navigate(
+                AddEditFragmentDirections
+                    .actionEditFragmentToListFragment()
+            )
+        }
     }
 
     private fun FragmentAddEditBinding.initTextFields() {

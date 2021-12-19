@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
+import com.senex.androidlab1.utils.log
 
 class MainViewModel : ViewModel() {
     private val noteDao = AppDatabaseMain.database.noteDao()
@@ -27,8 +28,12 @@ class MainViewModel : ViewModel() {
     }
 
     fun update(note: Note) {
-        notes[notes.indexOf(note)] = note
-        noteDao.update(note)
+        for((i, oldNote) in notes.withIndex()) {
+            if(oldNote.id == note.id) {
+                notes[i] = note
+                noteDao.update(note)
+            }
+        }
     }
 
     fun removeAt(index: Int) {

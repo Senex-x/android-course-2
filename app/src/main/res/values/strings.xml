@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Android Lab</string>
     <string name="text_indefinite_term">Indefinite term</string>
@@ -8,4 +9,5 @@
     <string name="title_set_target_date">Set target date</string>
     <string name="text_target_date_indefinite">Target date is indefinite</string>
     <string name="error_note_must_have_header">Note must have a header</string>
+    <string name="text_target_date_is">Target date: %1$d.%2$d.%3$d</string>
 </resources>
