@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
-import com.senex.androidlab1.utils.log
 
 class MainViewModel : ViewModel() {
     private val noteDao = AppDatabaseMain.database.noteDao()
@@ -35,7 +34,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun swap(fromIndex: Int, toIndex: Int) {
-        log("Swap from $fromIndex to $toIndex")
         notes.add(
             toIndex,
             notes.removeAt(fromIndex)

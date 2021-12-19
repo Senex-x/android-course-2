@@ -9,8 +9,7 @@ object NoteRepository {
     }
 
     fun get(id: Long): Note? {
-        val note = AppDatabaseMain.database.noteDao().get(id)
-        return note
+        return AppDatabaseMain.database.noteDao().get(id)
     }
 
     fun getAll(): List<Note> {

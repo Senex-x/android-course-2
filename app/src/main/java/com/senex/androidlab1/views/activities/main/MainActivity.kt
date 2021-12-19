@@ -6,6 +6,8 @@ import com.senex.androidlab1.R
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
+import com.senex.androidlab1.utils.log
+
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +23,8 @@ class MainActivity : AppCompatActivity() {
             "Content",
             Date()
         ))
+
+        log(NoteRepository.get(100).toString())
     }
 }
 

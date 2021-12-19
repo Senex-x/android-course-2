@@ -89,7 +89,8 @@ class ListFragment : Fragment() {
 
     private fun submitList() {
         listAdapter.submitList(
-            mainViewModel.getAll()
+            // Use toList() to retrieve a new link to it
+            mainViewModel.getAll().toList()
         )
     }
 }
