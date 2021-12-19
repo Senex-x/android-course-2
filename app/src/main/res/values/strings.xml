@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Android Lab</string>
+    <string name="text_indefinite_term">Indefinite term</string>
 </resources>

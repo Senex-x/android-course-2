@@ -8,6 +8,22 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="com.senex.androidlab1.views.fragments.list.ListFragment"
-        android:label="SampleFragment"
-        tools:layout="@layout/fragment_list"/>
+        android:label="ListFragment"
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_listFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="com.senex.androidlab1.views.fragments.edit.EditFragment"
+        android:label="EditFragment"
+        tools:layout="@layout/fragment_edit">
+        <action
+            android:id="@+id/action_editFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <argument
+            android:name="noteId"
+            app:argType="long" />
+    </fragment>
 </navigation>
