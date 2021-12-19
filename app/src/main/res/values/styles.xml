@@ -7,8 +7,15 @@
 
     <style name="text_view_style.header">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="text_view_style.header.1">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="text_view_style.header.2">
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="text_view_style.center">
