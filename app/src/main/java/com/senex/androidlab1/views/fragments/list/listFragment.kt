@@ -56,8 +56,7 @@ class ListFragment : Fragment() {
 
     private fun FragmentListBinding.initRecyclerView() {
         listRecyclerMain.run {
-            listAdapter = ListRecyclerAdapter(
-                { clickedNote ->
+            listAdapter = ListRecyclerAdapter { clickedNote ->
                     log("Clicked note: $clickedNote")
                     findNavController().navigate(
                         ListFragmentDirections
@@ -65,11 +64,8 @@ class ListFragment : Fragment() {
                             .setNoteId(clickedNote.id!!)
                     )
 
-                }, { deletedNotePosition ->
-                    mainViewModel.removeAt(deletedNotePosition)
-                    submitList()
                 }
-            )
+
 
             submitList()
 

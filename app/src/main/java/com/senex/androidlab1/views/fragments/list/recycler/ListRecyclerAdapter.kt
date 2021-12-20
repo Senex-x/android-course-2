@@ -11,14 +11,12 @@ import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.utils.formatDate
 
 class ListRecyclerAdapter(
-    private val onItemClick: (note: Note) -> Unit,
-    private val onItemDelete: (position: Int) -> Unit,
+    private val onItemClick: (note: Note) -> Unit
 ) : ListAdapter<Note, ListRecyclerAdapter.ViewHolder>(NoteDiffCallback) {
 
     class ViewHolder(
         itemView: View,
-        private val onItemClick: (note: Note) -> Unit,
-        private val onItemDelete: (position: Int) -> Unit,
+        private val onItemClick: (note: Note) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val binding = ListItemNoteBinding.bind(itemView)
 
@@ -26,41 +24,44 @@ class ListRecyclerAdapter(
             binding.run {
                 header.text = note.header
                 content.text = note.content
-
-                if(note.targetDate != null) {
-                    targetDate.text = formatDate(
-                        note.targetDate.time
+                openingDate.text = formatDate(note.openingDate.time)
+                targetDate.text = if (note.targetDate != null)
+                    formatDate(note.targetDate.time)
+                else
+                    binding.root.context.getString(
+                        R.string.text_indefinite
                     )
-                } else {
-                    targetDate.text = binding.root.context.getString(
-                        R.string.text_indefinite_term
-                    )
-                }
-
-                deleteButton.setOnClickListener {
-                    onItemDelete(layoutPosition)
-                }
+                longitude.text = if(note.longitude != null)
+                    note.longitude.toString() else "Not set"
+                latitude.text =if(note.latitude != null)
+                    note.latitude.toString() else "Not set"
 
                 root.setOnClickListener {
                     onItemClick(note)
+                }
+
+                if(note.content.isEmpty()) {
+                    content.visibility = View.GONE
+                }
+                if(note.latitude == null || note.longitude == null) {
+
                 }
             }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ) = ViewHolder(
         LayoutInflater
             .from(parent.context)
             .inflate(R.layout.list_item_note, parent, false),
-        onItemClick,
-        onItemDelete
+        onItemClick
     )
 
     override fun onBindViewHolder(
         holder: ViewHolder,
-        currentPosition: Int
+        currentPosition: Int,
     ) = holder.bind(
         getItem(currentPosition)
     )

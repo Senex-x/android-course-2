@@ -54,4 +54,8 @@
     <style name="ShapeAppearanceOverlay.Rounded">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/primary</item>
+    </style>
 </resources>

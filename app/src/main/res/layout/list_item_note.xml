@@ -7,7 +7,7 @@
     app:cardCornerRadius="0dp"
     app:cardElevation="2dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/size_double"
@@ -15,9 +15,9 @@
 
         <TextView
             android:id="@+id/header"
-            style="@style/text_view_style.header.2"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             app:layout_constraintEnd_toStartOf="@+id/deleteButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -25,32 +25,84 @@
 
         <TextView
             android:id="@+id/content"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_small"
+            android:layout_marginTop="@dimen/size_default"
+            android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintEnd_toStartOf="@+id/deleteButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header"
             tools:text="Note content message" />
 
-        <TextView
-            android:id="@+id/targetDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/content"
-            tools:text="Opening date" />
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_marginTop="@dimen/size_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <ImageButton
-            android:id="@+id/deleteButton"
+        <TextView
+            android:id="@+id/coordinates_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:padding="@dimen/size_default"
-            android:src="@drawable/ic_clear_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primary" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginTop="@dimen/size_default"
+            android:text="Location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/content" />
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/coordinates_hint"
+            tools:text="Longitude" />
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/longitude"
+            tools:text="Latitude" />
+
+        <TextView
+            android:id="@+id/date_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_default"
+            android:text="Date frame"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/latitude" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_hint">
+
+            <TextView
+                android:id="@+id/openingDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                tools:text="24.11.2021" />
+
+            <ImageView
+                android:id="@+id/date_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_double_arrow_right_24"
+                app:tint="@color/primary" />
+
+            <TextView
+                android:id="@+id/targetDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                tools:text="21.12.2021" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
