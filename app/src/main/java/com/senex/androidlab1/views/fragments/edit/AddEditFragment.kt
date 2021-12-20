@@ -75,8 +75,8 @@ class AddEditFragment : Fragment() {
         val oldNote = this@AddEditFragment.oldNote
 
         saveButton.setOnClickListener {
-            // TODO: add handling
             val targetDate: Date? = targetDateCalendar?.time
+            // TODO: add handling
             val longitude: String? = null
             val latitude: String? = null
 

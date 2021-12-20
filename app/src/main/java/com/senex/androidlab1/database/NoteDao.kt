@@ -6,7 +6,7 @@ import com.senex.androidlab1.models.Note
 @Dao
 interface NoteDao {
     @Insert
-    fun insert(note: Note)
+    fun insert(note: Note): Long
 
     @Insert
     fun insertAll(vararg notes: Note)

@@ -4,15 +4,14 @@ import androidx.lifecycle.ViewModel
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
-import com.senex.androidlab1.utils.log
 
 class MainViewModel : ViewModel() {
     private val noteDao = AppDatabaseMain.database.noteDao()
     private val notes = NoteRepository.getAll().toMutableList()
 
     fun add(note: Note) {
-        notes.add(note)
-        noteDao.insert(note)
+        val newNoteId = noteDao.insert(note)
+        notes.add(noteDao.get(newNoteId)!!)
     }
 
     fun get(index: Int): Note {

@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.utils.ListItemDecoration
-import com.senex.androidlab1.utils.toast
+import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.main.MainViewModel
 import com.senex.androidlab1.views.fragments.list.recycler.ListRecyclerAdapter
 import com.senex.androidlab1.views.fragments.list.recycler.ListTouchHelper
@@ -38,7 +39,10 @@ class ListFragment : Fragment() {
             initRecyclerView()
 
             floatingActionButton.setOnClickListener {
-                requireContext().toast("Fab on click call")
+                findNavController().navigate(
+                    ListFragmentDirections
+                        .actionListFragmentToAddEditFragment()
+                )
             }
         }
 
@@ -54,6 +58,7 @@ class ListFragment : Fragment() {
         listRecyclerMain.run {
             listAdapter = ListRecyclerAdapter(
                 { clickedNote ->
+                    log("Clicked note: $clickedNote")
                     findNavController().navigate(
                         ListFragmentDirections
                             .actionListFragmentToAddEditFragment()
