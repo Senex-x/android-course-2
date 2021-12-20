@@ -27,7 +27,7 @@ internal fun log(message: String?) =
 
 internal fun formatDate(date: Date): String {
     return SimpleDateFormat(
-        "HH:mm dd.MM.yyyy",
+        "dd.MM.yyyy",
         Locale.ROOT
     ).format(date)
 }
