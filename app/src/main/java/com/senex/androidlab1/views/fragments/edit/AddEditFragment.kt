@@ -75,7 +75,7 @@ class AddEditFragment : Fragment() {
         val oldNote = this@AddEditFragment.oldNote
 
         saveButton.setOnClickListener {
-            val targetDate: Date? = targetDateCalendar?.time
+            val targetDate: Calendar? = targetDateCalendar
             // TODO: add handling
             val longitude: String? = null
             val latitude: String? = null
@@ -91,7 +91,7 @@ class AddEditFragment : Fragment() {
                 if (isEditing && oldNote != null) oldNote.id else null,
                 headerEditText.text.toString(),
                 contentEditText.text.toString(),
-                Date(), targetDate,
+                Calendar.getInstance(), targetDate,
                 longitude, latitude,
             )
 
@@ -115,7 +115,7 @@ class AddEditFragment : Fragment() {
             headerEditText.setText(oldNote.header)
             contentEditText.setText(oldNote.content)
             saveLocationCheck.isChecked = oldNote.longitude != null
-            oldNote.targetDate?.let { targetDate.text = formatDate(it) }
+            oldNote.targetDate?.let { targetDate.text = formatDate(it.time) }
         }
     }
 

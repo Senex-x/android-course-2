@@ -29,7 +29,7 @@ class ListRecyclerAdapter(
 
                 if(note.targetDate != null) {
                     targetDate.text = formatDate(
-                        note.targetDate
+                        note.targetDate.time
                     )
                 } else {
                     targetDate.text = binding.root.context.getString(

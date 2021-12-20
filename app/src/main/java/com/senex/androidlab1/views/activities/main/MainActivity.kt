@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             null,
             "Header",
             "Content",
-            Date(),
+            Calendar.getInstance(),
             null,
             null,
             null,

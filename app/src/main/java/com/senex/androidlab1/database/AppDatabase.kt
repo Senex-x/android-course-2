@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.senex.androidlab1.models.Note
 
 @Database(entities = [Note::class], version = 1)
-@TypeConverters(TypeConverter::class)
+@TypeConverters(MainConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 }
