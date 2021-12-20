@@ -14,6 +14,6 @@ data class Note(
     val content: String,
     val openingDate: Calendar,
     val targetDate: Calendar?,
-    val longitude: String?,
-    val latitude: String?,
+    val longitude: Double?,
+    val latitude: Double?,
 )

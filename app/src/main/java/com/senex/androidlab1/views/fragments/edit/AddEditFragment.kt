@@ -1,17 +1,24 @@
 package com.senex.androidlab1.views.fragments.edit
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.location.LocationServices
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentAddEditBinding
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.utils.formatDate
+import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.activities.main.MainViewModel
 import java.util.*
@@ -46,6 +53,7 @@ class AddEditFragment : Fragment() {
 
         binding.run {
             initTextFields()
+            initSaveLocationCheckbox()
             initSetDateButton()
             initSaveButton()
         }
@@ -71,14 +79,37 @@ class AddEditFragment : Fragment() {
         }
     }
 
-    private fun FragmentAddEditBinding.initSaveButton() {
-        val oldNote = this@AddEditFragment.oldNote
+    private fun FragmentAddEditBinding.initSaveLocationCheckbox() {
+        saveLocationCheck.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked && !isLocationAccessGranted) {
+                requestLocationAccessPermission()
+            }
+        }
+    }
 
+    private val isLocationAccessGranted: Boolean
+        get() = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+    private fun requestLocationAccessPermission() {
+        locationPermissionRequest.launch(
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    }
+
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            binding.saveLocationCheck.isChecked = false
+        }
+    }
+
+    private fun FragmentAddEditBinding.initSaveButton() {
         saveButton.setOnClickListener {
             val targetDate: Calendar? = targetDateCalendar
-            // TODO: add handling
-            val longitude: String? = null
-            val latitude: String? = null
 
             if (headerEditText.text.toString().isBlank()) {
                 requireContext().toast(
@@ -87,25 +118,71 @@ class AddEditFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val note = Note(
-                if (isEditing && oldNote != null) oldNote.id else null,
-                headerEditText.text.toString(),
-                contentEditText.text.toString(),
-                Calendar.getInstance(), targetDate,
-                longitude, latitude,
-            )
+            var longitude: Double? = null
+            var latitude: Double? = null
+            if (!isEditing && saveLocationCheck.isChecked) {
+                getLocation { location ->
+                    location?.let {
+                        longitude = it.longitude
+                        latitude = it.latitude
+                    }
 
-            if(isEditing) {
-                mainViewModel.update(note)
+                    saveNote(
+                        targetDate,
+                        longitude, latitude
+                    )
+
+                    navigateToListFragment()
+                }
             } else {
-                mainViewModel.add(note)
-            }
+                saveNote(
+                    targetDate,
+                    longitude, latitude
+                )
 
-            findNavController().navigate(
-                AddEditFragmentDirections
-                    .actionEditFragmentToListFragment()
-            )
+                navigateToListFragment()
+            }
         }
+    }
+
+    private fun Fragment.navigateToListFragment() {
+        findNavController().navigate(
+            AddEditFragmentDirections
+                .actionEditFragmentToListFragment()
+        )
+    }
+
+    private fun FragmentAddEditBinding.saveNote(
+        targetDate: Calendar?,
+        longitude: Double?, latitude: Double?,
+    ) {
+        val note = Note(
+            if (isEditing && oldNote != null) oldNote!!.id else null,
+            headerEditText.text.toString(),
+            contentEditText.text.toString(),
+            Calendar.getInstance(), targetDate,
+            longitude, latitude,
+        )
+
+        if (isEditing) {
+            mainViewModel.update(note)
+        } else {
+            mainViewModel.add(note)
+        }
+    }
+
+    private fun getLocation(callback: (Location?) -> Unit) {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener(callback)
+        } catch (exception: SecurityException) {
+            exception.printStackTrace()
+            callback(null)
+        }
+    }
+
+    private val fusedLocationClient by lazy {
+        LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
     private fun FragmentAddEditBinding.initTextFields() {
@@ -114,7 +191,7 @@ class AddEditFragment : Fragment() {
         if (isEditing && oldNote != null) {
             headerEditText.setText(oldNote.header)
             contentEditText.setText(oldNote.content)
-            saveLocationCheck.isChecked = oldNote.longitude != null
+            saveLocationCheck.visibility = View.GONE
             oldNote.targetDate?.let { targetDate.text = formatDate(it.time) }
         }
     }

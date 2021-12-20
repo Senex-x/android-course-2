@@ -49,6 +49,8 @@ dependencies {
     // Do not raise library version. Higher compile SDK needed.
     implementation 'com.google.android.material:material:1.5.0-alpha02'
 
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
+
     // Do not raise library version. Higher compile SDK needed.
     def nav_version = "2.4.0-alpha06"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
