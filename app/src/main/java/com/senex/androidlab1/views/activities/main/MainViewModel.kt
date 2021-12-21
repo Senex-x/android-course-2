@@ -12,6 +12,7 @@ class MainViewModel : ViewModel() {
     fun add(note: Note) {
         val newNoteId = noteDao.insert(note)
         notes.add(noteDao.get(newNoteId)!!)
+        notifySubscriber()
     }
 
     fun get(index: Int): Note {
@@ -33,12 +34,14 @@ class MainViewModel : ViewModel() {
                 noteDao.update(note)
             }
         }
+        notifySubscriber()
     }
 
     fun removeAt(index: Int) {
         noteDao.delete(
             notes.removeAt(index)
         )
+        notifySubscriber()
     }
 
     fun swap(fromIndex: Int, toIndex: Int) {
@@ -46,5 +49,16 @@ class MainViewModel : ViewModel() {
             toIndex,
             notes.removeAt(fromIndex)
         )
+        notifySubscriber()
+    }
+
+    private fun notifySubscriber() {
+        subscriber?.invoke(notes.toList())
+    }
+
+    private var subscriber: ((List<Note>) -> Unit)? = null
+
+    fun setOnListChangeListener(listener: (List<Note>) -> Unit) {
+        subscriber = listener
     }
 }

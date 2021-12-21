@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.utils.ListItemDecoration
-import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.views.activities.main.MainViewModel
 import com.senex.androidlab1.views.fragments.list.recycler.ListRecyclerAdapter
 import com.senex.androidlab1.views.fragments.list.recycler.ListTouchHelper
@@ -26,6 +25,7 @@ class ListFragment : Fragment() {
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
     }
+
     private lateinit var listAdapter: ListRecyclerAdapter
 
     override fun onCreateView(
@@ -57,21 +57,24 @@ class ListFragment : Fragment() {
     private fun FragmentListBinding.initRecyclerView() {
         listRecyclerMain.run {
             listAdapter = ListRecyclerAdapter { clickedNote ->
-                    log("Clicked note: $clickedNote")
                     findNavController().navigate(
                         ListFragmentDirections
                             .actionListFragmentToAddEditFragment()
                             .setNoteId(clickedNote.id!!)
                     )
-
                 }
-
-
-            submitList()
 
             ItemTouchHelper(
                 ListTouchHelper(listTouchHelperAdapter)
             ).attachToRecyclerView(this)
+
+            mainViewModel.setOnListChangeListener {
+                listAdapter.submitList(it)
+            }
+
+            listAdapter.submitList(
+                mainViewModel.getAll().toList()
+            )
 
             adapter = listAdapter
 
@@ -89,12 +92,10 @@ class ListFragment : Fragment() {
 
         override fun onItemMove(fromPosition: Int, toPosition: Int) {
             mainViewModel.swap(fromPosition, toPosition)
-            submitList()
         }
 
         override fun onItemDismiss(position: Int) {
             mainViewModel.removeAt(position)
-            submitList()
         }
     }
 
