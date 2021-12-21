@@ -44,6 +44,12 @@ class MainViewModel : ViewModel() {
         notifySubscriber()
     }
 
+    fun removeAll() {
+        notes.clear()
+        noteDao.deleteAll()
+        notifySubscriber()
+    }
+
     fun swap(fromIndex: Int, toIndex: Int) {
         notes.add(
             toIndex,
