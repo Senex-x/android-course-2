@@ -17,11 +17,14 @@ import com.google.android.gms.location.LocationServices
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentAddEditBinding
 import com.senex.androidlab1.models.Note
-import com.senex.androidlab1.utils.formatDate
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.utils.toast
 import com.senex.androidlab1.views.activities.main.MainViewModel
+import kotlinx.coroutines.*
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+import kotlin.math.abs
 
 class AddEditFragment : Fragment() {
     private var _isEditing: Boolean? = null
@@ -32,12 +35,18 @@ class AddEditFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private val args: AddEditFragmentArgs by navArgs()
-    private var oldNote: Note? = null
-
-    private val mainViewModel: MainViewModel by lazy {
+    private val mainViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
     }
+    private val fusedLocationClient by lazy {
+        LocationServices.getFusedLocationProviderClient(requireActivity())
+    }
+
+    private val args: AddEditFragmentArgs by navArgs()
+    private var oldNote: Note? = null
+    private var targetDateCalendar: Calendar? = null
+    private var deferredLocation: Deferred<Location?>? = null
+    private var locationLastRecordTime: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,8 +70,6 @@ class AddEditFragment : Fragment() {
         return binding.root
     }
 
-    private var targetDateCalendar: Calendar? = null
-
     private fun FragmentAddEditBinding.initSetDateButton() {
         setTargetDateButton.setOnClickListener {
             DatePickerFragment { _, year, month, day ->
@@ -81,8 +88,14 @@ class AddEditFragment : Fragment() {
 
     private fun FragmentAddEditBinding.initSaveLocationCheckbox() {
         saveLocationCheck.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked && !isLocationAccessGranted) {
-                requestLocationAccessPermission()
+            if (isChecked) {
+                if (!isLocationAccessGranted) {
+                    log("Requesting location access permission")
+
+                    requestLocationAccessPermission()
+                } else {
+                    setDeferredLocation()
+                }
             }
         }
     }
@@ -104,6 +117,20 @@ class AddEditFragment : Fragment() {
     ) { isGranted ->
         if (!isGranted) {
             binding.saveLocationCheck.isChecked = false
+        } else {
+            setDeferredLocation()
+        }
+    }
+
+    private fun setDeferredLocation() {
+        if (deferredLocation == null ||
+            locationLastRecordTime differByMoreThanSecondFrom System.currentTimeMillis()
+        ) {
+            log("Saving location")
+            requireContext().toast("Saving location")
+
+            locationLastRecordTime = System.currentTimeMillis()
+            deferredLocation = getLocationAsync()
         }
     }
 
@@ -120,30 +147,31 @@ class AddEditFragment : Fragment() {
 
             var longitude: Double? = null
             var latitude: Double? = null
+
             if (!isEditing && saveLocationCheck.isChecked) {
-                getLocation { location ->
-                    location?.let {
-                        longitude = it.longitude
-                        latitude = it.latitude
+                deferredLocation?.let { deferred: Deferred<Location?> ->
+                    runBlocking {
+                        deferred.await()?.let { location ->
+                            longitude = location.longitude
+                            latitude = location.latitude
+                        }
                     }
-
-                    saveNote(
-                        targetDate,
-                        longitude, latitude
-                    )
-
-                    navigateToListFragment()
                 }
-            } else {
-                saveNote(
-                    targetDate,
-                    longitude, latitude
-                )
-
-                navigateToListFragment()
             }
+
+            saveNote(
+                targetDate,
+                longitude, latitude
+            )
+
+            navigateToListFragment()
         }
     }
+
+    private infix fun Long?.differByMoreThanSecondFrom(time: Long) =
+        this?.let {
+            abs(it - time) > 1000
+        } ?: true
 
     private fun Fragment.navigateToListFragment() {
         findNavController().navigate(
@@ -171,18 +199,22 @@ class AddEditFragment : Fragment() {
         }
     }
 
-    private fun getLocation(callback: (Location?) -> Unit) {
-        try {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener(callback)
-        } catch (exception: SecurityException) {
-            exception.printStackTrace()
-            callback(null)
-        }
+    private fun getLocationAsync() = MainScope().async {
+        getLocation()
     }
 
-    private val fusedLocationClient by lazy {
-        LocationServices.getFusedLocationProviderClient(requireActivity())
+    private suspend fun getLocation(): Location? {
+        return suspendCoroutine { continuation ->
+            try {
+                fusedLocationClient
+                    .lastLocation
+                    .addOnSuccessListener {
+                        continuation.resume(it)
+                    }
+            } catch (exception: SecurityException) {
+                continuation.resume(null)
+            }
+        }
     }
 
     private fun FragmentAddEditBinding.initTextFields() {
@@ -192,7 +224,12 @@ class AddEditFragment : Fragment() {
             headerEditText.setText(oldNote.header)
             contentEditText.setText(oldNote.content)
             saveLocationCheck.visibility = View.GONE
-            oldNote.targetDate?.let { targetDate.text = formatDate(it.time) }
+            oldNote.targetDate?.let {
+                targetDate.text = requireContext().getString(
+                    R.string.text_target_date_is,
+                    it.get(Calendar.DAY_OF_MONTH), it.get(Calendar.MONTH), it.get(Calendar.YEAR)
+                )
+            }
         }
     }
 

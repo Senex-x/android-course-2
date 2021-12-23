@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,10 +21,8 @@ class ListFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    // Lazy initialization is used here in order to avoid requirement to use var with lateinit
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-    }
+    // Delegated initialization is used here in order to avoid requirement to use var with lateinit
+    private val mainViewModel: MainViewModel by viewModels()
 
     private lateinit var listAdapter: ListRecyclerAdapter
 
