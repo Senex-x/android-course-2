@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.fragments.edit
+package com.senex.androidlab1.ui.fragments.edit
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -19,7 +19,7 @@ import com.senex.androidlab1.databinding.FragmentAddEditBinding
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.utils.toast
-import com.senex.androidlab1.views.activities.main.MainViewModel
+import com.senex.androidlab1.ui.activities.main.MainViewModel
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.resume

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.senex.androidlab1.views.fragments.list.ListFragment"
+        android:name="com.senex.androidlab1.ui.fragments.list.ListFragment"
         android:label="ListFragment"
         tools:layout="@layout/fragment_list">
 
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/addEditFragment"
-        android:name="com.senex.androidlab1.views.fragments.edit.AddEditFragment"
+        android:name="com.senex.androidlab1.ui.fragments.edit.AddEditFragment"
         android:label="AddEditFragment"
         tools:layout="@layout/fragment_add_edit">
 

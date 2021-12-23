@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.fragments.edit
+package com.senex.androidlab1.ui.fragments.edit
 
 import android.app.DatePickerDialog
 import android.app.Dialog

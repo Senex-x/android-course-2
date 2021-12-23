@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.fragments.list
+package com.senex.androidlab1.ui.fragments.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,15 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.senex.androidlab1.databinding.FragmentListBinding
-import com.senex.androidlab1.utils.ListItemDecoration
-import com.senex.androidlab1.views.activities.main.MainViewModel
-import com.senex.androidlab1.views.fragments.list.recycler.ListRecyclerAdapter
-import com.senex.androidlab1.views.fragments.list.recycler.ListTouchHelper
+import com.senex.androidlab1.ui.activities.main.MainViewModel
+import com.senex.androidlab1.ui.fragments.list.recycler.ListRecyclerAdapter
+import com.senex.androidlab1.ui.fragments.list.recycler.ListTouchHelper
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null

@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.activities.main
+package com.senex.androidlab1.ui.activities.main
 
 import android.os.Bundle
 import android.view.Menu

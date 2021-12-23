@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.activities.main
+package com.senex.androidlab1.ui.activities.main
 
 import androidx.lifecycle.ViewModel
 import com.senex.androidlab1.database.AppDatabaseMain

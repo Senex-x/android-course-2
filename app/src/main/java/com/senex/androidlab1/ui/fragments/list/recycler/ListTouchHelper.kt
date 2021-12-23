@@ -1,4 +1,4 @@
-package com.senex.androidlab1.views.fragments.list.recycler
+package com.senex.androidlab1.ui.fragments.list.recycler
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
