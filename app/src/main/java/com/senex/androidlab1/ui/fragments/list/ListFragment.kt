@@ -7,10 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.senex.androidlab1.databinding.FragmentListBinding
 import com.senex.androidlab1.ui.activities.main.MainViewModel
 import com.senex.androidlab1.ui.fragments.list.recycler.ListRecyclerAdapter
 import com.senex.androidlab1.ui.fragments.list.recycler.ListTouchHelper
+import com.senex.androidlab1.utils.ListItemDecoration
+
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
