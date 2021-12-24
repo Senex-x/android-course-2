@@ -2,7 +2,7 @@ package com.senex.androidlab1.repositories
 
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
-Miimport com.senex.androidlab1.utils.log
+import com.senex.androidlab1.utils.log
 import kotlinx.coroutines.*
 
 class NoteRepository(
@@ -10,11 +10,16 @@ class NoteRepository(
 ) {
     private val noteDao = AppDatabaseMain.database.noteDao()
 
-    fun insert(note: Note): Long {
-        coroutineScope.launch {
+    fun insertAsync(note: Note): Deferred<Long> {
+        return coroutineScope.async {
             noteDao.insert(note)
         }
-        return -1
+    }
+
+    fun insertBlocking(note: Note): Long {
+        return runBlocking {
+            noteDao.insert(note)
+        }
     }
 
     fun insertAll(vararg notes: Note) {
@@ -23,19 +28,25 @@ class NoteRepository(
         }
     }
 
-    fun get(id: Long): Note? {
-        log("get call")
-        val res = coroutineScope.async {
+    fun getAsync(id: Long): Deferred<Note?> {
+        return coroutineScope.async {
             noteDao.get(id)
-            log("get got data")
-            delay(1000)
         }
-        log("after call")
-
-        return null
     }
 
-    fun getAll(): List<Note> {
+    fun getBlocking(id: Long): Note? {
+        return runBlocking {
+            noteDao.get(id)
+        }
+    }
+
+    fun getAllAsync(): Deferred<List<Note>> {
+        return coroutineScope.async {
+            noteDao.getAll()
+        }
+    }
+
+    fun getAllBlocking(): List<Note> {
         return runBlocking {
             noteDao.getAll()
         }

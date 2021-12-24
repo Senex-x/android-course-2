@@ -6,11 +6,11 @@ import com.senex.androidlab1.repositories.NoteRepository
 
 class MainViewModel : ViewModel() {
     private val noteDataSource = NoteRepository()
-    private val notes = noteDataSource.getAll().toMutableList()
+    private val notes = noteDataSource.getAllBlocking().toMutableList()
 
     fun add(note: Note) {
-        val newNoteId = noteDataSource.insert(note)
-        notes.add(noteDataSource.get(newNoteId)!!)
+        val newNoteId = noteDataSource.insertBlocking(note)
+        notes.add(noteDataSource.getBlocking(newNoteId)!!)
         notifySubscriber()
     }
 
