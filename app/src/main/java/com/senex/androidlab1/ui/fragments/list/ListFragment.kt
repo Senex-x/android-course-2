@@ -15,13 +15,11 @@ import com.senex.androidlab1.ui.fragments.list.recycler.ListRecyclerAdapter
 import com.senex.androidlab1.ui.fragments.list.recycler.ListTouchHelper
 import com.senex.androidlab1.utils.ListItemDecoration
 
-
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
     private val binding
         get() = _binding!!
 
-    // Delegated initialization is used here in order to avoid requirement to use var with lateinit
     private val mainViewModel: MainViewModel by viewModels()
 
     private lateinit var listAdapter: ListRecyclerAdapter
@@ -35,21 +33,10 @@ class ListFragment : Fragment() {
 
         binding.run {
             initRecyclerView()
-
-            floatingActionButton.setOnClickListener {
-                findNavController().navigate(
-                    ListFragmentDirections
-                        .actionListFragmentToAddEditFragment()
-                )
-            }
+            initFab()
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun FragmentListBinding.initRecyclerView() {
@@ -70,10 +57,6 @@ class ListFragment : Fragment() {
                 listAdapter.submitList(it)
             }
 
-            listAdapter.submitList(
-                mainViewModel.getAll().toList()
-            )
-
             adapter = listAdapter
 
             layoutManager = LinearLayoutManager(
@@ -82,6 +65,15 @@ class ListFragment : Fragment() {
 
             addItemDecoration(
                 ListItemDecoration(20)
+            )
+        }
+    }
+
+    private fun FragmentListBinding.initFab() {
+        floatingActionButton.setOnClickListener {
+            findNavController().navigate(
+                ListFragmentDirections
+                    .actionListFragmentToAddEditFragment()
             )
         }
     }
@@ -97,10 +89,13 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun submitList() {
-        listAdapter.submitList(
-            // Use toList() to retrieve a new link to it
-            mainViewModel.getAll().toList()
-        )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        mainViewModel.removeOnListChangeListener()
+        // In my case there is no reason to stop all coroutines operating with database,
+        // since they are affecting neither UI elements nor instance of ListFragment.
+        // Simple unsubscribing from change listening is enough.
+        // mainViewModel.onDestroy()
     }
 }

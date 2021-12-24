@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.senex.androidlab1.R
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
-import com.senex.androidlab1.repositories.NoteRepository
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.viewmodels.MainViewModel
 import io.github.serpro69.kfaker.Faker
@@ -28,13 +27,11 @@ class MainActivity : AppCompatActivity() {
 
         AppDatabaseMain.init(applicationContext)
 
-        val noteDataSource = NoteRepository()
-
         //AppDatabaseMain.database.noteDao().deleteAll()
         //createRandomNotes(10)
 
         log("Database snapshot: " +
-                noteDataSource.getAllBlocking().toString()
+                mainViewModel.getAll().toString()
         )
     }
 
@@ -74,7 +71,13 @@ class MainActivity : AppCompatActivity() {
             ))
         }
 
-        NoteRepository().insertAll(*notes.toTypedArray())
+        mainViewModel.addAll(*notes.toTypedArray())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        log("Activity destroyed")
     }
 }
 

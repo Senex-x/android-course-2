@@ -1,15 +1,25 @@
 package com.senex.androidlab1.viewmodels
 
+import androidx.lifecycle.viewModelScope
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
 
 class MainViewModel : BaseViewModel() {
-    private val noteDataSource = NoteRepository(coroutineScope)
+    private val noteDataSource = NoteRepository(viewModelScope)
+    // I really dislike that here I get all notes by blocking the main thread.
+    // I tried to figure out, how to avoid this blocking,
+    // but didn't come up to any acceptable concise solution yet.
     private val notes = noteDataSource.getAllBlocking().toMutableList()
 
     fun add(note: Note) {
         val insertedNoteId = noteDataSource.insertBlocking(note)
         notes.add(note.copy(id = insertedNoteId))
+        notifySubscriber()
+    }
+
+    fun addAll(vararg newNotes: Note) {
+        noteDataSource.insertAllBlocking(*newNotes)
+        notes.addAll(newNotes)
         notifySubscriber()
     }
 
@@ -26,10 +36,10 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun update(note: Note) {
-        for((i, oldNote) in notes.withIndex()) {
-            if(oldNote.id == note.id) {
+        for ((i, oldNote) in notes.withIndex()) {
+            if (oldNote.id == note.id) {
                 notes[i] = note
-                noteDataSource.update(note)
+                noteDataSource.updateBlocking(note)
             }
         }
         notifySubscriber()
@@ -64,5 +74,10 @@ class MainViewModel : BaseViewModel() {
 
     fun setOnListChangeListener(listener: (List<Note>) -> Unit) {
         subscriber = listener
+        notifySubscriber()
+    }
+
+    fun removeOnListChangeListener() {
+        subscriber = null
     }
 }

@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 
 abstract class BaseViewModel : ViewModel() {
-    protected val coroutineScope = CoroutineScope(Dispatchers.Default)
+    protected val senderScope = CoroutineScope(Dispatchers.Default)
 
     fun onDestroy() {
-        coroutineScope.coroutineContext.cancelChildren()
+        senderScope.coroutineContext.cancelChildren()
     }
 }

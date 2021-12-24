@@ -237,6 +237,8 @@ class AddEditFragment : Fragment() {
         _isEditing = null
         deferredLocation?.cancel()
         deferredLocation = null
-        mainViewModel.onDestroy()
+        // In my case there is no reason to stop all coroutines operating with database,
+        // since they are affecting neither UI elements nor instance of AddEditFragment.
+        // mainViewModel.onDestroy()
     }
 }
