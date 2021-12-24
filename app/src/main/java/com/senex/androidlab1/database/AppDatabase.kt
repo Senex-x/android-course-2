@@ -24,8 +24,7 @@ object AppDatabaseMain {
                 context,
                 AppDatabase::class.java,
                 "database-main"
-            ).allowMainThreadQueries()
-                .build()
+            ).build()
     }
 }
 
