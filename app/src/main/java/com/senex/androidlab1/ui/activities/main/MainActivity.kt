@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.senex.androidlab1.R
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
+import com.senex.androidlab1.repositories.NoteRepository
 import com.senex.androidlab1.utils.log
+import com.senex.androidlab1.viewmodels.MainViewModel
 import io.github.serpro69.kfaker.Faker
 import java.util.*
 import kotlin.random.Random
@@ -26,11 +28,13 @@ class MainActivity : AppCompatActivity() {
 
         AppDatabaseMain.init(applicationContext)
 
+        val noteDataSource = NoteRepository()
+
         //AppDatabaseMain.database.noteDao().deleteAll()
         //createRandomNotes(10)
 
         log("Database snapshot: " +
-                AppDatabaseMain.database.noteDao().getAll().toString()
+                noteDataSource.getAllBlocking().toString()
         )
     }
 
@@ -70,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             ))
         }
 
-        AppDatabaseMain.database.noteDao().insertAll(*notes.toTypedArray())
+        NoteRepository().insertAll(*notes.toTypedArray())
     }
 }
 

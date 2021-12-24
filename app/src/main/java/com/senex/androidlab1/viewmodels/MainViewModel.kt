@@ -1,16 +1,15 @@
-package com.senex.androidlab1.ui.activities.main
+package com.senex.androidlab1.viewmodels
 
-import androidx.lifecycle.ViewModel
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
 
-class MainViewModel : ViewModel() {
-    private val noteDataSource = NoteRepository()
+class MainViewModel : BaseViewModel() {
+    private val noteDataSource = NoteRepository(coroutineScope)
     private val notes = noteDataSource.getAllBlocking().toMutableList()
 
     fun add(note: Note) {
-        val newNoteId = noteDataSource.insertBlocking(note)
-        notes.add(noteDataSource.getBlocking(newNoteId)!!)
+        val insertedNoteId = noteDataSource.insertBlocking(note)
+        notes.add(note.copy(id = insertedNoteId))
         notifySubscriber()
     }
 
@@ -57,11 +56,11 @@ class MainViewModel : ViewModel() {
         notifySubscriber()
     }
 
+    private var subscriber: ((List<Note>) -> Unit)? = null
+
     private fun notifySubscriber() {
         subscriber?.invoke(notes.toList())
     }
-
-    private var subscriber: ((List<Note>) -> Unit)? = null
 
     fun setOnListChangeListener(listener: (List<Note>) -> Unit) {
         subscriber = listener

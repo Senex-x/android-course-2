@@ -2,7 +2,6 @@ package com.senex.androidlab1.repositories
 
 import com.senex.androidlab1.database.AppDatabaseMain
 import com.senex.androidlab1.models.Note
-import com.senex.androidlab1.utils.log
 import kotlinx.coroutines.*
 
 class NoteRepository(

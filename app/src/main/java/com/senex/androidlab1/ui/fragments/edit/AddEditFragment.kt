@@ -10,16 +10,16 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.LocationServices
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentAddEditBinding
 import com.senex.androidlab1.models.Note
+import com.senex.androidlab1.viewmodels.MainViewModel
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.utils.toast
-import com.senex.androidlab1.ui.activities.main.MainViewModel
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.resume
@@ -27,21 +27,19 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.math.abs
 
 class AddEditFragment : Fragment() {
-    private var _isEditing: Boolean? = null
-    private val isEditing: Boolean
-        get() = _isEditing!!
-
     private var _binding: FragmentAddEditBinding? = null
     private val binding
         get() = _binding!!
 
-    private val mainViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-    }
+    private var _isEditing: Boolean? = null
+    private val isEditing: Boolean
+        get() = _isEditing!!
+
     private val fusedLocationClient by lazy {
         LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
+    private val mainViewModel: MainViewModel by viewModels()
     private val args: AddEditFragmentArgs by navArgs()
     private var oldNote: Note? = null
     private var targetDateCalendar: Calendar? = null
@@ -237,5 +235,8 @@ class AddEditFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         _isEditing = null
+        deferredLocation?.cancel()
+        deferredLocation = null
+        mainViewModel.onDestroy()
     }
 }
