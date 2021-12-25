@@ -27,12 +27,15 @@ class MainActivity : AppCompatActivity() {
 
         AppDatabaseMain.init(applicationContext)
 
-        //AppDatabaseMain.database.noteDao().deleteAll()
-        //createRandomNotes(10)
+        /*
+        AppDatabaseMain.database.noteDao().deleteAll()
+        createRandomNotes(10)
 
         log("Database snapshot: " +
-                mainViewModel.getAll().toString()
+                mainViewModel.getAll().map { note -> "\n" + note.header }
         )
+        */
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

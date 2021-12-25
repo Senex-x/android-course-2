@@ -13,6 +13,7 @@ class NoteRepository(
 
     // Inserts are blocking-only to ensure that changes are written into database,
     // even if user did close the application before coroutine completion.
+    // Maybe Room can handle such a situation, but still.
     fun insertBlocking(note: Note): Long {
         return runBlocking {
             noteDao.insert(note)
@@ -72,7 +73,6 @@ class NoteRepository(
             noteDao.deleteAll()
         }
     }
-
 
     fun close() {
         coroutineScope.cancel()

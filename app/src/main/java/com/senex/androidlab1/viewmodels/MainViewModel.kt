@@ -1,10 +1,11 @@
 package com.senex.androidlab1.viewmodels
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senex.androidlab1.models.Note
 import com.senex.androidlab1.repositories.NoteRepository
 
-class MainViewModel : BaseViewModel() {
+class MainViewModel : ViewModel() {
     private val noteDataSource = NoteRepository(viewModelScope)
     // I really dislike that here I get all notes by blocking the main thread.
     // I tried to figure out, how to avoid this blocking,
@@ -79,5 +80,13 @@ class MainViewModel : BaseViewModel() {
 
     fun removeOnListChangeListener() {
         subscriber = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // There is no need to manually cancel coroutines,
+        // since the viewModelScope is lifecycle aware,
+        // so it is canceled automatically.
+        // noteDataSource.close()
     }
 }
