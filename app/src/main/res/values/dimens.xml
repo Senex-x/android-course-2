@@ -5,9 +5,9 @@
     <dimen name="text_size_big">22sp</dimen>
     <dimen name="size_zero">0dp</dimen>
     <dimen name="size_small">4dp</dimen>
-    <dimen name="size_default">8dp</dimen>
+    <dimen name="size_half">8dp</dimen>
     <dimen name="size_medium">10dp</dimen>
-    <dimen name="size_double">16dp</dimen>
+    <dimen name="size_default">16dp</dimen>
     <dimen name="icon_size_default">28dp</dimen>
     <dimen name="bar_height_default">42dp</dimen>
     <dimen name="bar_height_big">56dp</dimen>

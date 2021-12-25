@@ -3,6 +3,7 @@ package com.senex.androidlab1.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 
 internal fun Context.toast(message: String?) =
     message?.let {
@@ -19,6 +20,10 @@ internal fun Int?.toast(context: Context) =
 
 internal fun String?.toast(context: Context) =
     context.toast(this)
+
+internal fun Fragment.toast(message: String?) {
+    requireContext().toast(message)
+}
 
 internal fun log(message: String?) =
     Log.d("app-debug", message ?: "null")
