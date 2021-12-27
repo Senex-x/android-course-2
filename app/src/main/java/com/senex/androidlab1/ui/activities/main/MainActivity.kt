@@ -14,7 +14,6 @@ import io.github.serpro69.kfaker.Faker
 import java.util.*
 import kotlin.random.Random
 
-// TODO: add binding to dev
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
@@ -27,9 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         AppDatabaseMain.init(applicationContext)
 
+        // mainViewModel.removeAll()
+        // createRandomNotes(10)
         /*
-        AppDatabaseMain.database.noteDao().deleteAll()
-        createRandomNotes(10)
 
         log("Database snapshot: " +
                 mainViewModel.getAll().map { note -> "\n" + note.header }
