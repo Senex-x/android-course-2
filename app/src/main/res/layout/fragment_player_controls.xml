@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/current_track_name"
-            style="@android:style/TextAppearance.Material.Body1"
+            style="@android:style/TextAppearance.Material.Body2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_8"

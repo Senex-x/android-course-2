@@ -38,7 +38,7 @@
                     style="@style/text_view_style.header.1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Track name"
+                    tools:text="Track name"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +46,7 @@
                     android:id="@+id/track_artist_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Artist name"
+                    tools:text="Artist name"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/track_name" />
 
@@ -54,7 +54,7 @@
                     android:id="@+id/track_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Duration"
+                    tools:text="Duration"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,20 +69,38 @@
                     app:layout_constraintTop_toBottomOf="@+id/track_artist_name" />
 
                 <TextView
+                    android:id="@+id/hint_album_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size_16"
+                    android:text="@string/hint_album"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+                <TextView
+                    android:id="@+id/track_album_name"
+                    style="@style/text_view_style.header.2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Track album name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/hint_album_name" />
+
+                <TextView
                     android:id="@+id/hint_release"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_16"
-                    android:text="Release date"
+                    android:text="@string/hint_release_date"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+                    app:layout_constraintTop_toBottomOf="@+id/track_album_name" />
 
                 <TextView
                     android:id="@+id/track_release_year"
                     style="@style/text_view_style.header.2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Track release year"
+                    tools:text="Track release year"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/hint_release" />
 
@@ -91,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size_16"
-                    android:text="Genre"
+                    android:text="@string/hint_genre"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/track_release_year" />
 
@@ -100,7 +118,7 @@
                     style="@style/text_view_style.header.2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Track genre"
+                    tools:text="Track genre"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hint_genre" />
 
@@ -109,7 +127,7 @@
                     style="@style/text_view_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Track genre description bundled into enumeration instance"
+                    tools:text="Track genre description bundled into enumeration instance"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/genre_name" />
             </androidx.constraintlayout.widget.ConstraintLayout>

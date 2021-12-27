@@ -139,9 +139,8 @@ class PlayerControlService : Service() {
         mediaPlayer.duration
 
     val isPlaying
-        get() = currentState == PlayerState.PLAYING && mediaPlayer.isPlaying
-
-    // val isNotPlaying = !isPlaying // YA OFICIALNO DOLBOEB
+        get() = currentState == PlayerState.PLAYING
+                && mediaPlayer.isPlaying
 
     val isNotPlaying
         get() = !isPlaying

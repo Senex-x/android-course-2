@@ -45,12 +45,15 @@ class TrackInfoFragment : Fragment() {
     }
 
     private fun FragmentTrackInfoBinding.initTextViews() {
-        imageTrackCover.setImageResource(thisTrack.coverRes)
-        trackName.text = thisTrack.trackName
-        trackArtistName.text = thisTrack.artistName
-        trackReleaseYear.text = thisTrack.releaseYear.toString()
-        trackDuration.text = formatTime(thisTrack.durationMillis)
-        genreName.text = thisTrack.genre.value
-        genreDescription.text = thisTrack.genre.desc
+        thisTrack.let {
+            imageTrackCover.setImageResource(it.coverRes)
+            trackName.text = it.trackName
+            trackArtistName.text = it.artistName
+            trackAlbumName.text = it.albumName
+            trackReleaseYear.text = it.releaseYear.toString()
+            trackDuration.text = formatTime(it.durationMillis)
+            genreName.text = it.genre.value
+            genreDescription.text = it.genre.desc
+        }
     }
 }
