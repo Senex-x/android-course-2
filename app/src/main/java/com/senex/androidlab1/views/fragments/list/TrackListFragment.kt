@@ -25,16 +25,6 @@ class TrackListFragment : Fragment() {
 
     private lateinit var musicService: PlayerControlService
 
-    private var connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            musicService = (service as PlayerControlService.MainBinder).getService()
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,6 +47,16 @@ class TrackListFragment : Fragment() {
         )
     }
 
+    private var connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            musicService = (service as PlayerControlService.MainBinder).getService()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+    }
+
     private fun FragmentTrackListBinding.initRecycler() {
         listRecyclerMain.apply {
             layoutManager = LinearLayoutManager(
@@ -72,11 +72,11 @@ class TrackListFragment : Fragment() {
             addItemDecoration(
                 MarginItemDecoration(20)
             )
-
         }
     }
 
-    private fun onTrackClicked(trackId: Long) = musicService.pauseResumeIfCurrentOrPlayNew(trackId)
+    private fun onTrackClicked(trackId: Long) =
+        musicService.resumeOrPauseIfCurrentOrPlayNew(trackId)
 
     private fun navigateToMusicInfoFragment(trackId: Long) {
         findNavController().navigate(

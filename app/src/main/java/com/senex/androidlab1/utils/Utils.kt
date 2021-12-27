@@ -42,8 +42,13 @@ internal fun toMillis(minutes: Int, seconds: Int) =
 internal fun fromMillis(millis: Int) =
     Pair(millis / 1000 / 60, millis / 1000 % 60)
 
-internal fun formatTime(time: Pair<Int, Int>) =
-    "${time.first}:${time.second}"
+internal fun formatTime(time: Pair<Int, Int>): String {
+    val minutesInt = time.second
+    val minuteString = if (minutesInt < 10)
+        "0$minutesInt" else minutesInt.toString()
+
+    return "${time.first}:$minuteString"
+}
 
 internal fun formatTime(timeMillis: Int) =
     formatTime(fromMillis(timeMillis))

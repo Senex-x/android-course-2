@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Android Lab</string>
     <string name="title_album_cover_image">Album cover image</string>
+    <string name="time_zero_minutes">0:00</string>
 </resources>

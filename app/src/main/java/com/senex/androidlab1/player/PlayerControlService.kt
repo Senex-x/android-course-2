@@ -21,7 +21,6 @@ class PlayerControlService : Service() {
     lateinit var currentTrack: Track
 
     override fun onBind(intent: Intent): MainBinder {
-        // TODO: Inspect NOT_STARTED checks
         if (currentState == PlayerState.NOT_STARTED) {
             setTrack(TrackRepository.getTrackForFirstTime())
         }
@@ -51,7 +50,6 @@ class PlayerControlService : Service() {
     }
 
     private fun setTrack(track: Track) {
-        log("PlayerService set()")
         currentTrack = track
         mediaPlayer = MediaPlayer.create(
             this,
@@ -61,21 +59,29 @@ class PlayerControlService : Service() {
         updatePlayerState(PlayerState.PAUSED)
     }
 
-    fun pauseResumeIfCurrentOrPlayNew(trackId: Long) {
+    fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long) {
         if (isTrackCurrent(trackId)) {
-            if (isPlaying) {
-                pause()
-            } else {
+            if (isNotPlaying) {
                 resume()
+            } else {
+                pause()
             }
         } else {
-            stop()
             play(trackId)
         }
     }
 
+    fun resumeOrPause() {
+        if (isNotPlaying) {
+            resume()
+        } else {
+            pause()
+        }
+    }
+
     fun play(track: Track) {
-        log("PlayerService play()")
+        stop()
+
         currentTrack = track
         mediaPlayer = MediaPlayer.create(
             this,
@@ -89,24 +95,19 @@ class PlayerControlService : Service() {
     fun play(trackId: Long) =
         play(TrackRepository.get(trackId)!!)
 
-
     fun resume() {
-        log("PlayerService resume()")
         mediaPlayer.start()
-
 
         updatePlayerState(PlayerState.PLAYING)
     }
 
     fun pause() {
-        log("PlayerService pause()")
         mediaPlayer.pause()
 
         updatePlayerState(PlayerState.PAUSED)
     }
 
     fun stop() {
-        log("PlayerService stop()")
         mediaPlayer.apply {
             stop()
             release()
@@ -115,42 +116,45 @@ class PlayerControlService : Service() {
         updatePlayerState(PlayerState.STOPPED)
     }
 
-    fun previous() {
-        if (isInitialized) {
-            handleTrackUpdate(
-                TrackRepository.getPrevFor(currentTrack.id)
-            )
-        } else {
-            setTrack(TrackRepository.getTrackForFirstTime())
-        }
-    }
+    fun previous() = handleTrackUpdate(
+        TrackRepository.getPrevFor(currentTrack.id)
+    )
 
-    fun next() {
-        if (isInitialized) {
-            handleTrackUpdate(
-                TrackRepository.getNextFor(currentTrack.id)
-            )
-        } else {
-            setTrack(TrackRepository.getTrackForFirstTime())
-        }
-    }
+    fun next() = handleTrackUpdate(
+        TrackRepository.getNextFor(currentTrack.id)
+    )
 
     private fun handleTrackUpdate(newTrack: Track) {
         if (isPlaying) {
-            stop()
             play(newTrack)
         } else {
             setTrack(newTrack)
         }
     }
 
-    private val isInitialized
-        get() = currentState != PlayerState.NOT_STARTED
+    fun getTrackElapsedDurationMillis() =
+        mediaPlayer.currentPosition
+
+    fun getTrackDurationMillis() =
+        mediaPlayer.duration
 
     val isPlaying
-        get() = currentState == PlayerState.PLAYING
+        get() = currentState == PlayerState.PLAYING && mediaPlayer.isPlaying
+
+    // val isNotPlaying = !isPlaying // YA OFICIALNO DOLBOEB
+
+    val isNotPlaying
+        get() = !isPlaying
+
+    fun isTrackCurrent(track: Track) =
+        track == currentTrack
+
+    fun isTrackCurrent(trackId: Long) =
+        isTrackCurrent(TrackRepository.get(trackId)!!)
 
     private fun updatePlayerState(newState: PlayerState) {
+        log("Player state updated to: $newState")
+
         currentState = newState
         notifySubscribers()
 
@@ -185,17 +189,12 @@ class PlayerControlService : Service() {
         callback(currentState)
     }
 
-    fun isTrackCurrent(track: Track) =
-        currentState != PlayerState.NOT_STARTED
-                && track == currentTrack
-
-    fun isTrackCurrent(trackId: Long) =
-        isTrackCurrent(TrackRepository.get(trackId)!!)
-
     override fun onDestroy() {
         super.onDestroy()
 
-        cancelNotification(PlayerNotificationHandler.PLAYER_NOTIFICATION_ID)
+        cancelNotification(
+            PlayerNotificationHandler.PLAYER_NOTIFICATION_ID
+        )
         stop()
     }
 }

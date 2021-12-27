@@ -60,16 +60,6 @@ internal inline fun <reified T> Context.createExplicitPendingIntent(
     flag
 )
 
-internal inline fun <reified T> Context.createExplicitBroadcastIntent(
-    id: Int,
-    notification: Notification,
-): PendingIntent {
-    val intent = Intent(this, T::class.java)
-    intent.putExtra("notification_id", id)
-    intent.putExtra("notification", notification)
-    return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-}
-
 internal fun Context.fireNotification(
     id: Int,
     notification: Notification,

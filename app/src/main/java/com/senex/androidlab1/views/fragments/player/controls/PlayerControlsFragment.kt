@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +16,9 @@ import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentPlayerControlsBinding
 import com.senex.androidlab1.player.PlayerControlService
 import com.senex.androidlab1.player.PlayerState
+import com.senex.androidlab1.utils.formatTime
 import com.senex.androidlab1.utils.getThemedIcon
+import com.senex.androidlab1.utils.log
 
 class PlayerControlsFragment : Fragment() {
     private var _binding: FragmentPlayerControlsBinding? = null
@@ -54,20 +58,35 @@ class PlayerControlsFragment : Fragment() {
             musicService = (service as PlayerControlService.MainBinder).getService()
 
             musicService.subscribeForStateChange(stateListener)
+            progressBarUpdater.run()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            // TODO: Inspect option
+            releaseCallbacks()
         }
     }
 
     private val stateListener: (PlayerState) -> Unit = {
-        com.senex.androidlab1.utils.log("Music player state has changed to: $it")
-
         binding.displayPlayerState(it)
     }
 
-    private fun FragmentPlayerControlsBinding.displayPlayerState(state: PlayerState) {
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val progressBarUpdater = object : Runnable {
+        override fun run() {
+            mainHandler.postDelayed(this, 1000)
+
+            val elapsedTime = musicService.getTrackElapsedDurationMillis()
+            binding.trackElapsedDuration.text = formatTime(elapsedTime)
+            binding.trackDurationProgressBar.setProgress(
+                elapsedTime / 1000,
+                true
+            )
+        }
+    }
+
+    private fun FragmentPlayerControlsBinding.displayPlayerState(
+        state: PlayerState
+    ) {
         val icon = if (state == PlayerState.PLAYING)
             R.drawable.ic_pause_24 else R.drawable.ic_play_24
         playPauseButton.icon = requireContext().getThemedIcon(icon)
@@ -75,17 +94,15 @@ class PlayerControlsFragment : Fragment() {
         val currentTrack = musicService.currentTrack
         currentTrackName.text = currentTrack.trackName
         currentTrackArtist.text = currentTrack.artistName
+
+        val trackDurationMillis = currentTrack.durationMillis
+        trackDuration.text = formatTime(trackDurationMillis)
+        trackDurationProgressBar.max = trackDurationMillis / 1000
     }
 
     private fun FragmentPlayerControlsBinding.initPlayPauseButton() {
         playPauseButton.setOnClickListener {
-            musicService.run {
-                if (isPlaying) {
-                    pause()
-                } else {
-                    resume()
-                }
-            }
+            musicService.resumeOrPause()
         }
     }
 
@@ -104,6 +121,11 @@ class PlayerControlsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        releaseCallbacks()
+    }
+
+    private fun releaseCallbacks() {
         musicService.unsubscribeFromStateChange(stateListener)
+        mainHandler.removeCallbacks(progressBarUpdater)
     }
 }
