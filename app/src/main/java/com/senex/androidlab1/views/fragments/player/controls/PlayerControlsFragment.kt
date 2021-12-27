@@ -70,8 +70,11 @@ class PlayerControlsFragment : Fragment() {
     private fun FragmentPlayerControlsBinding.displayPlayerState(state: PlayerState) {
         val icon = if (state == PlayerState.PLAYING)
             R.drawable.ic_pause_24 else R.drawable.ic_play_24
-
         playPauseButton.icon = requireContext().getThemedIcon(icon)
+
+        val currentTrack = musicService.currentTrack
+        currentTrackName.text = currentTrack.trackName
+        currentTrackArtist.text = currentTrack.artistName
     }
 
     private fun FragmentPlayerControlsBinding.initPlayPauseButton() {

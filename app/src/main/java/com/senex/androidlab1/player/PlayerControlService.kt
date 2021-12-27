@@ -17,7 +17,8 @@ class PlayerControlService : Service() {
     private var currentState = PlayerState.NOT_STARTED
     private val stateSubscribersList = mutableListOf<(PlayerState) -> Unit>()
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var currentTrack: Track
+
+    lateinit var currentTrack: Track
 
     override fun onBind(intent: Intent): MainBinder {
         // TODO: Inspect NOT_STARTED checks
