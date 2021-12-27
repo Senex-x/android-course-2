@@ -3,6 +3,8 @@ package com.senex.androidlab1.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 private const val APP_DEBUG_COMMON_PREFIX = "app-debug"
@@ -45,3 +47,9 @@ internal fun formatTime(time: Pair<Int, Int>) =
 
 internal fun formatTime(timeMillis: Int) =
     formatTime(fromMillis(timeMillis))
+
+internal fun Context.getThemedIcon(@DrawableRes id: Int) =
+    ContextCompat.getDrawable(
+        this,
+        id
+    )
