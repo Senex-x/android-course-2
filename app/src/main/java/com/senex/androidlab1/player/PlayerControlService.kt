@@ -19,7 +19,13 @@ class PlayerControlService : Service() {
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var currentTrack: Track
 
-    override fun onBind(intent: Intent) = MainBinder()
+    override fun onBind(intent: Intent): MainBinder {
+        // TODO: Inspect NOT_STARTED checks
+        if(currentState == PlayerState.NOT_STARTED) {
+            setTrack(TrackRepository.getTrackForFirstTime())
+        }
+        return MainBinder()
+    }
 
     inner class MainBinder : Binder() {
         fun getService(): PlayerControlService = this@PlayerControlService
@@ -91,13 +97,25 @@ class PlayerControlService : Service() {
         updatePlayerState(PlayerState.STOPPED)
     }
 
-    fun previous() = handleTrackUpdate(
-        TrackRepository.getPrevFor(currentTrack.id)
-    )
+    fun previous() {
+        if (isInitialized) {
+            handleTrackUpdate(
+                TrackRepository.getPrevFor(currentTrack.id)
+            )
+        } else {
+            setTrack(TrackRepository.getTrackForFirstTime())
+        }
+    }
 
-    fun next() = handleTrackUpdate(
-        TrackRepository.getNextFor(currentTrack.id)
-    )
+    fun next() {
+        if (isInitialized) {
+            handleTrackUpdate(
+                TrackRepository.getNextFor(currentTrack.id)
+            )
+        } else {
+            setTrack(TrackRepository.getTrackForFirstTime())
+        }
+    }
 
     private fun handleTrackUpdate(newTrack: Track) {
         if (isPlaying) {

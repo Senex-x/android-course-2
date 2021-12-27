@@ -28,26 +28,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_16"
             android:text="Track name"
-            app:layout_constraintEnd_toStartOf="@+id/track_duration"
+            app:layout_constraintEnd_toStartOf="@+id/track_info_button"
             app:layout_constraintStart_toEndOf="@id/track_album_cover"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/track_artist_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/size_16"
             android:text="Artist name"
+            app:layout_constraintEnd_toStartOf="@+id/track_info_button"
             app:layout_constraintStart_toEndOf="@id/track_album_cover"
             app:layout_constraintTop_toBottomOf="@+id/track_name" />
 
-        <TextView
-            android:id="@+id/track_duration"
+        <ImageButton
+            android:id="@+id/track_info_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Duration"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/size_8"
+            android:src="@drawable/ic_arrow_right_24"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/primary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

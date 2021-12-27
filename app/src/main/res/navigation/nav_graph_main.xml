@@ -9,7 +9,7 @@
         android:id="@+id/musicListFragment"
         android:name="com.senex.androidlab1.views.fragments.list.TrackListFragment"
         android:label="MusicListFragment"
-        tools:layout="@layout/fragment_music_list">
+        tools:layout="@layout/fragment_track_list">
 
         <action
             android:id="@+id/action_musicListFragment_to_musicInfoFragment"
@@ -19,7 +19,7 @@
         android:id="@+id/musicInfoFragment"
         android:name="com.senex.androidlab1.views.fragments.info.TrackInfoFragment"
         android:label="MusicInfoFragment"
-        tools:layout="@layout/fragment_music_info">
+        tools:layout="@layout/fragment_track_info">
 
         <action
             android:id="@+id/action_musicInfoFragment_to_musicListFragment"

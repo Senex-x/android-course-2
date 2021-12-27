@@ -31,6 +31,10 @@ object TrackRepository {
     private fun getIndex(id: Long) =
         getWithIndex(id).index
 
+    // Better use savedInstanceState inside viewModel
+    fun getTrackForFirstTime() =
+        TrackRepository.getAll().first()
+
     private val trackList = listOf(
         Track(
             1,
@@ -54,16 +58,6 @@ object TrackRepository {
         ),
         Track(
             3,
-            "Written In The Stars",
-            "Tinie Tempah",
-            2010,
-            Genre.RAP_AND_HIP_HOP,
-            R.drawable.tinie_tempah_disc_overy_cover,
-            R.raw.tinie_tempah_written_in_the_stars,
-            toMillis(3, 40)
-        ),
-        Track(
-            4,
             "Meine Welt",
             "Peter Heppner",
             2012,

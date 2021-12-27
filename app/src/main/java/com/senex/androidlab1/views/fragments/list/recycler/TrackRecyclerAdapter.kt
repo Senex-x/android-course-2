@@ -20,7 +20,6 @@ class TrackRecyclerAdapter(
             binding.run {
                 trackAlbumCover.setImageResource(track.coverRes)
                 trackName.text = track.trackName
-                trackDuration.text = formatTime(track.durationMillis)
                 trackArtistName.text = track.artistName
 
                 root.setOnClickListener {
