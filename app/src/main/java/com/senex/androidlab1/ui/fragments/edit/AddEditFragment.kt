@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.LocationServices
@@ -39,7 +40,10 @@ class AddEditFragment : Fragment() {
         LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+    }
+
     private val args: AddEditFragmentArgs by navArgs()
     private var oldNote: Note? = null
     private var targetDateCalendar: Calendar? = null

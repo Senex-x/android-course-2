@@ -26,14 +26,16 @@ class MainActivity : AppCompatActivity() {
 
         AppDatabaseMain.init(applicationContext)
 
-        // mainViewModel.removeAll()
-        // createRandomNotes(10)
-        /*
+        //mainViewModel.removeAll()
+        //createRandomNotes(10)
 
+
+        /*
         log("Database snapshot: " +
                 mainViewModel.getAll().map { note -> "\n" + note.header }
         )
         */
+
 
     }
 
