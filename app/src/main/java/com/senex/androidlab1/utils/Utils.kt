@@ -3,6 +3,9 @@ package com.senex.androidlab1.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+
+private const val APP_DEBUG_COMMON_PREFIX = "app-debug"
 
 internal fun Context.toast(message: String?) =
     message?.let {
@@ -21,10 +24,15 @@ internal fun String?.toast(context: Context) =
     context.toast(this)
 
 internal fun log(message: String?) =
-    Log.d("app-debug", message ?: "null")
+    Log.d(
+        APP_DEBUG_COMMON_PREFIX,
+        message ?: "null"
+    )
 
-private fun String.present() =
-    isNotEmpty() && isNotBlank()
+internal fun Fragment.log(message: String?) =
+    Log.d(APP_DEBUG_COMMON_PREFIX,
+        this::class.java.simpleName + ": " + message
+    )
 
 internal fun toMillis(minutes: Int, seconds: Int) =
     (minutes * 60 + seconds) * 1000

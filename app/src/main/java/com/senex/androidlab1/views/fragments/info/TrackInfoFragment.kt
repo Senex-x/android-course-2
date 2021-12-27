@@ -95,10 +95,8 @@ class TrackInfoFragment : Fragment() {
             val nextTrack = TrackRepository.getNextFor(thisTrack.id)
 
             musicService.run {
-                if (isPlaying) {
-                    stop()
-                    play(nextTrack)
-                }
+                if (isInitialized) next()
+                else play(nextTrack)
             }
 
             findNavController().navigate(
@@ -115,10 +113,8 @@ class TrackInfoFragment : Fragment() {
             val prevTrack = TrackRepository.getPrevFor(thisTrack.id)
 
             musicService.run {
-                if (isPlaying) {
-                    stop()
-                    play(prevTrack)
-                }
+                if (isInitialized) previous()
+                else play(prevTrack)
             }
 
             findNavController().navigate(
@@ -155,7 +151,7 @@ class TrackInfoFragment : Fragment() {
             musicService.subscribeForStateChange(stateListener)
         }
 
-        override fun onServiceDisconnected(name: ComponentName?) { }
+        override fun onServiceDisconnected(name: ComponentName?) {}
     }
 
     private val stateListener: (PlayerState) -> Unit = {

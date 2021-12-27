@@ -63,6 +63,8 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     implementation 'androidx.media:media:1.4.3'
 
     testImplementation 'junit:junit:4.13.2'
