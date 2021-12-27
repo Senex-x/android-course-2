@@ -5,27 +5,34 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.senex.androidlab1.databinding.ListItemMusicTrackBinding
 import com.senex.androidlab1.models.Track
-import com.senex.androidlab1.utils.formatTime
 
 class TrackRecyclerAdapter(
     private val tracks: List<Track>,
     private val onItemClick: (Long) -> Unit,
+    private val onItemInfoButtonClick: (Long) -> Unit,
 ) : RecyclerView.Adapter<TrackRecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(
         private val binding: ListItemMusicTrackBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(track: Track, onItemClick: (Long) -> Unit) =
-            binding.run {
-                trackAlbumCover.setImageResource(track.coverRes)
-                trackName.text = track.trackName
-                trackArtistName.text = track.artistName
+        fun bind(
+            track: Track,
+            onItemClick: (Long) -> Unit,
+            onItemInfoButtonClick: (Long) -> Unit,
+        ) = binding.run {
+            trackAlbumCover.setImageResource(track.coverRes)
+            trackName.text = track.trackName
+            trackArtistName.text = track.artistName
 
-                root.setOnClickListener {
-                    onItemClick(track.id)
-                }
+            trackInfoButton.setOnClickListener {
+                onItemInfoButtonClick(track.id)
             }
+
+            root.setOnClickListener {
+                onItemClick(track.id)
+            }
+        }
     }
 
     override fun onCreateViewHolder(
@@ -44,7 +51,8 @@ class TrackRecyclerAdapter(
         currentPosition: Int,
     ) = holder.bind(
         tracks[currentPosition],
-        onItemClick
+        onItemClick,
+        onItemInfoButtonClick
     )
 
     override fun getItemCount() = tracks.size

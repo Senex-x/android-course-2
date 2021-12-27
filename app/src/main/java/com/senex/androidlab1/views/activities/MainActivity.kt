@@ -18,31 +18,12 @@ import com.senex.androidlab1.utils.log
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var musicService: PlayerControlService
-
-    private var connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-/*
-        bindService(
-            Intent(this, PlayerControlService::class.java),
-            connection,
-            Context.BIND_AUTO_CREATE
-        )*/
     }
 
     override fun onStop() {

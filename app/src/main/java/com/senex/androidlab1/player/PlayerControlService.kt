@@ -21,7 +21,7 @@ class PlayerControlService : Service() {
 
     override fun onBind(intent: Intent): MainBinder {
         // TODO: Inspect NOT_STARTED checks
-        if(currentState == PlayerState.NOT_STARTED) {
+        if (currentState == PlayerState.NOT_STARTED) {
             setTrack(TrackRepository.getTrackForFirstTime())
         }
         return MainBinder()
@@ -60,6 +60,19 @@ class PlayerControlService : Service() {
         updatePlayerState(PlayerState.PAUSED)
     }
 
+    fun pauseResumeIfCurrentOrPlayNew(trackId: Long) {
+        if (isTrackCurrent(trackId)) {
+            if (isPlaying) {
+                pause()
+            } else {
+                resume()
+            }
+        } else {
+            stop()
+            play(trackId)
+        }
+    }
+
     fun play(track: Track) {
         log("PlayerService play()")
         currentTrack = track
@@ -71,6 +84,10 @@ class PlayerControlService : Service() {
 
         updatePlayerState(PlayerState.PLAYING)
     }
+
+    fun play(trackId: Long) =
+        play(TrackRepository.get(trackId)!!)
+
 
     fun resume() {
         log("PlayerService resume()")
@@ -126,7 +143,7 @@ class PlayerControlService : Service() {
         }
     }
 
-    val isInitialized
+    private val isInitialized
         get() = currentState != PlayerState.NOT_STARTED
 
     val isPlaying
@@ -170,6 +187,9 @@ class PlayerControlService : Service() {
     fun isTrackCurrent(track: Track) =
         currentState != PlayerState.NOT_STARTED
                 && track == currentTrack
+
+    fun isTrackCurrent(trackId: Long) =
+        isTrackCurrent(TrackRepository.get(trackId)!!)
 
     override fun onDestroy() {
         super.onDestroy()
