@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_16">
+
+        <ImageView
+            android:id="@+id/track_album_cover"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/clepsydra_sacred_symphonies_cover" />
+
+        <TextView
+            android:id="@+id/track_name"
+            style="@style/text_view_style.header.1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_16"
+            android:text="Track name"
+            app:layout_constraintEnd_toStartOf="@+id/track_info_button"
+            app:layout_constraintStart_toEndOf="@id/track_album_cover"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/track_artist_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_16"
+            android:text="Artist name"
+            app:layout_constraintEnd_toStartOf="@+id/track_info_button"
+            app:layout_constraintStart_toEndOf="@id/track_album_cover"
+            app:layout_constraintTop_toBottomOf="@+id/track_name" />
+
+        <ImageButton
+            android:id="@+id/track_info_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/size_8"
+            android:src="@drawable/ic_arrow_right_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/primary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

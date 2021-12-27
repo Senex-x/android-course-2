@@ -2,10 +2,6 @@ package com.senex.androidlab1.views.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -16,15 +12,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Setting up navigation host for Jetpack's Navigation component framework
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_main) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        // Setting up navigation view for Jetpack's Navigation component framework
-        val bottomNavigationView: BottomNavigationView =
-            findViewById(R.id.main_bottom_navigation_view)
-        bottomNavigationView.setupWithNavController(navController)
     }
 }
 

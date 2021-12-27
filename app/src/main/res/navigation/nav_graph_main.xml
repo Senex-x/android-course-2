@@ -3,11 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/sampleFragment">
+    app:startDestination="@id/musicListFragment">
 
     <fragment
-        android:id="@+id/sampleFragment"
-        android:name="com.senex.androidlab1.views.fragments.SampleFragment"
-        android:label="SampleFragment"
-        tools:layout="@layout/fragment_sample"/>
+        android:id="@+id/musicListFragment"
+        android:name="com.senex.androidlab1.views.fragments.list.TrackListFragment"
+        android:label="MusicListFragment"
+        tools:layout="@layout/fragment_track_list">
+
+        <action
+            android:id="@+id/action_musicListFragment_to_musicInfoFragment"
+            app:destination="@id/musicInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/musicInfoFragment"
+        android:name="com.senex.androidlab1.views.fragments.info.TrackInfoFragment"
+        android:label="MusicInfoFragment"
+        tools:layout="@layout/fragment_track_info">
+
+        <action
+            android:id="@+id/action_musicInfoFragment_to_musicListFragment"
+            app:destination="@id/musicListFragment" />
+        <action
+            android:id="@+id/action_musicInfoFragment_self"
+            app:destination="@id/musicInfoFragment"
+            app:popUpTo="@id/musicInfoFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="trackId"
+            app:argType="long" />
+    </fragment>
 </navigation>
