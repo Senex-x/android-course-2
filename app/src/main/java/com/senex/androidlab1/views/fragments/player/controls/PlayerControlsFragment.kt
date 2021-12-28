@@ -15,10 +15,8 @@ import androidx.fragment.app.Fragment
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentPlayerControlsBinding
 import com.senex.androidlab1.player.PlayerControlService
-import com.senex.androidlab1.player.PlayerState
 import com.senex.androidlab1.utils.formatTime
 import com.senex.androidlab1.utils.getThemedIcon
-import com.senex.androidlab1.utils.log
 
 class PlayerControlsFragment : Fragment() {
     private var _binding: FragmentPlayerControlsBinding? = null
@@ -57,7 +55,7 @@ class PlayerControlsFragment : Fragment() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             musicService = (service as PlayerControlService.MainBinder).getService()
 
-            musicService.subscribeForStateChange(stateListener)
+            musicService.subscribeForStateChange(stateChangeListener)
             progressBarUpdater.run()
         }
 
@@ -66,7 +64,7 @@ class PlayerControlsFragment : Fragment() {
         }
     }
 
-    private val stateListener: (PlayerState) -> Unit = {
+    private val stateChangeListener: (PlayerControlService.State) -> Unit = {
         binding.displayPlayerState(it)
     }
 
@@ -85,9 +83,9 @@ class PlayerControlsFragment : Fragment() {
     }
 
     private fun FragmentPlayerControlsBinding.displayPlayerState(
-        state: PlayerState
+        state: PlayerControlService.State
     ) {
-        val icon = if (state == PlayerState.PLAYING)
+        val icon = if (state == PlayerControlService.State.PLAYING)
             R.drawable.ic_pause_24 else R.drawable.ic_play_24
         playPauseButton.icon = requireContext().getThemedIcon(icon)
 
@@ -125,7 +123,7 @@ class PlayerControlsFragment : Fragment() {
     }
 
     private fun releaseCallbacks() {
-        musicService.unsubscribeFromStateChange(stateListener)
+        musicService.unsubscribeFromStateChange(stateChangeListener)
         mainHandler.removeCallbacks(progressBarUpdater)
     }
 }

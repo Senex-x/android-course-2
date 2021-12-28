@@ -14,14 +14,14 @@ class PlayerControlService : Service() {
         PlayerNotificationHandler(applicationContext)
     }
 
-    private var currentState = PlayerState.NOT_STARTED
-    private val stateSubscribersList = mutableListOf<(PlayerState) -> Unit>()
     private lateinit var mediaPlayer: MediaPlayer
+    private var currentState = State.NOT_STARTED
+    private val stateSubscribersList = mutableListOf<(State) -> Unit>()
 
     lateinit var currentTrack: Track
 
     override fun onBind(intent: Intent): MainBinder {
-        if (currentState == PlayerState.NOT_STARTED) {
+        if (currentState == State.NOT_STARTED) {
             setTrack(TrackRepository.getTrackForFirstTime())
         }
         return MainBinder()
@@ -56,7 +56,7 @@ class PlayerControlService : Service() {
             currentTrack.trackRes
         )
 
-        updatePlayerState(PlayerState.PAUSED)
+        updatePlayerState(State.PAUSED)
     }
 
     fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long) {
@@ -89,7 +89,7 @@ class PlayerControlService : Service() {
         )
         mediaPlayer.start()
 
-        updatePlayerState(PlayerState.PLAYING)
+        updatePlayerState(State.PLAYING)
     }
 
     fun play(trackId: Long) =
@@ -98,13 +98,13 @@ class PlayerControlService : Service() {
     fun resume() {
         mediaPlayer.start()
 
-        updatePlayerState(PlayerState.PLAYING)
+        updatePlayerState(State.PLAYING)
     }
 
     fun pause() {
         mediaPlayer.pause()
 
-        updatePlayerState(PlayerState.PAUSED)
+        updatePlayerState(State.PAUSED)
     }
 
     fun stop() {
@@ -113,7 +113,7 @@ class PlayerControlService : Service() {
             release()
         }
 
-        updatePlayerState(PlayerState.STOPPED)
+        updatePlayerState(State.STOPPED)
     }
 
     fun previous() = handleTrackUpdate(
@@ -135,23 +135,20 @@ class PlayerControlService : Service() {
     fun getTrackElapsedDurationMillis() =
         mediaPlayer.currentPosition
 
-    fun getTrackDurationMillis() =
-        mediaPlayer.duration
-
     val isPlaying
-        get() = currentState == PlayerState.PLAYING
+        get() = currentState == State.PLAYING
                 && mediaPlayer.isPlaying
 
     val isNotPlaying
         get() = !isPlaying
 
-    fun isTrackCurrent(track: Track) =
+    private fun isTrackCurrent(track: Track) =
         track == currentTrack
 
-    fun isTrackCurrent(trackId: Long) =
+    private fun isTrackCurrent(trackId: Long) =
         isTrackCurrent(TrackRepository.get(trackId)!!)
 
-    private fun updatePlayerState(newState: PlayerState) {
+    private fun updatePlayerState(newState: State) {
         log("Player state updated to: $newState")
 
         currentState = newState
@@ -164,14 +161,14 @@ class PlayerControlService : Service() {
     }
 
     fun subscribeForStateChange(
-        callback: (PlayerState) -> Unit,
+        callback: (State) -> Unit,
     ) {
         stateSubscribersList.add(callback)
-        notifySubscriber(callback)
+        callback(currentState)
     }
 
     fun unsubscribeFromStateChange(
-        callbackToUnsubscribe: (PlayerState) -> Unit,
+        callbackToUnsubscribe: (State) -> Unit,
     ) = stateSubscribersList.removeIf { callback ->
         callback == callbackToUnsubscribe
     }
@@ -182,12 +179,6 @@ class PlayerControlService : Service() {
         }
     }
 
-    private fun notifySubscriber(
-        callback: (PlayerState) -> Unit,
-    ) {
-        callback(currentState)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -196,11 +187,12 @@ class PlayerControlService : Service() {
         )
         stop()
     }
+
+    enum class State {
+        NOT_STARTED,
+        PLAYING,
+        PAUSED,
+        STOPPED
+    }
 }
 
-enum class PlayerState {
-    NOT_STARTED,
-    PLAYING,
-    PAUSED,
-    STOPPED
-}

@@ -51,10 +51,10 @@ class PlayerNotificationHandler(
 
     private fun createPlayerNotificationCurrentTrackStateBuilder(
         track: Track,
-        playerState: PlayerState,
+        playerState: PlayerControlService.State,
     ): NotificationCompat.Builder {
         val (iconId, pendingIntent) = when (playerState) {
-            PlayerState.PAUSED ->
+            PlayerControlService.State.PAUSED ->
                 Pair(R.drawable.ic_play_24, playPendingIntent)
             else ->
                 Pair(R.drawable.ic_pause_24, pausePendingIntent)
@@ -68,7 +68,7 @@ class PlayerNotificationHandler(
 
     fun setPlayerNotification(
         track: Track,
-        playerState: PlayerState,
+        playerState: PlayerControlService.State,
     ) {
         context.fireNotification(
             PLAYER_NOTIFICATION_ID,
