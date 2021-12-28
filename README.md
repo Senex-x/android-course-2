@@ -14,7 +14,7 @@ https://github.com/Senex-x/android-course-2/pull/10 (closed accidentaly)
 * Runs with bound service
 * Provides control notification
 
-https://github.com/Senex-x/android-course-2/pull/9 (closed accidentaly)
+https://github.com/Senex-x/android-course-2/pull/14
 
 ## Task 25.11 ― Alarm 
 * Uses `AlarmManager` to schedule notifications
