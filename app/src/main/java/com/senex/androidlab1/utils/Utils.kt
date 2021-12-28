@@ -23,9 +23,6 @@ internal fun String?.toast(context: Context) =
 internal fun log(message: String?) =
     Log.d("app-debug", message ?: "null")
 
-private fun String.present() =
-    isNotEmpty() && isNotBlank()
-
 internal fun toMillis(minutes: Int, seconds: Int) =
     (minutes * 60 + seconds) * 1000
 
