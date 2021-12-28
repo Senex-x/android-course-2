@@ -75,7 +75,9 @@ class AddEditFragment : Fragment() {
         oldNote?.let {
             headerEditText.setText(it.header)
             contentEditText.setText(it.content)
-            saveLocationCheck.visibility = View.GONE
+            saveLocationCheck.text =
+                getString(R.string.message_update_saved_location)
+
             it.targetDate?.let { date ->
                 val calendar = Calendar.getInstance().apply { time = date }
                 targetDate.text = requireContext().getString(
@@ -164,10 +166,10 @@ class AddEditFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            var longitude: Double? = null
-            var latitude: Double? = null
+            var longitude: Double? = oldNote?.longitude
+            var latitude: Double? = oldNote?.latitude
 
-            if (!isEditing && saveLocationCheck.isChecked) {
+            if (saveLocationCheck.isChecked) {
                 deferredLocation?.let { deferred: Deferred<Location?> ->
                     runBlocking {
                         deferred.await()?.let { location ->
