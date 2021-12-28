@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class State : Parcelable {
+enum class PlayerState : Parcelable {
     NOT_STARTED,
     PLAYING,
     PAUSED,

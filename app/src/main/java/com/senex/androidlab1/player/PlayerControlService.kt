@@ -34,7 +34,7 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
     }
 
     private lateinit var mediaPlayer: MediaPlayer
-    private var currentState = State.NOT_STARTED
+    private var currentState = PlayerState.NOT_STARTED
 
     lateinit var currentTrack: Track
 
@@ -43,14 +43,14 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        if (currentState == State.NOT_STARTED) {
+        if (currentState == PlayerState.NOT_STARTED) {
             setTrack(TrackRepository.getRandomTrack())
         }
-        return MainBinder()
+        return playerControlServiceBinder
     }
 
-    val playerControlServiceBinder: IPlayerControlService.Stub =
-        object : IPlayerControlService.Stub(), PlayerControlServiceBinder by this {}
+    private val playerControlServiceBinder: IPlayerControlService.Stub =
+        object : IPlayerControlService.Stub(), PlayerControlServiceBinder by this { }
 
     inner class MainBinder : Binder() {
         fun getService(): PlayerControlService = this@PlayerControlService
@@ -79,7 +79,7 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
             currentTrack.trackRes
         )
 
-        updatePlayerState(State.PAUSED)
+        updatePlayerState(PlayerState.PAUSED)
     }
 
     override fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long) {
@@ -112,7 +112,7 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
         )
         mediaPlayer.start()
 
-        updatePlayerState(State.PLAYING)
+        updatePlayerState(PlayerState.PLAYING)
     }
 
     override fun play(trackId: Long) =
@@ -121,13 +121,13 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
     fun resume() {
         mediaPlayer.start()
 
-        updatePlayerState(State.PLAYING)
+        updatePlayerState(PlayerState.PLAYING)
     }
 
     fun pause() {
         mediaPlayer.pause()
 
-        updatePlayerState(State.PAUSED)
+        updatePlayerState(PlayerState.PAUSED)
     }
 
     fun stop() {
@@ -136,7 +136,7 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
             release()
         }
 
-        updatePlayerState(State.STOPPED)
+        updatePlayerState(PlayerState.STOPPED)
     }
 
     override fun previous() = handleTrackUpdate(
@@ -159,7 +159,7 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
         mediaPlayer.currentPosition
 
     val isPlaying
-        get() = currentState == State.PLAYING
+        get() = currentState == PlayerState.PLAYING
                 && mediaPlayer.isPlaying
 
     val isNotPlaying
@@ -171,10 +171,10 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
     private fun isTrackCurrent(trackId: Long) =
         isTrackCurrent(TrackRepository.get(trackId)!!)
 
-    private fun updatePlayerState(newState: State) {
-        log("Player state updated to: $newState")
+    private fun updatePlayerState(newPlayerState: PlayerState) {
+        log("Player state updated to: $newPlayerState")
 
-        currentState = newState
+        currentState = newPlayerState
         notifySubscribers()
 
         playerNotificationHandler.setPlayerNotification(

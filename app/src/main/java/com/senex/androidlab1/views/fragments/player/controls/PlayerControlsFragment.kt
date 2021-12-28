@@ -14,9 +14,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentPlayerControlsBinding
+import com.senex.androidlab1.interfaces.IPlayerControlService
 import com.senex.androidlab1.player.OnStateChangeListener
 import com.senex.androidlab1.player.PlayerControlService
-import com.senex.androidlab1.player.State
+import com.senex.androidlab1.player.PlayerState
 import com.senex.androidlab1.utils.formatTime
 import com.senex.androidlab1.utils.getThemedIcon
 
@@ -25,7 +26,7 @@ class PlayerControlsFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private lateinit var musicService: PlayerControlService
+    private lateinit var musicService: IPlayerControlService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +56,7 @@ class PlayerControlsFragment : Fragment() {
 
     private var connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            musicService = (service as PlayerControlService.MainBinder).getService()
+            musicService = (service as IPlayerControlService)
 
             musicService.subscribeForStateChange(stateChangeListener)
             progressBarUpdater.run()
@@ -66,11 +67,9 @@ class PlayerControlsFragment : Fragment() {
         }
     }
 
-    // ????????????????????????????????????????????????????????
-    private val stateChangeListener: OnStateChangeListener = object : OnStateChangeListener {
-        override fun onStateChange(newState: State) {
-            binding.displayPlayerState(newState)
-            TODO("Not yet implemented")
+    private val stateChangeListener = object : OnStateChangeListener.Stub() {
+        override fun onStateChange(newPlayerState: PlayerState) {
+            binding.displayPlayerState(newPlayerState)
         }
     }
 
@@ -79,7 +78,7 @@ class PlayerControlsFragment : Fragment() {
         override fun run() {
             mainHandler.postDelayed(this, 1000)
 
-            val elapsedTime = musicService.getTrackElapsedDurationMillis()
+            val elapsedTime = musicService.trackElapsedDurationMillis
             binding.trackElapsedDuration.text = formatTime(elapsedTime)
             binding.trackDurationProgressBar.setProgress(
                 elapsedTime / 1000,
@@ -89,13 +88,13 @@ class PlayerControlsFragment : Fragment() {
     }
 
     private fun FragmentPlayerControlsBinding.displayPlayerState(
-        state: State
+        playerState: PlayerState
     ) {
-        val icon = if (state == State.PLAYING)
+        val icon = if (playerState == PlayerState.PLAYING)
             R.drawable.ic_pause_24 else R.drawable.ic_play_24
         playPauseButton.icon = requireContext().getThemedIcon(icon)
 
-        val currentTrack = musicService.currentTrack
+        val currentTrack = musicService.track
         currentTrackName.text = currentTrack.trackName
         currentTrackArtist.text = currentTrack.artistName
 

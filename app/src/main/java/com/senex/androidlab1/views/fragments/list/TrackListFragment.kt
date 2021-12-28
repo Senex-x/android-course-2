@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senex.androidlab1.databinding.FragmentTrackListBinding
+import com.senex.androidlab1.interfaces.IPlayerControlService
 import com.senex.androidlab1.player.PlayerControlService
 import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.views.fragments.list.recycler.MarginItemDecoration
@@ -23,7 +24,7 @@ class TrackListFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private lateinit var musicService: PlayerControlService
+    private lateinit var musicService: IPlayerControlService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +50,7 @@ class TrackListFragment : Fragment() {
 
     private var connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            musicService = (service as PlayerControlService.MainBinder).getService()
+            musicService = (service as IPlayerControlService)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
