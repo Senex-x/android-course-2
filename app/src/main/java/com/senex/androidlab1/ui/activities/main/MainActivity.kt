@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
 
         AppDatabaseMain.init(applicationContext)
 
-        mainViewModel.removeAll()
-        createRandomNotes(10)
+        //mainViewModel.removeAll()
+        //createRandomNotes(10)
 
 
         /*
@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.getAll().map { note -> "\n" + note.header }
         )
         */
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

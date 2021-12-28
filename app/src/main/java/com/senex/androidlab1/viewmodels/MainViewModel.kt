@@ -9,7 +9,7 @@ class MainViewModel : ViewModel() {
     private val noteDataSource = NoteRepository(viewModelScope)
     // I really dislike that here I get all notes by blocking the main thread.
     // I tried to figure out, how to avoid this blocking,
-    // but didn't come up to any acceptable concise solution yet.
+    // but didn't come up to any acceptably concise solution yet.
     private val notes = noteDataSource.getAllBlocking().toMutableList()
 
     fun add(note: Note) {
@@ -24,17 +24,13 @@ class MainViewModel : ViewModel() {
         notifySubscriber()
     }
 
-    fun get(index: Int): Note {
-        return notes[index]
+    fun get(index: Int): Note = notes[index]
+
+    fun get(id: Long): Note? = notes.find { note ->
+        note.id == id
     }
 
-    fun get(id: Long): Note? {
-        return notes.find { note -> note.id == id }
-    }
-
-    fun getAll(): List<Note> {
-        return notes
-    }
+    fun getAll(): List<Note> = notes.toList()
 
     fun update(note: Note) {
         for ((i, oldNote) in notes.withIndex()) {
