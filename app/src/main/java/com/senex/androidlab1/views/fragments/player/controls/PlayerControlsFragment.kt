@@ -14,7 +14,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.senex.androidlab1.R
 import com.senex.androidlab1.databinding.FragmentPlayerControlsBinding
+import com.senex.androidlab1.player.OnStateChangeListener
 import com.senex.androidlab1.player.PlayerControlService
+import com.senex.androidlab1.player.State
 import com.senex.androidlab1.utils.formatTime
 import com.senex.androidlab1.utils.getThemedIcon
 
@@ -64,8 +66,12 @@ class PlayerControlsFragment : Fragment() {
         }
     }
 
-    private val stateChangeListener: (PlayerControlService.State) -> Unit = {
-        binding.displayPlayerState(it)
+    // ????????????????????????????????????????????????????????
+    private val stateChangeListener: OnStateChangeListener = object : OnStateChangeListener {
+        override fun onStateChange(newState: State) {
+            binding.displayPlayerState(newState)
+            TODO("Not yet implemented")
+        }
     }
 
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -83,9 +89,9 @@ class PlayerControlsFragment : Fragment() {
     }
 
     private fun FragmentPlayerControlsBinding.displayPlayerState(
-        state: PlayerControlService.State
+        state: State
     ) {
-        val icon = if (state == PlayerControlService.State.PLAYING)
+        val icon = if (state == State.PLAYING)
             R.drawable.ic_pause_24 else R.drawable.ic_play_24
         playPauseButton.icon = requireContext().getThemedIcon(icon)
 

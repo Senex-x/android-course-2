@@ -4,29 +4,53 @@ import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
+import android.os.IBinder
+import com.senex.androidlab1.interfaces.IPlayerControlService
 import com.senex.androidlab1.models.Track
 import com.senex.androidlab1.player.PlayerNotificationHandler.Companion.getNotificationActionExtra
 import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.player.PlayerNotificationHandler.Action as PlayerNotificationAction
 
-class PlayerControlService : Service() {
+interface PlayerControlServiceBinder {
+    fun getTrack(): Track
+    fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long)
+    fun resumeOrPause()
+    fun play(trackId: Long)
+    fun previous()
+    fun next()
+    fun getTrackElapsedDurationMillis(): Int
+    fun subscribeForStateChange(
+        listener: OnStateChangeListener
+    )
+    fun unsubscribeFromStateChange(
+        listener: OnStateChangeListener
+    )
+}
+
+class PlayerControlService : Service(), PlayerControlServiceBinder {
     private val playerNotificationHandler: PlayerNotificationHandler by lazy {
         PlayerNotificationHandler(applicationContext)
     }
 
     private lateinit var mediaPlayer: MediaPlayer
     private var currentState = State.NOT_STARTED
-    private val stateSubscribersList = mutableListOf<(State) -> Unit>()
 
     lateinit var currentTrack: Track
 
-    override fun onBind(intent: Intent): MainBinder {
+    override fun getTrack(): Track {
+        return currentTrack
+    }
+
+    override fun onBind(intent: Intent): IBinder {
         if (currentState == State.NOT_STARTED) {
-            setTrack(TrackRepository.getTrackForFirstTime())
+            setTrack(TrackRepository.getRandomTrack())
         }
         return MainBinder()
     }
+
+    val playerControlServiceBinder: IPlayerControlService.Stub =
+        object : IPlayerControlService.Stub(), PlayerControlServiceBinder by this {}
 
     inner class MainBinder : Binder() {
         fun getService(): PlayerControlService = this@PlayerControlService
@@ -58,7 +82,7 @@ class PlayerControlService : Service() {
         updatePlayerState(State.PAUSED)
     }
 
-    fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long) {
+    override fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long) {
         if (isTrackCurrent(trackId)) {
             if (isNotPlaying) {
                 resume()
@@ -70,7 +94,7 @@ class PlayerControlService : Service() {
         }
     }
 
-    fun resumeOrPause() {
+    override fun resumeOrPause() {
         if (isNotPlaying) {
             resume()
         } else {
@@ -91,7 +115,7 @@ class PlayerControlService : Service() {
         updatePlayerState(State.PLAYING)
     }
 
-    fun play(trackId: Long) =
+    override fun play(trackId: Long) =
         play(TrackRepository.get(trackId)!!)
 
     fun resume() {
@@ -115,11 +139,11 @@ class PlayerControlService : Service() {
         updatePlayerState(State.STOPPED)
     }
 
-    fun previous() = handleTrackUpdate(
+    override fun previous() = handleTrackUpdate(
         TrackRepository.getPrevFor(currentTrack.id)
     )
 
-    fun next() = handleTrackUpdate(
+    override fun next() = handleTrackUpdate(
         TrackRepository.getNextFor(currentTrack.id)
     )
 
@@ -131,7 +155,7 @@ class PlayerControlService : Service() {
         }
     }
 
-    fun getTrackElapsedDurationMillis() =
+    override fun getTrackElapsedDurationMillis() =
         mediaPlayer.currentPosition
 
     val isPlaying
@@ -159,22 +183,28 @@ class PlayerControlService : Service() {
         )
     }
 
-    fun subscribeForStateChange(
-        callback: (State) -> Unit,
+
+
+    private val stateSubscribersList = mutableListOf<OnStateChangeListener>()
+
+    override fun subscribeForStateChange(
+        listener: OnStateChangeListener,
     ) {
-        stateSubscribersList.add(callback)
-        callback(currentState)
+        stateSubscribersList.add(listener)
+        listener.onStateChange(currentState)
     }
 
-    fun unsubscribeFromStateChange(
-        callbackToUnsubscribe: (State) -> Unit,
-    ) = stateSubscribersList.removeIf { callback ->
-        callback == callbackToUnsubscribe
+    override fun unsubscribeFromStateChange(
+        listener: OnStateChangeListener,
+    ) {
+        stateSubscribersList.removeIf { callback ->
+            callback == listener
+        }
     }
 
     private fun notifySubscribers() {
         for (callback in stateSubscribersList) {
-            callback(currentState)
+            callback.onStateChange(currentState)
         }
     }
 
@@ -183,13 +213,6 @@ class PlayerControlService : Service() {
 
         playerNotificationHandler.cancelPlayerNotification()
         stop()
-    }
-
-    enum class State {
-        NOT_STARTED,
-        PLAYING,
-        PAUSED,
-        STOPPED
     }
 }
 

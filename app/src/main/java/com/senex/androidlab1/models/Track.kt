@@ -1,8 +1,11 @@
 package com.senex.androidlab1.models
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Track(
     val id: Long,
     val trackName: String,
@@ -15,7 +18,7 @@ data class Track(
     @RawRes
     val trackRes: Int,
     val durationMillis: Int,
-)
+): Parcelable
 
 enum class Genre(
     val value: String,

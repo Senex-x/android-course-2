@@ -32,8 +32,8 @@ object TrackRepository {
         getWithIndex(id).index
 
     // Better use savedInstanceState inside viewModel
-    fun getTrackForFirstTime() =
-        getAll().first()
+    fun getRandomTrack() =
+        getAll().random()
 
     private val trackList = listOf(
         Track(
