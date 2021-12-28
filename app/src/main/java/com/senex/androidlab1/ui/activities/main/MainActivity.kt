@@ -62,11 +62,11 @@ class MainActivity : AppCompatActivity() {
                 null,
                 faker.quote.famousLastWords(),
                 faker.harryPotter.quotes() + " " + faker.harryPotter.quotes(),
-                Calendar.getInstance(),
+                Calendar.getInstance().time,
                 if (Random.nextBoolean())
                     Calendar.getInstance().apply {
                         set(2021, Random.nextInt(1, 13), Random.nextInt(1, 29))
-                    }
+                    }.time
                 else null,
                 if (Random(i).nextBoolean()) Random.nextDouble(180.0) else null,
                 if (Random(i).nextBoolean()) Random.nextDouble(180.0) else null

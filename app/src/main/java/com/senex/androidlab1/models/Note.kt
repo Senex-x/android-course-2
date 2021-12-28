@@ -12,8 +12,8 @@ data class Note(
     val id: Long?,
     val header: String,
     val content: String,
-    val openingDate: Calendar,
-    val targetDate: Calendar?,
+    val openingDate: Date,
+    val targetDate: Date?,
     val longitude: Double?,
     val latitude: Double?,
 )

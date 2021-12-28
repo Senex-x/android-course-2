@@ -24,9 +24,9 @@ class ListRecyclerAdapter(
             binding.run {
                 header.text = note.header
                 content.text = note.content
-                openingDate.text = formatDate(note.openingDate.time)
+                openingDate.text = formatDate(note.openingDate)
                 targetDate.text = if (note.targetDate != null)
-                    formatDate(note.targetDate.time)
+                    formatDate(note.targetDate)
                 else
                     binding.root.context.getString(
                         R.string.text_indefinite

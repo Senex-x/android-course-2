@@ -76,7 +76,8 @@ class AddEditFragment : Fragment() {
             headerEditText.setText(it.header)
             contentEditText.setText(it.content)
             saveLocationCheck.visibility = View.GONE
-            it.targetDate?.let { calendar ->
+            it.targetDate?.let { date ->
+                val calendar = Calendar.getInstance().apply { time = date }
                 targetDate.text = requireContext().getString(
                     R.string.text_target_date_is,
                     calendar.get(Calendar.DAY_OF_MONTH),
@@ -154,7 +155,7 @@ class AddEditFragment : Fragment() {
 
     private fun FragmentAddEditBinding.initSaveButton() {
         saveButton.setOnClickListener {
-            val targetDate: Calendar? = targetDateCalendar
+            val targetDate: Date? = targetDateCalendar?.time
 
             if (headerEditText.text.toString().isBlank()) {
                 requireContext().toast(
@@ -199,14 +200,14 @@ class AddEditFragment : Fragment() {
     }
 
     private fun FragmentAddEditBinding.saveNote(
-        targetDate: Calendar?,
+        targetDate: Date?,
         longitude: Double?, latitude: Double?,
     ) {
         val note = Note(
             if (isEditing && oldNote != null) oldNote!!.id else null,
             headerEditText.text.toString(),
             contentEditText.text.toString(),
-            Calendar.getInstance(), targetDate,
+            Date(), targetDate,
             longitude, latitude,
         )
 
