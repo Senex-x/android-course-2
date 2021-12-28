@@ -5,12 +5,13 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
 import com.senex.androidlab1.models.Track
+import com.senex.androidlab1.player.PlayerNotificationHandler.Companion.getNotificationActionExtra
 import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.player.PlayerNotificationHandler.Action as PlayerNotificationAction
 
 class PlayerControlService : Service() {
-    private val notificationHandler: PlayerNotificationHandler by lazy {
+    private val playerNotificationHandler: PlayerNotificationHandler by lazy {
         PlayerNotificationHandler(applicationContext)
     }
 
@@ -33,9 +34,7 @@ class PlayerControlService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        intent.getSerializableExtraAs<PlayerNotificationAction>(
-            PlayerNotificationAction.getIntentExtraKey()
-        )?.let {
+        intent.getNotificationActionExtra()?.let {
             log("Received command from notification: $it")
 
             when (it) {
@@ -154,7 +153,7 @@ class PlayerControlService : Service() {
         currentState = newState
         notifySubscribers()
 
-        notificationHandler.setPlayerNotification(
+        playerNotificationHandler.setPlayerNotification(
             currentTrack,
             currentState
         )
@@ -182,9 +181,7 @@ class PlayerControlService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        cancelNotification(
-            PlayerNotificationHandler.PLAYER_NOTIFICATION_ID
-        )
+        playerNotificationHandler.cancelPlayerNotification()
         stop()
     }
 

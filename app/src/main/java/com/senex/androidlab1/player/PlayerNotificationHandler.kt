@@ -12,8 +12,10 @@ import com.senex.androidlab1.views.activities.MainActivity
 class PlayerNotificationHandler(
     private val context: Context,
 ) {
+    private val notificationHandler = NotificationHandler(context)
+
     init {
-        context.createNotificationChannel(
+        notificationHandler.createNotificationChannel(
             PLAYER_NOTIFICATION_CHANNEL_ID,
             PLAYER_NOTIFICATION_CHANNEL_NAME,
         )
@@ -33,7 +35,7 @@ class PlayerNotificationHandler(
             putExtra(Action.getIntentExtraKey(), actionExtra)
         }
 
-        return context.createServicePendingIntent(explicitServiceIntentWithAction, requestCounter++)
+        return notificationHandler.createServicePendingIntent(explicitServiceIntentWithAction, requestCounter++)
     }
 
     private val playerNotificationBuilder = initPlayerNotificationBuilder()
@@ -42,7 +44,7 @@ class PlayerNotificationHandler(
         .Builder(context, PLAYER_NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_flask_primary_24)
         .setStyle(androidx.media.app.NotificationCompat.MediaStyle())
-        .setContentIntent(context.createExplicitPendingIntent<MainActivity>())
+        .setContentIntent(notificationHandler.createExplicitPendingIntent<MainActivity>())
         .setOngoing(true)
 
     private fun setCurrentTrackToPlayerNotification(track: Track) =
@@ -74,13 +76,17 @@ class PlayerNotificationHandler(
         track: Track,
         playerState: PlayerControlService.State,
     ) {
-        context.fireNotification(
+        notificationHandler.fireNotification(
             PLAYER_NOTIFICATION_ID,
             setCurrentTrackStateToPlayerNotification(
                 track,
                 playerState
             ).build()
         )
+    }
+
+    fun cancelPlayerNotification() {
+        notificationHandler.cancelNotification(PLAYER_NOTIFICATION_ID)
     }
 
     companion object {
@@ -92,6 +98,12 @@ class PlayerNotificationHandler(
 
         private const val PLAYER_NOTIFICATION_INTENT_ACTION_STRING_KEY =
             "com.senex.androidlab.action"
+
+        internal inline fun <reified T> Intent?.getSerializableExtraAs(key: String) =
+            this?.getSerializableExtra(key) as? T
+
+        internal fun Intent?.getNotificationActionExtra() =
+            getSerializableExtraAs<Action>(Action.getIntentExtraKey())
     }
 
     enum class Action {
