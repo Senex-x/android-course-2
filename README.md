@@ -3,7 +3,7 @@
 ## Task 30.12 ― Todo list with coroutines
 * Uses Room database queries via coroutines
 
-https://github.com/Senex-x/android-course-2/pull/11 (closed accidentaly)
+https://github.com/Senex-x/android-course-2/pull/13
 
 ## Task 21.12 ― Todo list
 * Uses Room database
