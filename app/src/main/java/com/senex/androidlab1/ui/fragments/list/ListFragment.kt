@@ -24,8 +24,6 @@ class ListFragment : Fragment() {
         ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
     }
 
-    private lateinit var listAdapter: ListRecyclerAdapter
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,7 +41,7 @@ class ListFragment : Fragment() {
 
     private fun FragmentListBinding.initRecyclerView() {
         listRecyclerMain.run {
-            listAdapter = ListRecyclerAdapter { clickedNote ->
+            val listAdapter = ListRecyclerAdapter { clickedNote ->
                 findNavController().navigate(
                     ListFragmentDirections
                         .actionListFragmentToAddEditFragment()

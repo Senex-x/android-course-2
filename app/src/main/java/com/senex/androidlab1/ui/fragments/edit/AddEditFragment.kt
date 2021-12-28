@@ -144,16 +144,22 @@ class AddEditFragment : Fragment() {
     }
 
     private fun setDeferredLocation() {
-        if (deferredLocation == null ||
-            locationLastRecordTime differByMoreThanSecondFrom System.currentTimeMillis()
-        ) {
-            log("Saving location")
-            requireContext().toast("Saving location")
+        if (deferredLocation != null && !isTimeToUpdateLocation()) return
 
-            locationLastRecordTime = System.currentTimeMillis()
-            deferredLocation = getLocationAsync()
-        }
+        log("Saving location")
+        requireContext().toast("Saving location")
+
+        locationLastRecordTime = System.currentTimeMillis()
+        deferredLocation = getLocationAsync()
     }
+
+    private fun isTimeToUpdateLocation(): Boolean =
+        locationLastRecordTime differByMoreThanSecondFrom System.currentTimeMillis()
+
+    private infix fun Long?.differByMoreThanSecondFrom(time: Long) =
+        this?.let {
+            abs(it - time) > 1000
+        } ?: true
 
     private fun FragmentAddEditBinding.initSaveButton() {
         saveButton.setOnClickListener {
@@ -189,12 +195,7 @@ class AddEditFragment : Fragment() {
         }
     }
 
-    private infix fun Long?.differByMoreThanSecondFrom(time: Long) =
-        this?.let {
-            abs(it - time) > 1000
-        } ?: true
-
-    private fun Fragment.navigateToListFragment() {
+    private fun navigateToListFragment() {
         findNavController().navigate(
             AddEditFragmentDirections
                 .actionEditFragmentToListFragment()
@@ -206,7 +207,7 @@ class AddEditFragment : Fragment() {
         longitude: Double?, latitude: Double?,
     ) {
         val note = Note(
-            if (isEditing && oldNote != null) oldNote!!.id else null,
+            oldNote?.id,
             headerEditText.text.toString(),
             contentEditText.text.toString(),
             Date(), targetDate,
