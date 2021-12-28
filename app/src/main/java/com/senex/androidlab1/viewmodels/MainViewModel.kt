@@ -20,7 +20,7 @@ class MainViewModel : ViewModel() {
 
     fun addAll(vararg newNotes: Note) {
         noteDataSource.insertAllBlocking(*newNotes)
-        notes.addAll(newNotes)
+        notes.addAll(noteDataSource.getAllBlocking())
         notifySubscriber()
     }
 

@@ -5,16 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senex.androidlab1.databinding.FragmentListBinding
-import com.senex.androidlab1.viewmodels.MainViewModel
 import com.senex.androidlab1.ui.fragments.list.recycler.ListRecyclerAdapter
 import com.senex.androidlab1.ui.fragments.list.recycler.ListTouchHelper
 import com.senex.androidlab1.utils.ListItemDecoration
+import com.senex.androidlab1.viewmodels.MainViewModel
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
@@ -45,18 +44,21 @@ class ListFragment : Fragment() {
     private fun FragmentListBinding.initRecyclerView() {
         listRecyclerMain.run {
             listAdapter = ListRecyclerAdapter { clickedNote ->
-                    findNavController().navigate(
-                        ListFragmentDirections
-                            .actionListFragmentToAddEditFragment()
-                            .setNoteId(clickedNote.id!!)
-                    )
-                }
+                findNavController().navigate(
+                    ListFragmentDirections
+                        .actionListFragmentToAddEditFragment()
+                        .setNoteId(clickedNote.id!!)
+                )
+            }
 
             ItemTouchHelper(
                 ListTouchHelper(listTouchHelperAdapter)
             ).attachToRecyclerView(this)
 
             mainViewModel.setOnListChangeListener {
+                binding.noItemsText.visibility =
+                    if (it.isEmpty()) View.VISIBLE else View.GONE
+
                 listAdapter.submitList(it)
             }
 
