@@ -36,20 +36,22 @@ class PlayerNotificationHandler(
         return context.createServicePendingIntent(explicitServiceIntentWithAction, requestCounter++)
     }
 
-    private fun createPlayerNotificationBaseBuilder() = NotificationCompat
+    private val playerNotificationBuilder = initPlayerNotificationBuilder()
+
+    private fun initPlayerNotificationBuilder() = NotificationCompat
         .Builder(context, PLAYER_NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_flask_primary_24)
         .setStyle(androidx.media.app.NotificationCompat.MediaStyle())
         .setContentIntent(context.createExplicitPendingIntent<MainActivity>())
         .setOngoing(true)
 
-    private fun createPlayerNotificationCurrentTrackBuilder(track: Track) =
-        createPlayerNotificationBaseBuilder()
+    private fun setCurrentTrackToPlayerNotification(track: Track) =
+        playerNotificationBuilder
             .setContentTitle(track.trackName)
             .setContentText(track.artistName)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, track.coverRes))
 
-    private fun createPlayerNotificationCurrentTrackStateBuilder(
+    private fun setCurrentTrackStateToPlayerNotification(
         track: Track,
         playerState: PlayerControlService.State,
     ): NotificationCompat.Builder {
@@ -60,10 +62,12 @@ class PlayerNotificationHandler(
                 Pair(R.drawable.ic_pause_24, pausePendingIntent)
         }
 
-        return createPlayerNotificationCurrentTrackBuilder(track)
+        return setCurrentTrackToPlayerNotification(track)
+            .clearActions()
             .addAction(R.drawable.ic_skip_previous_24, null, previousPendingIntent)
             .addAction(iconId, null, pendingIntent)
             .addAction(R.drawable.ic_skip_next_24, null, nextPendingIntent)
+
     }
 
     fun setPlayerNotification(
@@ -72,7 +76,7 @@ class PlayerNotificationHandler(
     ) {
         context.fireNotification(
             PLAYER_NOTIFICATION_ID,
-            createPlayerNotificationCurrentTrackStateBuilder(
+            setCurrentTrackStateToPlayerNotification(
                 track,
                 playerState
             ).build()
