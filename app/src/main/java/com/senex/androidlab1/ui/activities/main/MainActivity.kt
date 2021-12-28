@@ -15,7 +15,7 @@ import java.util.*
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
-    private val mainViewModel: MainViewModel by lazy {
+    private val mainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
