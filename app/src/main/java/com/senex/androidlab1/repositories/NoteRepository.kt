@@ -9,7 +9,7 @@ import java.util.concurrent.Executors
 class NoteRepository(
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main),
 ) {
-    private val noteDao = AppDatabaseMain.database.noteDao()
+    private val noteDao = AppDatabaseMain().noteDao()
 
     // Inserts are blocking-only to ensure that changes are written into database,
     // even if user did close the application before coroutine completion.

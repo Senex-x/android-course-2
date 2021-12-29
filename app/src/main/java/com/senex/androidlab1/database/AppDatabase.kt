@@ -15,8 +15,8 @@ abstract class AppDatabase : RoomDatabase() {
 
 object AppDatabaseMain {
     private var database_: AppDatabase? = null
-    val database: AppDatabase
-        get() = database_!!
+
+    operator fun invoke() = database_!!
 
     fun init(context: Context) {
         if (database_ == null)
