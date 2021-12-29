@@ -3,11 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/sampleFragment">
+    app:startDestination="@id/listFragment">
 
     <fragment
-        android:id="@+id/sampleFragment"
-        android:name="com.senex.androidlab1.views.fragments.SampleFragment"
-        android:label="SampleFragment"
-        tools:layout="@layout/fragment_sample"/>
+        android:id="@+id/listFragment"
+        android:name="com.senex.androidlab1.views.fragments.list.ListFragment"
+        android:label="ListFragment"
+        tools:layout="@layout/fragment_list">
+
+        <action
+            android:id="@+id/action_listFragment_to_addEditFragment"
+            app:destination="@id/addEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEditFragment"
+        android:name="com.senex.androidlab1.views.fragments.edit.AddEditFragment"
+        android:label="AddEditFragment"
+        tools:layout="@layout/fragment_add_edit">
+
+        <action
+            android:id="@+id/action_editFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+
+        <argument
+            android:name="noteId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 </navigation>
