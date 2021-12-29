@@ -16,7 +16,7 @@
 * Provides control notification
 * Uses AIDL-defined interfaces
 
-## Task 25.11 ― Alarm 
+## Task 25.11 ― Alarm manager
 [Pull request link](https://github.com/Senex-x/android-course-2/pull/7)
 * Uses `AlarmManager` to schedule notifications
 * Uses Room
@@ -27,8 +27,9 @@
 * Uses `ViewPager2`
 * Uses Room
 
-## Task 01.11 ― List / detailed view demo
+## Task 01.11 ― List and detailed view demo
 [Pull request link](https://github.com/Senex-x/android-course-2/pull/5)
-* Uses `CoordinatorLayout` wit `CollapsingToolbarLayout`
+* Uses `CoordinatorLayout` with `CollapsingToolbarLayout`
 * Uses `ItemDecoration`
 * Uses Room
+* Uses Navigation component
