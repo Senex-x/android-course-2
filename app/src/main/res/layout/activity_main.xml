@@ -12,18 +12,19 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/main_bottom_navigation_view"
+        app:layout_constraintBottom_toTopOf="@id/player_controls_fragment_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph_main" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/main_bottom_navigation_view"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/player_controls_fragment_container"
+        android:name="com.senex.androidlab1.views.fragments.player.controls.PlayerControlsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_main" />
+        tools:layout_height="100dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
