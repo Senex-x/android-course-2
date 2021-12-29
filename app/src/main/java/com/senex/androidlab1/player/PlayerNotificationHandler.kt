@@ -35,7 +35,9 @@ class PlayerNotificationHandler(
             putExtra(Action.getIntentExtraKey(), actionExtra)
         }
 
-        return notificationHandler.createServicePendingIntent(explicitServiceIntentWithAction, requestCounter++)
+        return notificationHandler.createServicePendingIntent(
+            explicitServiceIntentWithAction, requestCounter++
+        )
     }
 
     private val playerNotificationBuilder = initPlayerNotificationBuilder()
@@ -69,7 +71,6 @@ class PlayerNotificationHandler(
             .addAction(R.drawable.ic_skip_previous_24, null, previousPendingIntent)
             .addAction(iconId, null, pendingIntent)
             .addAction(R.drawable.ic_skip_next_24, null, nextPendingIntent)
-
     }
 
     fun setPlayerNotification(

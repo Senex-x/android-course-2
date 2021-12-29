@@ -94,7 +94,7 @@ class PlayerControlsFragment : Fragment() {
             R.drawable.ic_pause_24 else R.drawable.ic_play_24
         playPauseButton.icon = requireContext().getThemedIcon(icon)
 
-        val currentTrack = musicService.track
+        val currentTrack = musicService.currentTrack
         currentTrackName.text = currentTrack.trackName
         currentTrackArtist.text = currentTrack.artistName
 

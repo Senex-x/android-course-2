@@ -4,7 +4,7 @@ import com.senex.androidlab1.models.Track;
 import com.senex.androidlab1.player.OnStateChangeListener;
 
 interface IPlayerControlService {
-     Track getTrack();
+     Track getCurrentTrack();
 
      void resumeOrPauseIfCurrentOrPlayNew(long trackId);
 
@@ -15,6 +15,8 @@ interface IPlayerControlService {
      void previous();
 
      void next();
+
+     void stop();
 
      int getTrackElapsedDurationMillis();
 

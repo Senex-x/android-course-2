@@ -3,7 +3,6 @@ package com.senex.androidlab1.player
 import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
-import android.os.Binder
 import android.os.IBinder
 import com.senex.androidlab1.interfaces.IPlayerControlService
 import com.senex.androidlab1.models.Track
@@ -12,48 +11,25 @@ import com.senex.androidlab1.repository.TrackRepository
 import com.senex.androidlab1.utils.log
 import com.senex.androidlab1.player.PlayerNotificationHandler.Action as PlayerNotificationAction
 
-interface PlayerControlServiceBinder {
-    fun getTrack(): Track
-    fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long)
-    fun resumeOrPause()
-    fun play(trackId: Long)
-    fun previous()
-    fun next()
-    fun getTrackElapsedDurationMillis(): Int
-    fun subscribeForStateChange(
-        listener: OnStateChangeListener
-    )
-    fun unsubscribeFromStateChange(
-        listener: OnStateChangeListener
-    )
-}
-
 class PlayerControlService : Service(), PlayerControlServiceBinder {
     private val playerNotificationHandler: PlayerNotificationHandler by lazy {
         PlayerNotificationHandler(applicationContext)
     }
 
-    private lateinit var mediaPlayer: MediaPlayer
     private var currentState = PlayerState.NOT_STARTED
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var currentTrack: Track
 
-    lateinit var currentTrack: Track
+    override fun getCurrentTrack() = currentTrack
 
-    override fun getTrack(): Track {
-        return currentTrack
-    }
+    private val playerControlServiceBinder: IPlayerControlService.Stub =
+        object : IPlayerControlService.Stub(), PlayerControlServiceBinder by this { }
 
     override fun onBind(intent: Intent): IBinder {
         if (currentState == PlayerState.NOT_STARTED) {
             setTrack(TrackRepository.getRandomTrack())
         }
         return playerControlServiceBinder
-    }
-
-    private val playerControlServiceBinder: IPlayerControlService.Stub =
-        object : IPlayerControlService.Stub(), PlayerControlServiceBinder by this { }
-
-    inner class MainBinder : Binder() {
-        fun getService(): PlayerControlService = this@PlayerControlService
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -102,7 +78,7 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
         }
     }
 
-    fun play(track: Track) {
+    private fun play(track: Track) {
         stop()
 
         currentTrack = track
@@ -118,19 +94,19 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
     override fun play(trackId: Long) =
         play(TrackRepository.get(trackId)!!)
 
-    fun resume() {
+    private fun resume() {
         mediaPlayer.start()
 
         updatePlayerState(PlayerState.PLAYING)
     }
 
-    fun pause() {
+    private fun pause() {
         mediaPlayer.pause()
 
         updatePlayerState(PlayerState.PAUSED)
     }
 
-    fun stop() {
+    override fun stop() {
         mediaPlayer.apply {
             stop()
             release()
@@ -158,11 +134,11 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
     override fun getTrackElapsedDurationMillis() =
         mediaPlayer.currentPosition
 
-    val isPlaying
+    private val isPlaying
         get() = currentState == PlayerState.PLAYING
                 && mediaPlayer.isPlaying
 
-    val isNotPlaying
+    private val isNotPlaying
         get() = !isPlaying
 
     private fun isTrackCurrent(track: Track) =
@@ -182,8 +158,6 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
             currentState
         )
     }
-
-
 
     private val stateSubscribersList = mutableListOf<OnStateChangeListener>()
 
@@ -214,5 +188,31 @@ class PlayerControlService : Service(), PlayerControlServiceBinder {
         playerNotificationHandler.cancelPlayerNotification()
         stop()
     }
+}
+
+interface PlayerControlServiceBinder {
+    fun getCurrentTrack(): Track
+
+    fun resumeOrPauseIfCurrentOrPlayNew(trackId: Long)
+
+    fun resumeOrPause()
+
+    fun play(trackId: Long)
+
+    fun previous()
+
+    fun next()
+
+    fun stop()
+
+    fun getTrackElapsedDurationMillis(): Int
+
+    fun subscribeForStateChange(
+        listener: OnStateChangeListener
+    )
+
+    fun unsubscribeFromStateChange(
+        listener: OnStateChangeListener
+    )
 }
 
