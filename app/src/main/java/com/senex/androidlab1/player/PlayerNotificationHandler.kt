@@ -61,9 +61,9 @@ class PlayerNotificationHandler(
     ): NotificationCompat.Builder {
         val (iconId, pendingIntent) = when (playerState) {
             PlayerState.PAUSED ->
-                Pair(R.drawable.ic_play_24, playPendingIntent)
+                R.drawable.ic_play_24 to playPendingIntent
             else ->
-                Pair(R.drawable.ic_pause_24, pausePendingIntent)
+                R.drawable.ic_pause_24 to pausePendingIntent
         }
 
         return setCurrentTrackToPlayerNotification(track)

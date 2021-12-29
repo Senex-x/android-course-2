@@ -40,7 +40,7 @@ internal fun toMillis(minutes: Int, seconds: Int) =
     (minutes * 60 + seconds) * 1000
 
 internal fun fromMillis(millis: Int) =
-    Pair(millis / 1000 / 60, millis / 1000 % 60)
+    millis / 1000 / 60 to millis / 1000 % 60
 
 internal fun formatTime(time: Pair<Int, Int>): String {
     val minutesInt = time.second
