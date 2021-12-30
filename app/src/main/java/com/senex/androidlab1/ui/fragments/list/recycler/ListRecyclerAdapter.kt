@@ -43,9 +43,6 @@ class ListRecyclerAdapter(
                 if(note.content.isEmpty()) {
                     content.visibility = View.GONE
                 }
-                if(note.latitude == null || note.longitude == null) {
-
-                }
             }
     }
 

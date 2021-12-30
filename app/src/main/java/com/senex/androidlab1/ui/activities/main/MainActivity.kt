@@ -28,12 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         //mainViewModel.removeAll()
         //createRandomNotes(10)
+        //log("Database snapshot: " + mainViewModel.getAll().map { note -> "\n" + note.header })
 
-        /*
-        log("Database snapshot: " +
-                mainViewModel.getAll().map { note -> "\n" + note.header }
-        )
-        */
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,12 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainViewModel.addAll(*notes.toTypedArray())
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        log("Activity destroyed")
     }
 }
 

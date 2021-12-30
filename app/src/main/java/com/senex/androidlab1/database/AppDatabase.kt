@@ -14,17 +14,16 @@ abstract class AppDatabase : RoomDatabase() {
 }
 
 object AppDatabaseMain {
-    private var database_: AppDatabase? = null
+    private var database: AppDatabase? = null
 
-    operator fun invoke() = database_!!
+    operator fun invoke() = database!!
 
     fun init(context: Context) {
-        if (database_ == null)
-            database_ = Room.databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                "database-main"
-            ).build()
+        if (database == null) database = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "database-main"
+        ).build()
     }
 }
 

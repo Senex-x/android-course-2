@@ -5,26 +5,22 @@ import java.util.*
 
 class MainConverter {
     @TypeConverter
-    fun timestampToDate(value: Long?): Date? {
-        return value?.let { Date(value) }
-    }
+    fun timestampToDate(value: Long?): Date? =
+        value?.let { Date(value) }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
-    }
+    fun dateToTimestamp(date: Date?): Long? =
+        date?.time
 
     @TypeConverter
-    fun timestampToCalendar(value: Long?): Calendar? {
-        return value?.let {
+    fun timestampToCalendar(value: Long?): Calendar? =
+        value?.let {
             Calendar.getInstance().apply {
                 time = Date(value)
             }
         }
-    }
 
     @TypeConverter
-    fun calendarToTimestamp(calendar: Calendar?): Long? {
-        return calendar?.time?.time
-    }
+    fun calendarToTimestamp(calendar: Calendar?): Long? =
+        calendar?.time?.time
 }
