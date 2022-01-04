@@ -1,5 +1,3 @@
-# android-course-2
-
 ## Task 30.12 ― Todo list with coroutines
 [Pull request link](https://github.com/Senex-x/android-course-2/pull/17)
 * Uses Room database queries via coroutines
