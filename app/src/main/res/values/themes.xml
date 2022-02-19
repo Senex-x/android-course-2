@@ -10,5 +10,7 @@
         <item name="android:statusBarColor">@color/white</item>
         <!-- Dark theme disable. -->
         <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
+
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
     </style>
 </resources>

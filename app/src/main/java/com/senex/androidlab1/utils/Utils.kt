@@ -3,6 +3,8 @@ package com.senex.androidlab1.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.*
 
 internal fun Context.toast(message: String?) =
     message?.let {
@@ -21,7 +23,11 @@ internal fun String?.toast(context: Context) =
     context.toast(this)
 
 internal fun log(message: String?) =
-    Log.d("App-debug", message ?: "null")
+    Log.d("app-debug", message ?: "null")
 
-private fun String.present() =
-    isNotEmpty() && isNotBlank()
+internal fun formatDate(date: Date): String {
+    return SimpleDateFormat(
+        "dd.MM.yyyy",
+        Locale.ROOT
+    ).format(date)
+}
